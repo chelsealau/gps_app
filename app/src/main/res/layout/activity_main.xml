@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginLeft="30dp"
     tools:context=".MainActivity">
 
     <TextView
@@ -11,7 +12,7 @@
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:text="Lat:"
+        android:text="Latitude:"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -29,7 +30,7 @@
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="lon:"
+        android:text="Longitude:"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_labellat" />
 
@@ -57,7 +58,37 @@
         android:layout_height="wrap_content"
         android:text="0.00"
         app:layout_constraintStart_toEndOf="@+id/tv_labelspeed"
-        app:layout_constraintTop_toTopOf="@+id/tv_labelspeed" />
+        app:layout_constraintTop_toTopOf="@+id/tv_labelspeed"
+        />
+
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/sw_metric"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:text="Metric Units"
+        android:gravity="center"
+        android:paddingTop="20dp"
+        android:checked="false"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_labelspeed" />
+        />
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/sw_fontsize"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="66dp"
+        android:checked="false"
+        android:gravity="center"
+        android:paddingTop="20dp"
+        android:text="Large Font"
+        app:layout_constraintStart_toEndOf="@+id/sw_metric"
+        app:layout_constraintTop_toBottomOf="@+id/tv_labelspeed" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

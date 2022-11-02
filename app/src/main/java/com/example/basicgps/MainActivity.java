@@ -1,34 +1,26 @@
 package com.example.basicgps;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.os.Build;
-import android.os.Bundle;
-
-import android.app.Activity;
-import android.content.Context;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
+import android.os.Bundle;
 import android.widget.TextView;
 
-import android.util.Log;
-import android.widget.Toast;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 
 public class MainActivity extends AppCompatActivity {
     private static final int PERMISSIONS_FINE_LOCATION = 99;
     protected LocationManager locationManager;
-    //    protected LocationListener locationListener;
-//    protected Context context;
+
     TextView tv_lat, tv_lon, tv_speed;
 
-    int LOCATION_REFRESH_TIME = 15000; // 15 seconds to update
-    int LOCATION_REFRESH_DISTANCE = 500; // 500 meters to update
+    int LOCATION_REFRESH_TIME = 1000; // 1 seconds to update
+    int LOCATION_REFRESH_DISTANCE = 10; // 100 meters to update
 
     private final LocationListener mLocationListener = new LocationListener() {
         @Override

@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
             tv_lat.setText(String.valueOf(location.getLatitude()));
             tv_lon.setText(String.valueOf(location.getLongitude()));
             updateSpeed();
-//            tv_speed.setText(String.valueOf(location.getSpeed()));
+            tv_speed.setText(String.valueOf(location.getSpeed()));
             strCurrentSpeed = String.valueOf(location.getSpeed());
             currSpeed = location.getSpeed();
 
@@ -67,37 +67,37 @@ public class MainActivity extends AppCompatActivity {
         if(intSpeed == 0){
             tv_speed.setTextColor(Color.parseColor("#77FF33"));
         }
-        if(intSpeed < 0 && intSpeed>=10){
+        if(intSpeed > 0 && intSpeed<=10){
             tv_speed.setTextColor(Color.parseColor("#DFFF00"));
         }
-        if(intSpeed < 10 && intSpeed>=15){
+        if(intSpeed > 10 && intSpeed<=15){
             tv_speed.setTextColor(Color.parseColor("#FFBF00"));
         }
-        if(intSpeed < 15 && intSpeed>=20){
+        if(intSpeed > 15 && intSpeed<=20){
             tv_speed.setTextColor(Color.parseColor("#FF7F50"));
         }
-        if(intSpeed < 20 && intSpeed>=25){
+        if(intSpeed > 20 && intSpeed<=25){
             tv_speed.setTextColor(Color.parseColor("#DE3163"));
         }
-        if(intSpeed < 25 && intSpeed>=30){
+        if(intSpeed > 25 && intSpeed<=30){
             tv_speed.setTextColor(Color.parseColor("#9FE2BF"));
         }
-        if(intSpeed < 30 && intSpeed>=35){
+        if(intSpeed > 30 && intSpeed<=35){
             tv_speed.setTextColor(Color.parseColor("#339CFF"));
         }
-        if(intSpeed < 35 && intSpeed>=40){
+        if(intSpeed > 35 && intSpeed<=40){
             tv_speed.setTextColor(Color.parseColor("#9B33FF"));
         }
-        if(intSpeed < 40 && intSpeed>=45){
+        if(intSpeed > 40 && intSpeed<=45){
             tv_speed.setTextColor(Color.parseColor("#FF33EE"));
         }
-        if(intSpeed < 45 && intSpeed>=50){
+        if(intSpeed > 45 && intSpeed<=50){
             tv_speed.setTextColor(Color.parseColor("#FF6D33"));
         }
-        if(intSpeed < 50 && intSpeed>=55){
+        if(intSpeed > 50 && intSpeed<=55){
             tv_speed.setTextColor(Color.parseColor("#5DFF33"));
         }
-        if(intSpeed < 55 && intSpeed>=60){
+        if(intSpeed > 55 && intSpeed<=60){
             tv_speed.setTextColor(Color.parseColor("#EAFF33"));
         }
         if(intSpeed > 60){

@@ -209,7 +209,7 @@ public class MainActivity extends AppCompatActivity {
                             tv_speed.setText(strCurrentSpeed + " mph");
                         }
                     }, 1000*a);
-                    lat = lat + 0.00277777777777778;
+                    lat = lat + 4.47038888888889;
                 }
             }
         });

@@ -7,24 +7,22 @@ package com.example.basicgps;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-
 import androidx.appcompat.widget.AppCompatButton;
-
-import android.view.View;
-
-import android.graphics.Color;
 import androidx.appcompat.widget.SwitchCompat;
-import android.widget.CompoundButton;
-import android.widget.Toast;
+import androidx.core.app.ActivityCompat;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -33,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
 
     SwitchCompat sw_metric;
     SwitchCompat sw_fontsize;
+    AppCompatButton sw_test;
     private float currSpeed;
     private String strCurrentSpeed;
     AppCompatButton help_button;
@@ -146,6 +145,7 @@ public class MainActivity extends AppCompatActivity {
         tv_speed = findViewById(R.id.tv_speed);
         sw_metric = findViewById(R.id.sw_metric);
         sw_fontsize = findViewById(R.id.sw_fontsize);
+        sw_test = findViewById(R.id.sw_test);
 
         help_button = findViewById(R.id.help_button);
 
@@ -187,7 +187,35 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "Use selectors to choose units and font size", Toast.LENGTH_LONG).show();
             }
         });
+
+        sw_test.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Location location = new Location("Test");
+                double lat = 10.0;
+                double log = 20.0;
+
+                Handler handler1 = new Handler();
+                for (int a = 1; a<=10 ;a++) {
+                    double finalLat = lat;
+                    handler1.postDelayed(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            location.setLatitude(finalLat);
+                            location.setLongitude(log);
+                            tv_lat.setText(String.valueOf(location.getLatitude()));
+                            tv_lon.setText(String.valueOf(location.getLongitude()));
+                            strCurrentSpeed = "10";
+                            tv_speed.setText(strCurrentSpeed + " mph");
+                        }
+                    }, 1000*a);
+                    lat = lat + 0.00277777777777778;
+                }
+            }
+        });
     }
+
 
     private boolean useMetricUnits() {
         return sw_metric.isChecked();

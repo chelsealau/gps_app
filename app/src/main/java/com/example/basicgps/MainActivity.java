@@ -1,6 +1,10 @@
+/** REFERENCES
+ * https://javapapers.com/android/get-current-location-in-android/
+ * https://stackoverflow.com/questions/17591147/how-to-get-current-location-in-android
+ * https://developer.android.com/training/location/request-updates
+ */
 package com.example.basicgps;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
@@ -9,23 +13,14 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 
-import android.app.Activity;
-import android.content.Context;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.widget.TextView;
 import android.graphics.Color;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 import android.widget.CompoundButton;
 
-import android.util.Log;
-import android.widget.Toast;
-
-import java.util.Formatter;
-import java.util.Locale;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -36,8 +31,6 @@ public class MainActivity extends AppCompatActivity {
     private float currSpeed;
     private String strCurrentSpeed;
 
-    //    protected LocationListener locationListener;
-//    protected Context context;
     TextView tv_lat, tv_lon, tv_speed;
 
     int LOCATION_REFRESH_TIME = 500; // 15 seconds to update
@@ -50,20 +43,16 @@ public class MainActivity extends AppCompatActivity {
             tv_lon.setText(String.valueOf(location.getLongitude()));
             updateSpeed();
 //            tv_speed.setText(String.valueOf(location.getSpeed()));
-            strCurrentSpeed = String.valueOf(location.getSpeed());
+//            strCurrentSpeed = String.valueOf(location.getSpeed());
             currSpeed = location.getSpeed();
 
         }
     };
 
     private void updateSpeed() {
-//        Formatter fmt = new Formatter(new StringBuilder());
-//        fmt.format(Locale.US, "%5.1f", nCurrentSpeed);
-//        String strCurrentSpeed = fmt.toString();
-//        strCurrentSpeed = strCurrentSpeed.replace(" ", "0");
-//        float floatSpeed=Float.parseFloat(strCurrentSpeed);
         int intSpeed = Math.round(currSpeed);
-//        System.out.println(intSpeed);
+        String strCurrentSpeed;
+
         if(intSpeed == 0){
             tv_speed.setTextColor(Color.parseColor("#77FF33"));
         }
@@ -104,10 +93,12 @@ public class MainActivity extends AppCompatActivity {
             tv_speed.setTextColor(Color.parseColor("#FF3333"));
         }
         if(this.useMetricUnits()){
-            tv_speed.setText(strCurrentSpeed+"km/h");
+            strCurrentSpeed = String.valueOf(currSpeed);
+            tv_speed.setText(strCurrentSpeed+" m/s");
         }
         else{
-            tv_speed.setText(strCurrentSpeed+"mph");
+            strCurrentSpeed = String.valueOf(currSpeed*2.23694); // conversion factor to mph
+            tv_speed.setText(strCurrentSpeed+" mph");
         }
     }
 
@@ -146,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (bigFont()) {
-                    tv_speed.setTextSize(20);  // textSize="24sp"
+                    tv_speed.setTextSize(20);
                 } else {
                     tv_speed.setTextSize(14);
                 }

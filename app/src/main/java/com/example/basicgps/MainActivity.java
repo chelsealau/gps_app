@@ -10,6 +10,7 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -35,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
     SwitchCompat sw_fontsize;
     private float currSpeed;
     private String strCurrentSpeed;
-    AppCompatButton help_button;
+    AppCompatButton help_button, pause_button;
     TextView tv_lat, tv_lon, tv_speed;
 
     int LOCATION_REFRESH_TIME = 1; // 15 seconds to update
@@ -70,9 +71,14 @@ public class MainActivity extends AppCompatActivity {
     };
 
     private void updateSpeed() {
-        int intSpeed = Math.round(currSpeed);
-//        String strCurrentSpeed = "";
-
+        int intSpeed = 0;
+        if(useMetricUnits()){
+            intSpeed = (int) ((currSpeed * 3600) / 1000);
+        }
+        else{
+            intSpeed=(int) (currSpeed*2.2369);
+        }
+        intSpeed = Math.round(intSpeed);
         if(intSpeed == 0){
             tv_speed.setTextColor(Color.parseColor("#77FF33"));
         }
@@ -148,6 +154,8 @@ public class MainActivity extends AppCompatActivity {
         sw_fontsize = findViewById(R.id.sw_fontsize);
 
         help_button = findViewById(R.id.help_button);
+        pause_button = findViewById(R.id.pause_button);
+
 
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
@@ -180,14 +188,37 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        help_button.setOnClickListener(new View.OnClickListener(){
+        help_button.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
                 Toast.makeText(MainActivity.this, "This app measures your speed using GPS in mph or kph", Toast.LENGTH_LONG).show();
                 Toast.makeText(MainActivity.this, "Use selectors to choose units and font size", Toast.LENGTH_LONG).show();
             }
         });
+
     }
+//    private boolean updatesRequested = true;
+//    @OnClick(R.id.pause_button)
+//    public void toggleUpdates(){
+//        if(updatesRequested){
+//            removeLocationUpdates
+//        }
+//        else{
+//
+//        }
+//    }
+//    @Override
+//    protected void onPause(){
+//        super.onPause();
+//        removeLocationUpdates();
+//    }
+//    private void removeLocationUpdates(){
+//        LocationListener mLocationListener = new LocationListener()
+//
+//        if(location != null){
+//            locationManager.removeUpdates();
+//        }
+//    }
 
     private boolean useMetricUnits() {
         return sw_metric.isChecked();

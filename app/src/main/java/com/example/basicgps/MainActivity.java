@@ -5,35 +5,34 @@
  */
 package com.example.basicgps;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatButton;
-import androidx.core.app.ActivityCompat;
-
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.Build;
-import android.os.Bundle;
-
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.view.MenuItem;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
-import android.widget.Button;
-import android.widget.PopupMenu;
-import android.widget.TextView;
-import android.graphics.Color;
-import androidx.appcompat.widget.SwitchCompat;
 import android.widget.CompoundButton;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.SwitchCompat;
+import androidx.core.app.ActivityCompat;
 
 
 public class MainActivity extends AppCompatActivity {
     private static final int PERMISSIONS_FINE_LOCATION = 99;
     protected LocationManager locationManager;
+
     SwitchCompat sw_metric;
     SwitchCompat sw_fontsize;
+    AppCompatButton sw_test;
     private float currSpeed;
     private String strCurrentSpeed;
     AppCompatButton help_button, pause_button;
@@ -152,6 +151,7 @@ public class MainActivity extends AppCompatActivity {
         tv_speed = findViewById(R.id.tv_speed);
         sw_metric = findViewById(R.id.sw_metric);
         sw_fontsize = findViewById(R.id.sw_fontsize);
+        sw_test = findViewById(R.id.sw_test);
 
         help_button = findViewById(R.id.help_button);
         pause_button = findViewById(R.id.pause_button);
@@ -196,6 +196,35 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        sw_test.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Location location = new Location("Test");
+                double lat = 10.0;
+                double log = 20.0;
+
+                Handler handler1 = new Handler();
+                for (int a = 1; a<=10 ;a++) {
+                    double finalLat = lat;
+                    handler1.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            location.setLatitude(finalLat);
+                            location.setLongitude(log);
+                            location.setSpeed(10);
+                            tv_lat.setText(String.valueOf(location.getLatitude()));
+                            tv_lon.setText(String.valueOf(location.getLongitude()));
+                            currSpeed = 10;
+                            updateSpeed();
+                            tv_speed.setText("10" + " mph");
+                        }
+                    }, 1000*a);
+                    lat = lat + 4.47038888888889;
+                }
+                strCurrentSpeed = "0";
+                tv_speed.setText(strCurrentSpeed + " mph");
+            }
+        });
     }
 //    private boolean updatesRequested = true;
 //    @OnClick(R.id.pause_button)
@@ -219,6 +248,7 @@ public class MainActivity extends AppCompatActivity {
 //            locationManager.removeUpdates();
 //        }
 //    }
+
 
     private boolean useMetricUnits() {
         return sw_metric.isChecked();

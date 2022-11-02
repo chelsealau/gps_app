@@ -199,7 +199,6 @@ public class MainActivity extends AppCompatActivity {
                 for (int a = 1; a<=10 ;a++) {
                     double finalLat = lat;
                     handler1.postDelayed(new Runnable() {
-
                         @Override
                         public void run() {
                             location.setLatitude(finalLat);

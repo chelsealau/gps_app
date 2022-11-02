@@ -32,9 +32,11 @@ public class MainActivity extends AppCompatActivity {
 
     SwitchCompat sw_metric;
     SwitchCompat sw_fontsize;
+    SwitchCompat sw_pause;
     AppCompatButton sw_test;
     private float currSpeed;
     private String strCurrentSpeed;
+    private String strLong, strLat;
     AppCompatButton help_button, pause_button;
     TextView tv_lat, tv_lon, tv_speed;
 
@@ -44,28 +46,36 @@ public class MainActivity extends AppCompatActivity {
     private final LocationListener mLocationListener = new LocationListener() {
         @Override
         public void onLocationChanged(final Location location) {
-            tv_lat.setText(String.valueOf(location.getLatitude()));
-            tv_lon.setText(String.valueOf(location.getLongitude()));
-            updateSpeed();
-            if(location != null){
-                if(Math.round(currSpeed) == 0){
-                    tv_speed.setText("0.00");
-                }
-                else{
-                    if(useMetricUnits()){
-                        int metric_speed = (int) ((location.getSpeed() * 3600) / 1000);
-                        strCurrentSpeed = String.valueOf(metric_speed);
-                        tv_speed.setText(strCurrentSpeed+" km/h");
+            if(!isPaused()){
+                //tv_lat.setText(String.valueOf(location.getLatitude()));
+                //tv_lon.setText(String.valueOf(location.getLongitude()));
+                strLong = String.valueOf(location.getLongitude());
+                strLat = String.valueOf(location.getLatitude());
+                tv_lat.setText(strLat);
+                tv_lon.setText(strLong);
+
+                updateSpeed();
+                if(location != null){
+                    if(Math.round(currSpeed) == 0){
+                        tv_speed.setText("0.00");
                     }
                     else{
-                        int mph_speed=(int) (location.getSpeed()*2.2369);
-                        strCurrentSpeed = String.valueOf(mph_speed);
-                        tv_speed.setText(strCurrentSpeed+" mph");
+                        if(useMetricUnits()){
+                            int metric_speed = (int) ((location.getSpeed() * 3600) / 1000);
+                            strCurrentSpeed = String.valueOf(metric_speed);
+                            tv_speed.setText(strCurrentSpeed+" km/h");
+                        }
+                        else{
+                            int mph_speed=(int) (location.getSpeed()*2.2369);
+                            strCurrentSpeed = String.valueOf(mph_speed);
+                            tv_speed.setText(strCurrentSpeed+" mph");
+                        }
                     }
                 }
+                currSpeed = location.getSpeed();
+                updateSpeed();
             }
-            currSpeed = location.getSpeed();
-            updateSpeed();
+
         }
     };
 
@@ -152,9 +162,10 @@ public class MainActivity extends AppCompatActivity {
         sw_metric = findViewById(R.id.sw_metric);
         sw_fontsize = findViewById(R.id.sw_fontsize);
         sw_test = findViewById(R.id.sw_test);
+        sw_pause = findViewById(R.id.sw_pause);
 
         help_button = findViewById(R.id.help_button);
-        pause_button = findViewById(R.id.pause_button);
+        //pause_button = findViewById(R.id.pause_button);
 
 
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
@@ -184,6 +195,28 @@ public class MainActivity extends AppCompatActivity {
                     tv_speed.setTextSize(20);
                 } else {
                     tv_speed.setTextSize(14);
+                }
+            }
+        });
+
+        sw_pause.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                String speedText = strCurrentSpeed;
+                String latText = strLat;
+                String lonText = strLong;
+                if (isPaused()) {
+                    tv_lat.setText(latText);
+                    tv_lon.setText(lonText);
+                    if(useMetricUnits()){
+                        tv_speed.setText(speedText + " km/h");
+                    }
+                    else{
+                        tv_speed.setText(speedText + " mph");
+                    }
+                }
+                else {
+                    updateSpeed();
                 }
             }
         });
@@ -255,6 +288,9 @@ public class MainActivity extends AppCompatActivity {
     }
     private boolean bigFont() {
         return sw_fontsize.isChecked();
+    }
+    private boolean isPaused() {
+        return sw_pause.isChecked();
     }
 }
 

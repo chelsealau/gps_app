@@ -27,8 +27,8 @@ public class MainActivity extends AppCompatActivity {
 //    protected Context context;
     TextView tv_lat, tv_lon, tv_speed;
 
-    int LOCATION_REFRESH_TIME = 15000; // 15 seconds to update
-    int LOCATION_REFRESH_DISTANCE = 500; // 500 meters to update
+    int LOCATION_REFRESH_TIME = 500; // 15 seconds to update
+    int LOCATION_REFRESH_DISTANCE = 100; // 500 meters to update
 
     private final LocationListener mLocationListener = new LocationListener() {
         @Override

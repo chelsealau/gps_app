@@ -203,14 +203,18 @@ public class MainActivity extends AppCompatActivity {
                         public void run() {
                             location.setLatitude(finalLat);
                             location.setLongitude(log);
+                            location.setSpeed(10);
                             tv_lat.setText(String.valueOf(location.getLatitude()));
                             tv_lon.setText(String.valueOf(location.getLongitude()));
-                            strCurrentSpeed = "10";
-                            tv_speed.setText(strCurrentSpeed + " mph");
+                            currSpeed = 10;
+                            updateSpeed();
+                            tv_speed.setText("10" + " mph");
                         }
                     }, 1000*a);
                     lat = lat + 4.47038888888889;
                 }
+                strCurrentSpeed = "0";
+                tv_speed.setText(strCurrentSpeed + " mph");
             }
         });
     }

@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
 //    protected Context context;
     TextView tv_lat, tv_lon, tv_speed;
 
-    int LOCATION_REFRESH_TIME = 500; // 15 seconds to update
+    int LOCATION_REFRESH_TIME = 100; // 15 seconds to update
     int LOCATION_REFRESH_DISTANCE = 100; // 500 meters to update
 
     private final LocationListener mLocationListener = new LocationListener() {
@@ -49,10 +49,24 @@ public class MainActivity extends AppCompatActivity {
             tv_lat.setText(String.valueOf(location.getLatitude()));
             tv_lon.setText(String.valueOf(location.getLongitude()));
             updateSpeed();
-            tv_speed.setText(String.valueOf(location.getSpeed()));
-            strCurrentSpeed = String.valueOf(location.getSpeed());
+            if(location != null){
+                if(Math.round(currSpeed) == 0){
+                    tv_speed.setText("0.00");
+                }
+                else{
+                    if(useMetricUnits()){
+                        int metric_speed = (int) ((location.getSpeed() * 3600) / 1000);
+                        strCurrentSpeed = String.valueOf(metric_speed);
+                        tv_speed.setText(strCurrentSpeed+" km/h");
+                    }
+                    else{
+                        int mph_speed=(int) (location.getSpeed()*2.2369);
+                        strCurrentSpeed = String.valueOf(mph_speed);
+                        tv_speed.setText(strCurrentSpeed+" mph");
+                    }
+                }
+            }
             currSpeed = location.getSpeed();
-
         }
     };
 
@@ -104,10 +118,16 @@ public class MainActivity extends AppCompatActivity {
             tv_speed.setTextColor(Color.parseColor("#FF3333"));
         }
         if(this.useMetricUnits()){
-            tv_speed.setText(strCurrentSpeed+"km/h");
+            tv_speed.setText(strCurrentSpeed+" km/h");
+            if(intSpeed == 0){
+                tv_speed.setText("0.00 km/h");
+            }
         }
         else{
-            tv_speed.setText(strCurrentSpeed+"mph");
+            tv_speed.setText(strCurrentSpeed+" mph");
+            if(intSpeed == 0){
+                tv_speed.setText("0.00 mph");
+            }
         }
     }
 

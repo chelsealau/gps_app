@@ -101,7 +101,6 @@
         app:layout_constraintTop_toBottomOf="@+id/sw_metric" />
 
     <androidx.appcompat.widget.AppCompatButton
-<<<<<<< HEAD
         android:id="@+id/pause_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -109,7 +108,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/sw_fontsize" />
-=======
+
+    <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/sw_test"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -122,7 +122,6 @@
         android:text="start Test"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/help_button" />
->>>>>>> 7d2506362b8bf113be5612b5a65ad4e225b837af
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

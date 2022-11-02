@@ -6,6 +6,7 @@
 package com.example.basicgps;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
@@ -16,11 +17,15 @@ import android.os.Bundle;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.graphics.Color;
 import androidx.appcompat.widget.SwitchCompat;
 import android.widget.CompoundButton;
-
+import android.widget.Toast;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -30,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
     SwitchCompat sw_fontsize;
     private float currSpeed;
     private String strCurrentSpeed;
-
+    AppCompatButton help_button;
     TextView tv_lat, tv_lon, tv_speed;
 
     int LOCATION_REFRESH_TIME = 1; // 15 seconds to update
@@ -61,10 +66,6 @@ public class MainActivity extends AppCompatActivity {
             }
             currSpeed = location.getSpeed();
             updateSpeed();
-//            tv_speed.setText(String.valueOf(location.getSpeed()));
-//            strCurrentSpeed = String.valueOf(location.getSpeed());
-
-
         }
     };
 
@@ -146,6 +147,8 @@ public class MainActivity extends AppCompatActivity {
         sw_metric = findViewById(R.id.sw_metric);
         sw_fontsize = findViewById(R.id.sw_fontsize);
 
+        help_button = findViewById(R.id.help_button);
+
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -174,6 +177,14 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     tv_speed.setTextSize(14);
                 }
+            }
+        });
+
+        help_button.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Toast.makeText(MainActivity.this, "This app measures your speed using GPS in mph or kph", Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this, "Use selectors to choose units and font size", Toast.LENGTH_LONG).show();
             }
         });
     }

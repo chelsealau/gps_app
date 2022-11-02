@@ -1,6 +1,10 @@
+/** REFERENCES
+ * https://javapapers.com/android/get-current-location-in-android/
+ * https://stackoverflow.com/questions/17591147/how-to-get-current-location-in-android
+ * https://developer.android.com/training/location/request-updates
+ */
 package com.example.basicgps;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
@@ -9,23 +13,14 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 
-import android.app.Activity;
-import android.content.Context;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.widget.TextView;
 import android.graphics.Color;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 import android.widget.CompoundButton;
 
-import android.util.Log;
-import android.widget.Toast;
-
-import java.util.Formatter;
-import java.util.Locale;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -36,12 +31,10 @@ public class MainActivity extends AppCompatActivity {
     private float currSpeed;
     private String strCurrentSpeed;
 
-    //    protected LocationListener locationListener;
-//    protected Context context;
     TextView tv_lat, tv_lon, tv_speed;
 
-    int LOCATION_REFRESH_TIME = 100; // 15 seconds to update
-    int LOCATION_REFRESH_DISTANCE = 100; // 500 meters to update
+    int LOCATION_REFRESH_TIME = 1; // 15 seconds to update
+    int LOCATION_REFRESH_DISTANCE = 1; // 500 meters to update
 
     private final LocationListener mLocationListener = new LocationListener() {
         @Override
@@ -67,17 +60,18 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
             currSpeed = location.getSpeed();
+            updateSpeed();
+//            tv_speed.setText(String.valueOf(location.getSpeed()));
+//            strCurrentSpeed = String.valueOf(location.getSpeed());
+
+
         }
     };
 
     private void updateSpeed() {
-//        Formatter fmt = new Formatter(new StringBuilder());
-//        fmt.format(Locale.US, "%5.1f", nCurrentSpeed);
-//        String strCurrentSpeed = fmt.toString();
-//        strCurrentSpeed = strCurrentSpeed.replace(" ", "0");
-//        float floatSpeed=Float.parseFloat(strCurrentSpeed);
         int intSpeed = Math.round(currSpeed);
-//        System.out.println(intSpeed);
+//        String strCurrentSpeed = "";
+
         if(intSpeed == 0){
             tv_speed.setTextColor(Color.parseColor("#77FF33"));
         }
@@ -118,15 +112,25 @@ public class MainActivity extends AppCompatActivity {
             tv_speed.setTextColor(Color.parseColor("#FF3333"));
         }
         if(this.useMetricUnits()){
-            tv_speed.setText(strCurrentSpeed+" km/h");
             if(intSpeed == 0){
                 tv_speed.setText("0.00 km/h");
             }
+            if(strCurrentSpeed == null){
+                tv_speed.setText("0.00 km/h");
+            }
+            else{
+                tv_speed.setText(strCurrentSpeed+" km/h");
+            }
         }
-        else{
-            tv_speed.setText(strCurrentSpeed+" mph");
-            if(intSpeed == 0){
+        else {
+            if (intSpeed == 0) {
                 tv_speed.setText("0.00 mph");
+            }
+            if(strCurrentSpeed == null){
+                tv_speed.setText("0.00 mph");
+            }
+            else{
+                tv_speed.setText(strCurrentSpeed + " mph");
             }
         }
     }
@@ -166,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (bigFont()) {
-                    tv_speed.setTextSize(20);  // textSize="24sp"
+                    tv_speed.setTextSize(20);
                 } else {
                     tv_speed.setTextSize(14);
                 }

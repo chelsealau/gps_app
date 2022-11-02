@@ -6,7 +6,6 @@
 package com.example.basicgps;
 
 import android.Manifest;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
@@ -26,7 +25,7 @@ import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.app.ActivityCompat;
 
 
-public class MainActivity extends AppCompatActivity {
+public class Group3 extends AppCompatActivity {
     private static final int PERMISSIONS_FINE_LOCATION = 99;
     protected LocationManager locationManager;
 
@@ -184,7 +183,7 @@ public class MainActivity extends AppCompatActivity {
         sw_metric.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                MainActivity.this.updateSpeed();
+                Group3.this.updateSpeed();
             }
         });
 
@@ -224,8 +223,8 @@ public class MainActivity extends AppCompatActivity {
         help_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MainActivity.this, "This app measures your speed using GPS in mph or kph", Toast.LENGTH_LONG).show();
-                Toast.makeText(MainActivity.this, "Use selectors to choose units and font size", Toast.LENGTH_LONG).show();
+                Toast.makeText(Group3.this, "This app measures your speed using GPS in mph or kph", Toast.LENGTH_LONG).show();
+                Toast.makeText(Group3.this, "Use selectors to choose units and font size", Toast.LENGTH_LONG).show();
             }
         });
 

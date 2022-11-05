@@ -248,7 +248,16 @@ public class Group3 extends AppCompatActivity {
                             tv_lon.setText(String.valueOf(location.getLongitude()));
                             currSpeed = 10;
                             updateSpeed();
-                            tv_speed.setText("10" + " mph");
+                            double kmSpeed = (10 * 1.609);
+                            int int_kmSpeed = (int) kmSpeed;
+                            String speedText = "10";
+                            if(useMetricUnits()){
+                                tv_speed.setText(String.valueOf(int_kmSpeed) + " km/h");
+                            }
+                            else{
+                                tv_speed.setText(speedText + " mph");
+                            }
+//                            tv_speed.setText("10" + " mph");
                         }
                     }, 1000*a);
                     lat = lat + 4.47038888888889;

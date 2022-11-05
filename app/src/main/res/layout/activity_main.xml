@@ -7,6 +7,201 @@
     android:layout_marginLeft="30dp"
     tools:context=".Group3">
 
+    <CheckBox
+        android:id="@+id/chbx_seconds"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Seconds"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_unit_time" />
+
+    <CheckBox
+        android:id="@+id/chkbx_minutes"
+        android:layout_width="84dp"
+        android:layout_height="42dp"
+        android:layout_marginTop="12dp"
+        android:text="Minutes"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/chbx_seconds" />
+
+    <CheckBox
+        android:id="@+id/chkbx_hours"
+        android:layout_width="78dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="12dp"
+        android:text="Hours"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/chkbx_minutes" />
+
+
+    <CheckBox
+        android:id="@+id/chkbx_days"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Days"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/chkbx_hours" />
+
+    <CheckBox
+        android:id="@+id/chkbx_meters"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:text="Meters"
+        app:layout_constraintStart_toEndOf="@+id/chbx_seconds"
+        app:layout_constraintTop_toBottomOf="@+id/tv_unit_alt" />
+
+    <CheckBox
+        android:id="@+id/chkbx_kilometers"
+        android:layout_width="93dp"
+        android:layout_height="49dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="8dp"
+        android:text="Kilometer"
+        app:layout_constraintStart_toEndOf="@+id/chkbx_minutes"
+        app:layout_constraintTop_toBottomOf="@+id/chkbx_meters" />
+
+    <CheckBox
+        android:id="@+id/chkbx_miles"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        android:text="Miles"
+        app:layout_constraintStart_toEndOf="@+id/chkbx_hours"
+        app:layout_constraintTop_toBottomOf="@+id/chkbx_kilometers" />
+
+    <CheckBox
+        android:id="@+id/chkbx_feet"
+        android:layout_width="76dp"
+        android:layout_height="42dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="12dp"
+        android:text="feet"
+        app:layout_constraintStart_toEndOf="@+id/chkbx_days"
+        app:layout_constraintTop_toBottomOf="@+id/chkbx_miles" />
+
+    <CheckBox
+        android:id="@+id/chkbx_meterPerSec"
+        android:layout_width="82dp"
+        android:layout_height="47dp"
+        android:layout_marginStart="12dp"
+        android:text="m/sec"
+        app:layout_constraintStart_toEndOf="@+id/chkbx_dist_meter"
+        app:layout_constraintTop_toBottomOf="@+id/tv_unit_speed" />
+
+    <CheckBox
+        android:id="@+id/chkbx_kmh"
+        android:layout_width="81dp"
+        android:layout_height="47dp"
+        android:layout_marginTop="4dp"
+        android:text="Km/h"
+        app:layout_constraintStart_toEndOf="@+id/chkbx_dist_kilometer"
+        app:layout_constraintTop_toBottomOf="@+id/chkbx_meterPerSec" />
+
+    <CheckBox
+        android:id="@+id/chkbx_mph"
+        android:layout_width="79dp"
+        android:layout_height="47dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="4dp"
+        android:text="mph"
+        app:layout_constraintStart_toEndOf="@+id/chkbx_dist_feet"
+        app:layout_constraintTop_toBottomOf="@+id/chkbx_kmh" />
+
+    <CheckBox
+        android:id="@+id/chkbx_minPermile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="12dp"
+        android:text="Min/mile"
+        app:layout_constraintStart_toEndOf="@+id/chkbx_dist_mile"
+        app:layout_constraintTop_toBottomOf="@+id/chkbx_mph" />
+
+    <CheckBox
+        android:id="@+id/chkbx_dist_meter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:text="Meters"
+        app:layout_constraintStart_toEndOf="@+id/chkbx_meters"
+        app:layout_constraintTop_toBottomOf="@+id/tv_unit_distance" />
+
+    <CheckBox
+        android:id="@+id/chkbx_dist_kilometer"
+        android:layout_width="95dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="8dp"
+        android:text="Kilometer"
+        app:layout_constraintStart_toEndOf="@+id/chkbx_kilometers"
+        app:layout_constraintTop_toBottomOf="@+id/chkbx_dist_meter" />
+
+    <CheckBox
+        android:id="@+id/chkbx_dist_mile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="16dp"
+        android:text="Miles"
+        app:layout_constraintStart_toEndOf="@+id/chkbx_feet"
+        app:layout_constraintTop_toBottomOf="@+id/chkbx_dist_feet" />
+
+    <CheckBox
+        android:id="@+id/chkbx_dist_feet"
+        android:layout_width="81dp"
+        android:layout_height="46dp"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="4dp"
+        android:text="Feet"
+        app:layout_constraintStart_toEndOf="@+id/chkbx_miles"
+        app:layout_constraintTop_toBottomOf="@+id/chkbx_dist_kilometer" />
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/sw_metric"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="40dp"
+        android:checked="false"
+        android:gravity="center"
+        android:paddingTop="20dp"
+        android:text="Metric Units"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_labeldistance" />
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/sw_fontsize"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="40dp"
+        android:checked="false"
+        android:gravity="center"
+        android:paddingTop="20dp"
+        android:text="Large Font"
+        app:layout_constraintStart_toEndOf="@+id/sw_metric"
+        app:layout_constraintTop_toBottomOf="@+id/tv_labeldistance" />
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/sw_pause"
+        android:layout_width="100dp"
+        android:layout_height="57dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="16dp"
+        android:gravity="center"
+        android:paddingTop="20dp"
+        android:text="Pause Display"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/sw_fontsize"
+        app:layout_constraintTop_toBottomOf="@+id/tv_labeldistance" />
+
     <TextView
         android:id="@+id/tv_labellat"
         android:layout_width="100dp"
@@ -58,37 +253,64 @@
         android:layout_height="wrap_content"
         android:text="0.00"
         app:layout_constraintStart_toEndOf="@+id/tv_labelspeed"
-        app:layout_constraintTop_toTopOf="@+id/tv_labelspeed"
-        />
+        app:layout_constraintTop_toTopOf="@+id/tv_labelspeed" />
 
 
-    <androidx.appcompat.widget.SwitchCompat
-        android:id="@+id/sw_metric"
-        android:layout_width="wrap_content"
+    <TextView
+        android:id="@+id/tv_labeltime"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:text="Metric Units"
-        android:gravity="center"
-        android:paddingTop="20dp"
-        android:checked="false"
+        android:layout_marginTop="16dp"
+        android:text="Time Elapsed:"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_labelspeed" />
-        />
 
-    <androidx.appcompat.widget.SwitchCompat
-        android:id="@+id/sw_fontsize"
+
+    <TextView
+        android:id="@+id/tv_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="66dp"
-        android:checked="false"
-        android:gravity="center"
-        android:paddingTop="20dp"
-        android:text="Large Font"
-        app:layout_constraintStart_toEndOf="@+id/sw_metric"
+        android:layout_marginTop="16dp"
+        android:text="0.00"
+        app:layout_constraintStart_toEndOf="@+id/tv_labeltime"
         app:layout_constraintTop_toBottomOf="@+id/tv_labelspeed" />
+
+
+    <TextView
+        android:id="@+id/tv_labelalt"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Altitude:"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_labeltime" />
+
+    <TextView
+        android:id="@+id/tv_alt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="0.00"
+        app:layout_constraintStart_toEndOf="@+id/tv_labelalt"
+        app:layout_constraintTop_toBottomOf="@+id/tv_labeltime" />
+
+    <TextView
+        android:id="@+id/tv_labeldistance"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Distance Traveled:"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_labelalt" />
+
+    <TextView
+        android:id="@+id/tv_distance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="0.00"
+        app:layout_constraintStart_toEndOf="@+id/tv_labeldistance"
+        app:layout_constraintTop_toBottomOf="@+id/tv_labelalt" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/help_button"
@@ -98,16 +320,7 @@
         android:text="Help"
         app:layout_constraintStart_toEndOf="@+id/sw_fontsize"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sw_metric" />
-
-<!--    <androidx.appcompat.widget.AppCompatButton-->
-<!--        android:id="@+id/pause_button"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="Pause Activity"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/sw_fontsize" />-->
+        app:layout_constraintTop_toBottomOf="@+id/sw_test" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/sw_test"
@@ -115,25 +328,69 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="66dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="20dp"
         android:checked="false"
         android:gravity="center"
         android:paddingTop="20dp"
         android:text="start Test"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/help_button" />
+        app:layout_constraintTop_toBottomOf="@+id/chkbx_days" />
 
-    <androidx.appcompat.widget.SwitchCompat
-        android:id="@+id/sw_pause"
+    <TextView
+        android:id="@+id/tv_unit_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Pause Display"
-        android:gravity="center"
-        android:paddingTop="20dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="4dp"
+        android:text="Time"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/help_button"
-        app:layout_constraintTop_toBottomOf="@+id/sw_fontsize" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_units_header"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/tv_unit_alt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="60dp"
+        android:text="Alittude"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tv_unit_time"
+        app:layout_constraintTop_toBottomOf="@+id/sw_fontsize"
+        app:layout_constraintVertical_bias="0.06" />
+
+    <TextView
+        android:id="@+id/tv_unit_distance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Distance"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.256"
+        app:layout_constraintStart_toEndOf="@+id/tv_unit_alt"
+        app:layout_constraintTop_toBottomOf="@+id/sw_fontsize"
+        app:layout_constraintVertical_bias="0.06" />
+
+    <TextView
+        android:id="@+id/tv_unit_speed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:text="Speed"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.409"
+        app:layout_constraintStart_toEndOf="@+id/tv_unit_distance"
+        app:layout_constraintTop_toBottomOf="@+id/sw_pause"
+        app:layout_constraintVertical_bias="0.037" />
+
+    <TextView
+        android:id="@+id/tv_units_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Units:"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sw_metric" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

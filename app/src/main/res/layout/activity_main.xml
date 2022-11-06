@@ -4,159 +4,219 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="30dp"
+    android:layout_marginLeft="20dp"
     tools:context=".Group3">
 
-    <CheckBox
-        android:id="@+id/chbx_seconds"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Seconds"
+
+    <RadioGroup
+        android:id="@+id/rg_timeUnits"
+        android:layout_width="88dp"
+        android:layout_height="240dp"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_unit_time" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_unit_time">
 
-    <CheckBox
-        android:id="@+id/chkbx_minutes"
-        android:layout_width="84dp"
-        android:layout_height="42dp"
-        android:layout_marginTop="12dp"
-        android:text="Minutes"
+        <RadioButton
+            android:id="@+id/chbx_seconds"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/Seconds"
+            android:checked="true"
+            android:onClick="onRadioButtonClicked"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_unit_time" />
+
+        <RadioButton
+            android:id="@+id/chkbx_minutes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/Minutes"
+            android:checked="false"
+            android:onClick="onRadioButtonClicked"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/chbx_seconds" />
+
+        <RadioButton
+            android:id="@+id/chkbx_hours"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/Hours"
+            android:checked="false"
+            android:onClick="onRadioButtonClicked"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/chkbx_minutes" />
+
+        <RadioButton
+            android:id="@+id/chkbx_days"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/Days"
+            android:checked="false"
+            android:onClick="onRadioButtonClicked"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/chkbx_hours" />
+    </RadioGroup>
+
+    <RadioGroup
+        android:id="@+id/rg_altitutdeUnits"
+        android:layout_width="101dp"
+        android:layout_height="240dp"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.31"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/chbx_seconds" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_unit_alt">
 
-    <CheckBox
-        android:id="@+id/chkbx_hours"
-        android:layout_width="78dp"
-        android:layout_height="45dp"
-        android:layout_marginTop="12dp"
-        android:text="Hours"
+        <RadioButton
+            android:id="@+id/chkbx_meters"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/Meters"
+            android:checked="true"
+            android:onClick="onRadioButtonClicked"
+            app:layout_constraintStart_toEndOf="@+id/chbx_seconds"
+            app:layout_constraintTop_toBottomOf="@+id/tv_unit_alt" />
+
+        <RadioButton
+            android:id="@+id/chkbx_kilometers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/Kilometer"
+            android:checked="false"
+            android:onClick="onRadioButtonClicked"
+            app:layout_constraintStart_toEndOf="@+id/chkbx_minutes"
+            app:layout_constraintTop_toBottomOf="@+id/chkbx_meters" />
+
+        <RadioButton
+            android:id="@+id/chkbx_miles"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/Miles"
+            android:checked="false"
+            android:onClick="onRadioButtonClicked"
+            app:layout_constraintStart_toEndOf="@+id/chkbx_hours"
+            app:layout_constraintTop_toBottomOf="@+id/chkbx_kilometers" />
+
+        <RadioButton
+            android:id="@+id/chkbx_feet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/Feet"
+            android:checked="false"
+            android:onClick="onRadioButtonClicked"
+            app:layout_constraintStart_toEndOf="@+id/chkbx_days"
+            app:layout_constraintTop_toBottomOf="@+id/chkbx_miles" />
+    </RadioGroup>
+
+    <RadioGroup
+        android:id="@+id/rg_distanceeUnits"
+        android:layout_width="98dp"
+        android:layout_height="241dp"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.664"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/chkbx_minutes" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_unit_distance">
 
+        <RadioButton
+            android:id="@+id/chkbx_dist_meters"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/dist_meters"
+            android:checked="true"
+            android:onClick="onRadioButtonClicked"
+            app:layout_constraintStart_toEndOf="@+id/chbx_seconds"
+            app:layout_constraintTop_toBottomOf="@+id/tv_unit_alt" />
 
-    <CheckBox
-        android:id="@+id/chkbx_days"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Days"
+        <RadioButton
+            android:id="@+id/chkbx_dist_kilometers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/dist_kilometers"
+            android:checked="false"
+            android:onClick="onRadioButtonClicked"
+            app:layout_constraintStart_toEndOf="@+id/chkbx_minutes"
+            app:layout_constraintTop_toBottomOf="@+id/chkbx_meters" />
+
+        <RadioButton
+            android:id="@+id/chkbx_dist_miles"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/dist_miles"
+            android:checked="false"
+            android:onClick="onRadioButtonClicked"
+            app:layout_constraintStart_toEndOf="@+id/chkbx_hours"
+            app:layout_constraintTop_toBottomOf="@+id/chkbx_kilometers" />
+
+        <RadioButton
+            android:id="@+id/chkbx_dist_feet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/dist_feet"
+            android:checked="false"
+            android:onClick="onRadioButtonClicked"
+            app:layout_constraintStart_toEndOf="@+id/chkbx_days"
+            app:layout_constraintTop_toBottomOf="@+id/chkbx_miles" />
+    </RadioGroup>
+
+    <RadioGroup
+        android:id="@+id/rg_speedUnits"
+        android:layout_width="94dp"
+        android:layout_height="240dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="16dp"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/chkbx_hours" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_unit_speed"
+        app:layout_constraintVertical_bias="0.008">
 
-    <CheckBox
-        android:id="@+id/chkbx_meters"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:text="Meters"
-        app:layout_constraintStart_toEndOf="@+id/chbx_seconds"
-        app:layout_constraintTop_toBottomOf="@+id/tv_unit_alt" />
+        <RadioButton
+            android:id="@+id/chkbx_meterPerSec"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/metersPerSec"
+            android:checked="true"
+            android:onClick="onRadioButtonClicked"
+            app:layout_constraintTop_toBottomOf="@+id/tv_unit_speed" />
 
-    <CheckBox
-        android:id="@+id/chkbx_kilometers"
-        android:layout_width="93dp"
-        android:layout_height="49dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="8dp"
-        android:text="Kilometer"
-        app:layout_constraintStart_toEndOf="@+id/chkbx_minutes"
-        app:layout_constraintTop_toBottomOf="@+id/chkbx_meters" />
+        <RadioButton
+            android:id="@+id/chkbx_kmh"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/kilometersPerHour"
+            android:checked="false"
+            android:onClick="onRadioButtonClicked"
+            app:layout_constraintTop_toBottomOf="@+id/chkbx_meterPerSec" />
 
-    <CheckBox
-        android:id="@+id/chkbx_miles"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="4dp"
-        android:text="Miles"
-        app:layout_constraintStart_toEndOf="@+id/chkbx_hours"
-        app:layout_constraintTop_toBottomOf="@+id/chkbx_kilometers" />
+        <RadioButton
+            android:id="@+id/chkbx_mph"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/milesPerHour"
+            android:checked="false"
+            android:onClick="onRadioButtonClicked"
+            app:layout_constraintTop_toBottomOf="@+id/chkbx_kmh" />
 
-    <CheckBox
-        android:id="@+id/chkbx_feet"
-        android:layout_width="76dp"
-        android:layout_height="42dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="12dp"
-        android:text="feet"
-        app:layout_constraintStart_toEndOf="@+id/chkbx_days"
-        app:layout_constraintTop_toBottomOf="@+id/chkbx_miles" />
-
-    <CheckBox
-        android:id="@+id/chkbx_meterPerSec"
-        android:layout_width="82dp"
-        android:layout_height="47dp"
-        android:layout_marginStart="12dp"
-        android:text="m/sec"
-        app:layout_constraintStart_toEndOf="@+id/chkbx_dist_meter"
-        app:layout_constraintTop_toBottomOf="@+id/tv_unit_speed" />
-
-    <CheckBox
-        android:id="@+id/chkbx_kmh"
-        android:layout_width="81dp"
-        android:layout_height="47dp"
-        android:layout_marginTop="4dp"
-        android:text="Km/h"
-        app:layout_constraintStart_toEndOf="@+id/chkbx_dist_kilometer"
-        app:layout_constraintTop_toBottomOf="@+id/chkbx_meterPerSec" />
-
-    <CheckBox
-        android:id="@+id/chkbx_mph"
-        android:layout_width="79dp"
-        android:layout_height="47dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="4dp"
-        android:text="mph"
-        app:layout_constraintStart_toEndOf="@+id/chkbx_dist_feet"
-        app:layout_constraintTop_toBottomOf="@+id/chkbx_kmh" />
-
-    <CheckBox
-        android:id="@+id/chkbx_minPermile"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="12dp"
-        android:text="Min/mile"
-        app:layout_constraintStart_toEndOf="@+id/chkbx_dist_mile"
-        app:layout_constraintTop_toBottomOf="@+id/chkbx_mph" />
-
-    <CheckBox
-        android:id="@+id/chkbx_dist_meter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:text="Meters"
-        app:layout_constraintStart_toEndOf="@+id/chkbx_meters"
-        app:layout_constraintTop_toBottomOf="@+id/tv_unit_distance" />
-
-    <CheckBox
-        android:id="@+id/chkbx_dist_kilometer"
-        android:layout_width="95dp"
-        android:layout_height="45dp"
-        android:layout_marginTop="8dp"
-        android:text="Kilometer"
-        app:layout_constraintStart_toEndOf="@+id/chkbx_kilometers"
-        app:layout_constraintTop_toBottomOf="@+id/chkbx_dist_meter" />
-
-    <CheckBox
-        android:id="@+id/chkbx_dist_mile"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="28dp"
-        android:layout_marginTop="16dp"
-        android:text="Miles"
-        app:layout_constraintStart_toEndOf="@+id/chkbx_feet"
-        app:layout_constraintTop_toBottomOf="@+id/chkbx_dist_feet" />
-
-    <CheckBox
-        android:id="@+id/chkbx_dist_feet"
-        android:layout_width="81dp"
-        android:layout_height="46dp"
-        android:layout_marginStart="36dp"
-        android:layout_marginTop="4dp"
-        android:text="Feet"
-        app:layout_constraintStart_toEndOf="@+id/chkbx_miles"
-        app:layout_constraintTop_toBottomOf="@+id/chkbx_dist_kilometer" />
+        <RadioButton
+            android:id="@+id/chkbx_minPermile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/minutesPerMile"
+            android:checked="false"
+            android:onClick="onRadioButtonClicked"
+            app:layout_constraintTop_toBottomOf="@+id/chkbx_mph" />
+    </RadioGroup>
 
     <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/sw_metric"
@@ -219,6 +279,33 @@
         android:text="0.00"
         app:layout_constraintStart_toEndOf="@+id/tv_labellat"
         app:layout_constraintTop_toTopOf="parent" />
+    <ImageView
+        android:id="@+id/down_arrow_lat"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_marginTop="32dp"
+        android:visibility="invisible"
+        android:src="@drawable/ic_baseline_arrow_drop_down_24"
+        app:layout_constraintStart_toEndOf="@+id/tv_lat"
+        app:layout_constraintTop_toTopOf="parent" />
+    <ImageView
+        android:id="@+id/up_arrow_lat"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_marginTop="32dp"
+        android:visibility="invisible"
+        android:src="@drawable/ic_baseline_arrow_drop_up_24"
+        app:layout_constraintStart_toEndOf="@+id/tv_lat"
+        app:layout_constraintTop_toTopOf="parent" />
+    <TextView
+        android:id="@+id/diff_lat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:visibility="invisible"
+        android:text="0.00"
+        app:layout_constraintStart_toEndOf="@+id/up_arrow_lat"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tv_labellon"
@@ -238,6 +325,35 @@
         app:layout_constraintStart_toEndOf="@+id/tv_labellon"
         app:layout_constraintTop_toBottomOf="@+id/tv_lat" />
 
+    <ImageView
+        android:id="@+id/down_arrow_lon"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_marginTop="16dp"
+        android:visibility="invisible"
+        android:src="@drawable/ic_baseline_arrow_drop_down_24"
+        app:layout_constraintStart_toEndOf="@+id/tv_lon"
+        app:layout_constraintTop_toBottomOf="@+id/tv_lat" />
+    <ImageView
+        android:id="@+id/up_arrow_lon"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_marginTop="16dp"
+        android:visibility="invisible"
+        android:src="@drawable/ic_baseline_arrow_drop_down_24"
+        app:layout_constraintStart_toEndOf="@+id/tv_lon"
+        app:layout_constraintTop_toBottomOf="@+id/tv_lat" />
+
+    <TextView
+        android:id="@+id/diff_lon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:visibility="invisible"
+        android:text="0.00"
+        app:layout_constraintStart_toEndOf="@+id/up_arrow_lon"
+        app:layout_constraintTop_toBottomOf="@+id/tv_lat" />
+
     <TextView
         android:id="@+id/tv_labelspeed"
         android:layout_width="100dp"
@@ -255,6 +371,30 @@
         app:layout_constraintStart_toEndOf="@+id/tv_labelspeed"
         app:layout_constraintTop_toTopOf="@+id/tv_labelspeed" />
 
+    <ImageView
+        android:id="@+id/down_arrow_speed"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:visibility="invisible"
+        android:src="@drawable/ic_baseline_arrow_drop_down_24"
+        app:layout_constraintStart_toEndOf="@+id/tv_speed"
+        app:layout_constraintTop_toTopOf="@+id/tv_labelspeed" />
+    <ImageView
+        android:id="@+id/up_arrow_speed"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:visibility="invisible"
+        android:src="@drawable/ic_baseline_arrow_drop_up_24"
+        app:layout_constraintStart_toEndOf="@+id/tv_speed"
+        app:layout_constraintTop_toTopOf="@+id/tv_labelspeed" />
+    <TextView
+        android:id="@+id/diff_speed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        android:text="0.00"
+        app:layout_constraintStart_toEndOf="@+id/up_arrow_speed"
+        app:layout_constraintTop_toTopOf="@+id/tv_labelspeed" />
 
     <TextView
         android:id="@+id/tv_labeltime"
@@ -264,7 +404,6 @@
         android:text="Time Elapsed:"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_labelspeed" />
-
 
     <TextView
         android:id="@+id/tv_time"
@@ -294,6 +433,34 @@
         app:layout_constraintStart_toEndOf="@+id/tv_labelalt"
         app:layout_constraintTop_toBottomOf="@+id/tv_labeltime" />
 
+    <ImageView
+        android:id="@+id/down_arrow_alt"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:visibility="invisible"
+        android:layout_marginTop="16dp"
+        android:src="@drawable/ic_baseline_arrow_drop_down_24"
+        app:layout_constraintStart_toEndOf="@+id/tv_alt"
+        app:layout_constraintTop_toBottomOf="@+id/tv_labeltime"/>
+    <ImageView
+        android:id="@+id/up_arrow_alt"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_marginTop="16dp"
+        android:visibility="invisible"
+        android:src="@drawable/ic_baseline_arrow_drop_up_24"
+        app:layout_constraintStart_toEndOf="@+id/tv_alt"
+        app:layout_constraintTop_toBottomOf="@+id/tv_labeltime"/>
+    <TextView
+        android:id="@+id/diff_alt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:visibility="invisible"
+        android:text="0.00"
+        app:layout_constraintStart_toEndOf="@+id/up_arrow_alt"
+        app:layout_constraintTop_toBottomOf="@+id/tv_labeltime"/>
+
     <TextView
         android:id="@+id/tv_labeldistance"
         android:layout_width="100dp"
@@ -316,11 +483,19 @@
         android:id="@+id/help_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
+        android:layout_marginTop="12dp"
         android:text="Help"
-        app:layout_constraintStart_toEndOf="@+id/sw_fontsize"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sw_test" />
+        app:layout_constraintStart_toEndOf="@+id/sw_test"
+        app:layout_constraintTop_toBottomOf="@+id/rg_altitutdeUnits" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/reset_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="Reset"
+        app:layout_constraintStart_toEndOf="@+id/help_button"
+        app:layout_constraintTop_toBottomOf="@+id/rg_distanceeUnits" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/sw_test"
@@ -328,14 +503,13 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="12dp"
         android:checked="false"
         android:gravity="center"
         android:paddingTop="20dp"
         android:text="start Test"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/chkbx_days" />
+        app:layout_constraintTop_toBottomOf="@+id/rg_timeUnits" />
 
     <TextView
         android:id="@+id/tv_unit_time"
@@ -352,12 +526,11 @@
         android:id="@+id/tv_unit_alt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="60dp"
+        android:layout_marginStart="56dp"
+        android:layout_marginTop="24dp"
         android:text="Alittude"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/tv_unit_time"
-        app:layout_constraintTop_toBottomOf="@+id/sw_fontsize"
-        app:layout_constraintVertical_bias="0.06" />
+        app:layout_constraintTop_toBottomOf="@+id/sw_metric" />
 
     <TextView
         android:id="@+id/tv_unit_distance"
@@ -366,7 +539,7 @@
         android:text="Distance"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.256"
+        app:layout_constraintHorizontal_bias="0.266"
         app:layout_constraintStart_toEndOf="@+id/tv_unit_alt"
         app:layout_constraintTop_toBottomOf="@+id/sw_fontsize"
         app:layout_constraintVertical_bias="0.06" />
@@ -379,7 +552,7 @@
         android:text="Speed"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.409"
+        app:layout_constraintHorizontal_bias="0.505"
         app:layout_constraintStart_toEndOf="@+id/tv_unit_distance"
         app:layout_constraintTop_toBottomOf="@+id/sw_pause"
         app:layout_constraintVertical_bias="0.037" />
@@ -391,6 +564,7 @@
         android:text="Units:"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/sw_metric" />
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -25,6 +25,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Seconds"
+            android:checked="true"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_unit_time" />
 
@@ -33,6 +34,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Minutes"
+            android:checked="false"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/chbx_seconds" />
 
@@ -41,6 +43,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Hours"
+            android:checked="false"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/chkbx_minutes" />
 
@@ -49,6 +52,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Days"
+            android:checked="false"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/chkbx_hours" />
     </RadioGroup>
@@ -70,6 +74,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Meters"
+            android:checked="true"
             app:layout_constraintStart_toEndOf="@+id/chbx_seconds"
             app:layout_constraintTop_toBottomOf="@+id/tv_unit_alt" />
 
@@ -78,6 +83,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Kilometer"
+            android:checked="false"
             app:layout_constraintStart_toEndOf="@+id/chkbx_minutes"
             app:layout_constraintTop_toBottomOf="@+id/chkbx_meters" />
 
@@ -86,6 +92,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Miles"
+            android:checked="false"
             app:layout_constraintStart_toEndOf="@+id/chkbx_hours"
             app:layout_constraintTop_toBottomOf="@+id/chkbx_kilometers" />
 
@@ -94,6 +101,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="feet"
+            android:checked="false"
             app:layout_constraintStart_toEndOf="@+id/chkbx_days"
             app:layout_constraintTop_toBottomOf="@+id/chkbx_miles" />
     </RadioGroup>
@@ -115,6 +123,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Meters"
+            android:checked="true"
             app:layout_constraintStart_toEndOf="@+id/chbx_seconds"
             app:layout_constraintTop_toBottomOf="@+id/tv_unit_alt" />
 
@@ -123,6 +132,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Kilometer"
+            android:checked="false"
             app:layout_constraintStart_toEndOf="@+id/chkbx_minutes"
             app:layout_constraintTop_toBottomOf="@+id/chkbx_meters" />
 
@@ -131,6 +141,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Miles"
+            android:checked="false"
             app:layout_constraintStart_toEndOf="@+id/chkbx_hours"
             app:layout_constraintTop_toBottomOf="@+id/chkbx_kilometers" />
 
@@ -139,6 +150,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="feet"
+            android:checked="false"
             app:layout_constraintStart_toEndOf="@+id/chkbx_days"
             app:layout_constraintTop_toBottomOf="@+id/chkbx_miles" />
     </RadioGroup>
@@ -162,6 +174,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="m/sec"
+            android:checked="true"
             app:layout_constraintTop_toBottomOf="@+id/tv_unit_speed" />
 
         <RadioButton
@@ -169,6 +182,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Km/h"
+            android:checked="false"
             app:layout_constraintTop_toBottomOf="@+id/chkbx_meterPerSec" />
 
         <RadioButton
@@ -176,6 +190,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="mph"
+            android:checked="false"
             app:layout_constraintTop_toBottomOf="@+id/chkbx_kmh" />
 
         <RadioButton
@@ -183,6 +198,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Min/mile"
+            android:checked="false"
             app:layout_constraintTop_toBottomOf="@+id/chkbx_mph" />
     </RadioGroup>
 

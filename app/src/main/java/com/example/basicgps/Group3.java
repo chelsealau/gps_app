@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.RadioButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
@@ -36,8 +37,13 @@ public class Group3 extends AppCompatActivity {
     private float currSpeed;
     private String strCurrentSpeed;
     private String strLong, strLat;
-    AppCompatButton help_button, pause_button;
+    AppCompatButton help_button;
     TextView tv_lat, tv_lon, tv_speed;
+    RadioButton chbx_seconds, chkbx_minutes, chkbx_hours,chkbx_days,
+            chkbx_meters,chkbx_kilometers,chkbx_miles,chkbx_feet,chkbx_dist_meters,
+            chkbx_dist_kilometers,chkbx_dist_miles,chkbx_dist_feet, chkbx_meterPerSec,
+            chkbx_kmh, chkbx_mph, chkbx_minPermile;
+
 
     int LOCATION_REFRESH_TIME = 1; // 15 seconds to update
     int LOCATION_REFRESH_DISTANCE = 1; // 500 meters to update
@@ -164,7 +170,26 @@ public class Group3 extends AppCompatActivity {
         sw_pause = findViewById(R.id.sw_pause);
 
         help_button = findViewById(R.id.help_button);
-        //pause_button = findViewById(R.id.pause_button);
+        // Time unit selection
+        chbx_seconds = findViewById(R.id.chbx_seconds);
+        chkbx_minutes = findViewById(R.id.chkbx_minutes);
+        chkbx_hours = findViewById(R.id.chkbx_hours);
+        chkbx_days= findViewById(R.id.chkbx_days);
+        // Altitude unit selection
+        chkbx_meters = findViewById(R.id.chkbx_meters);
+        chkbx_kilometers = findViewById(R.id.chkbx_kilometers);
+        chkbx_miles = findViewById(R.id.chkbx_miles);
+        chkbx_feet = findViewById(R.id.chkbx_feet);
+        // Distance unit selection
+        chkbx_dist_meters = findViewById(R.id.chkbx_dist_meters);
+        chkbx_dist_kilometers = findViewById(R.id.chkbx_dist_kilometers);
+        chkbx_dist_miles = findViewById(R.id.chkbx_dist_miles);
+        chkbx_dist_feet = findViewById(R.id.chkbx_dist_feet);
+        // Speed unit selection
+        chkbx_meterPerSec = findViewById(R.id.chkbx_meterPerSec);
+        chkbx_kmh = findViewById(R.id.chkbx_kmh);
+        chkbx_mph = findViewById(R.id.chkbx_mph);
+        chkbx_minPermile = findViewById(R.id.chkbx_minPermile);
 
 
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
@@ -267,29 +292,6 @@ public class Group3 extends AppCompatActivity {
             }
         });
     }
-//    private boolean updatesRequested = true;
-//    @OnClick(R.id.pause_button)
-//    public void toggleUpdates(){
-//        if(updatesRequested){
-//            removeLocationUpdates
-//        }
-//        else{
-//
-//        }
-//    }
-//    @Override
-//    protected void onPause(){
-//        super.onPause();
-//        removeLocationUpdates();
-//    }
-//    private void removeLocationUpdates(){
-//        LocationListener mLocationListener = new LocationListener()
-//
-//        if(location != null){
-//            locationManager.removeUpdates();
-//        }
-//    }
-
 
     private boolean useMetricUnits() {
         return sw_metric.isChecked();

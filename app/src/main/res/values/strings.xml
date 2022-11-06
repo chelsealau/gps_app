@@ -1,3 +1,20 @@
 <resources>
     <string name="app_name">BasicGPS</string>
+    <string name="seconds">Seconds</string>
+    <string name="Minutes">Minutes</string>
+    <string name="Seconds">Seconds</string>
+    <string name="Hours">Hours</string>
+    <string name="Days">Days</string>
+    <string name="Meters">Meters</string>
+    <string name="Kilometer">Kilometer</string>
+    <string name="Miles">Miles</string>
+    <string name="Feet">feet</string>
+    <string name="dist_meters">Meters</string>
+    <string name="dist_kilometers">Kilometer</string>
+    <string name="dist_miles">Miles</string>
+    <string name="dist_feet">feet</string>
+    <string name="metersPerSec">m/sec</string>
+    <string name="kilometersPerHour">Km/h</string>
+    <string name="milesPerHour">mph</string>
+    <string name="minutesPerMile">Min/mile</string>
 </resources>

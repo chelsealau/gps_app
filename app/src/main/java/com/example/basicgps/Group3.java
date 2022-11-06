@@ -36,9 +36,12 @@ public class Group3 extends AppCompatActivity {
     AppCompatButton sw_test;
     private float currSpeed;
     private String strCurrentSpeed;
-    private String strLong, strLat;
+    private String strLong, strLat, strAlt;
+    private double raw_long, raw_lat, raw_alt, raw_speed;
+    private int metric_speed, mph_speed;
+    private double meter_alt, kilometer_alt, mile_alt, feet_alt;
     AppCompatButton help_button;
-    TextView tv_lat, tv_lon, tv_speed;
+    TextView tv_lat, tv_lon, tv_speed, tv_alt;
     RadioButton chbx_seconds, chkbx_minutes, chkbx_hours,chkbx_days,
             chkbx_meters,chkbx_kilometers,chkbx_miles,chkbx_feet,chkbx_dist_meters,
             chkbx_dist_kilometers,chkbx_dist_miles,chkbx_dist_feet, chkbx_meterPerSec,
@@ -52,28 +55,97 @@ public class Group3 extends AppCompatActivity {
         @Override
         public void onLocationChanged(final Location location) {
             if(!isPaused()){
-                //tv_lat.setText(String.valueOf(location.getLatitude()));
-                //tv_lon.setText(String.valueOf(location.getLongitude()));
-                strLong = String.valueOf(location.getLongitude());
-                strLat = String.valueOf(location.getLatitude());
+                raw_long = location.getLongitude();
+                raw_lat = location.getLatitude();
+                raw_speed = location.getSpeed();
+                raw_alt = location.getAltitude();
+                strLong = String.valueOf(raw_long);
+                strLat = String.valueOf(raw_lat);
+                strAlt = String.valueOf(raw_alt);
                 tv_lat.setText(strLat);
                 tv_lon.setText(strLong);
+                tv_alt.setText(strAlt);
 
-                updateSpeed();
+
                 if(location != null){
                     if(Math.round(currSpeed) == 0){
                         tv_speed.setText("0.00");
                     }
                     else{
-                        if(useMetricUnits()){
-                            int metric_speed = (int) ((location.getSpeed() * 3600) / 1000);
+                        if(chbx_seconds.isChecked()) {
+                            //elapsed_time = gettime()
+                            // seconds time = convert_time_toSec(elapsed_time)
+                        }
+                        if(chkbx_minutes.isChecked()) {
+
+                        }
+
+                        if(chkbx_hours.isChecked()) {
+
+                        }
+
+                        if(chkbx_days.isChecked()) {
+
+                        }
+                        if(location.hasAltitude()) {
+
+                            if (chkbx_meters.isChecked()) {
+                                meter_alt = (raw_alt);
+                                String strCurrentAlt = String.valueOf(meter_alt);
+                                tv_alt.setText(strCurrentAlt + " meters");
+                            }
+
+                            if (chkbx_kilometers.isChecked()) {
+                                kilometer_alt = (raw_alt / 1000);
+                                String strCurrentAlt = String.valueOf(kilometer_alt);
+                                tv_alt.setText(strCurrentAlt + " kilometers");
+                            }
+
+                            if (chkbx_miles.isChecked()) {
+                                mile_alt = (raw_alt / 1609);
+                                String strCurrentAlt = String.valueOf(mile_alt);
+                                tv_alt.setText(strCurrentAlt + " miles");
+                            }
+
+                            if (chkbx_feet.isChecked()) {
+                                feet_alt = (raw_alt * 3.281);
+                                String strCurrentAlt = String.valueOf(feet_alt);
+                                tv_alt.setText(strCurrentAlt + " feet");
+                            }
+                        }
+                        else{
+                            tv_alt.setText("Not Available");
+                        }
+
+                        if(chkbx_dist_meters.isChecked()) {
+
+                        }
+
+                        if(chkbx_dist_kilometers.isChecked()) {
+
+                        }
+
+                        if(chkbx_dist_miles.isChecked()) {
+
+                        }
+
+                        if(chkbx_dist_feet.isChecked()) {
+
+                        }
+
+                        if(chkbx_meterPerSec.isChecked()) {
+
+                        }
+                        if(chkbx_kmh.isChecked()) {
+                            metric_speed = (int) ((raw_speed * 3600) / 1000);
                             strCurrentSpeed = String.valueOf(metric_speed);
                             tv_speed.setText(strCurrentSpeed+" km/h");
                         }
-                        else{
-                            int mph_speed=(int) (location.getSpeed()*2.2369);
+                        if(chkbx_mph.isChecked()) {
+                            mph_speed=(int) (raw_speed*2.2369);
                             strCurrentSpeed = String.valueOf(mph_speed);
-                            tv_speed.setText(strCurrentSpeed+" mph");
+                            tv_speed.setText(strCurrentSpeed+" mph");                        }
+                        if(chkbx_minPermile.isChecked()) {
                         }
                     }
                 }
@@ -164,6 +236,7 @@ public class Group3 extends AppCompatActivity {
         tv_lat = findViewById(R.id.tv_lat);
         tv_lon = findViewById(R.id.tv_lon);
         tv_speed = findViewById(R.id.tv_speed);
+        tv_alt = findViewById(R.id.tv_alt);
         sw_metric = findViewById(R.id.sw_metric);
         sw_fontsize = findViewById(R.id.sw_fontsize);
         sw_test = findViewById(R.id.sw_test);
@@ -174,7 +247,7 @@ public class Group3 extends AppCompatActivity {
         chbx_seconds = findViewById(R.id.chbx_seconds);
         chkbx_minutes = findViewById(R.id.chkbx_minutes);
         chkbx_hours = findViewById(R.id.chkbx_hours);
-        chkbx_days= findViewById(R.id.chkbx_days);
+        chkbx_days = findViewById(R.id.chkbx_days);
         // Altitude unit selection
         chkbx_meters = findViewById(R.id.chkbx_meters);
         chkbx_kilometers = findViewById(R.id.chkbx_kilometers);
@@ -205,12 +278,12 @@ public class Group3 extends AppCompatActivity {
 
         }
 
-        sw_metric.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Group3.this.updateSpeed();
-            }
-        });
+//        sw_metric.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                Group3.this.updateSpeed();
+//            }
+//        });
 
         sw_fontsize.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -232,14 +305,12 @@ public class Group3 extends AppCompatActivity {
                 if (isPaused()) {
                     tv_lat.setText(latText);
                     tv_lon.setText(lonText);
-                    if(useMetricUnits()){
+                    if (useMetricUnits()) {
                         tv_speed.setText(speedText + " km/h");
-                    }
-                    else{
+                    } else {
                         tv_speed.setText(speedText + " mph");
                     }
-                }
-                else {
+                } else {
                     updateSpeed();
                 }
             }
@@ -261,7 +332,7 @@ public class Group3 extends AppCompatActivity {
                 double log = 20.0;
 
                 Handler handler1 = new Handler();
-                for (int a = 1; a<=10 ;a++) {
+                for (int a = 1; a <= 10; a++) {
                     double finalLat = lat;
                     handler1.postDelayed(new Runnable() {
                         @Override
@@ -276,15 +347,14 @@ public class Group3 extends AppCompatActivity {
                             double kmSpeed = (10 * 1.609);
                             int int_kmSpeed = (int) kmSpeed;
                             String speedText = "10";
-                            if(useMetricUnits()){
+                            if (useMetricUnits()) {
                                 tv_speed.setText(String.valueOf(int_kmSpeed) + " km/h");
-                            }
-                            else{
+                            } else {
                                 tv_speed.setText(speedText + " mph");
                             }
 //                            tv_speed.setText("10" + " mph");
                         }
-                    }, 1000*a);
+                    }, 1000 * a);
                     lat = lat + 4.47038888888889;
                 }
                 strCurrentSpeed = "0";
@@ -292,7 +362,6 @@ public class Group3 extends AppCompatActivity {
             }
         });
     }
-
     private boolean useMetricUnits() {
         return sw_metric.isChecked();
     }
@@ -301,6 +370,78 @@ public class Group3 extends AppCompatActivity {
     }
     private boolean isPaused() {
         return sw_pause.isChecked();
+    }
+    public void onRadioButtonClicked(View view) {
+        // Is the button now checked?
+        boolean checked = ((RadioButton) view).isChecked();
+
+        // Check which radio button was clicked
+        switch(view.getId()) {
+            case R.id.chbx_seconds:
+                if (checked)
+                    Toast.makeText(Group3.this, "Time Units: seconds", Toast.LENGTH_SHORT).show();
+                    break;
+            case R.id.chkbx_minutes:
+                if (checked)
+                    Toast.makeText(Group3.this, "Time Units: minutes", Toast.LENGTH_SHORT).show();
+                    break;
+            case R.id.chkbx_hours:
+                if (checked)
+                    Toast.makeText(Group3.this, "Time Units: hours", Toast.LENGTH_SHORT).show();
+                    break;
+            case R.id.chkbx_days:
+                if (checked)
+                    Toast.makeText(Group3.this, "Time Units: days", Toast.LENGTH_SHORT).show();
+                    break;
+            case R.id.chkbx_meters:
+                if (checked)
+                    Toast.makeText(Group3.this, "Altitude Units: meters", Toast.LENGTH_SHORT).show();
+                    break;
+            case R.id.chkbx_kilometers:
+                if (checked)
+                    Toast.makeText(Group3.this, "Altitude Units: kilometers", Toast.LENGTH_SHORT).show();
+                    break;
+            case R.id.chkbx_miles:
+                if (checked)
+                    Toast.makeText(Group3.this, "Altitude Units: miles", Toast.LENGTH_SHORT).show();
+                    break;
+            case R.id.chkbx_feet:
+                if (checked)
+                    Toast.makeText(Group3.this, "Altitude Units: feet", Toast.LENGTH_SHORT).show();
+                    break;
+            case R.id.chkbx_dist_meters:
+                if (checked)
+                    Toast.makeText(Group3.this, "Distance Units: meters", Toast.LENGTH_SHORT).show();
+                    break;
+            case R.id.chkbx_dist_kilometers:
+                if (checked)
+                    Toast.makeText(Group3.this, "Distance Units: kilometers", Toast.LENGTH_SHORT).show();
+                    break;
+            case R.id.chkbx_dist_miles:
+                if (checked)
+                    Toast.makeText(Group3.this, "Distance Units: miles", Toast.LENGTH_SHORT).show();
+                    break;
+            case R.id.chkbx_dist_feet:
+                if (checked)
+                    Toast.makeText(Group3.this, "Distance Units: feet", Toast.LENGTH_SHORT).show();
+                    break;
+            case R.id.chkbx_meterPerSec:
+                if (checked)
+                    Toast.makeText(Group3.this, "Speed Units: meters per second", Toast.LENGTH_SHORT).show();
+                    break;
+            case R.id.chkbx_kmh:
+                if (checked)
+                    Toast.makeText(Group3.this, "Speed Units: kilometers per hour", Toast.LENGTH_SHORT).show();
+                    break;
+            case R.id.chkbx_mph:
+                if (checked)
+                    Toast.makeText(Group3.this, "Speed Units: miles per hour", Toast.LENGTH_SHORT).show();
+                    break;
+            case R.id.chkbx_minPermile:
+                if (checked)
+                    Toast.makeText(Group3.this, "Speed Units: minutes per mile", Toast.LENGTH_SHORT).show();
+                    break;
+        }
     }
 }
 

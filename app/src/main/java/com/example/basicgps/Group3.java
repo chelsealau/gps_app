@@ -69,9 +69,9 @@ public class Group3 extends AppCompatActivity {
                 raw_lat = location.getLatitude();
                 raw_speed = location.getSpeed();
                 raw_alt = location.getAltitude();
-                strLong = String.valueOf(raw_long);
-                strLat = String.valueOf(raw_lat);
-                strAlt = String.valueOf(raw_alt);
+                strLong = String.format("%.4f",raw_long);
+                strLat = String.format("%.4f", raw_lat);
+                strAlt = String.format("%.4f", raw_alt);
                 // calculate distance in KM
                 distance += getDistanceFromLatLonInKm(pre_lat, pre_lon, raw_lat, raw_long);
                 // get difference of Latitude
@@ -256,13 +256,6 @@ public class Group3 extends AppCompatActivity {
     };
 
     private void updateSpeed(int intSpeed) {
-//        int intSpeed = 0;
-//        if(useMetricUnits()){
-//            intSpeed = (int) ((currSpeed * 3600) / 1000);
-//        }
-//        else{
-//            intSpeed=(int) (currSpeed*2.2369);
-//        }
         intSpeed = Math.round(intSpeed);
         if(intSpeed == 0){
             tv_speed.setTextColor(Color.parseColor("#77FF33"));
@@ -303,28 +296,6 @@ public class Group3 extends AppCompatActivity {
         if(intSpeed > 60){
             tv_speed.setTextColor(Color.parseColor("#FF3333"));
         }
-//        if(this.useMetricUnits()){
-//            if(intSpeed == 0){
-//                tv_speed.setText("0.00 km/h");
-//            }
-//            if(strCurrentSpeed == null){
-//                tv_speed.setText("0.00 km/h");
-//            }
-//            else{
-//                tv_speed.setText(strCurrentSpeed+" km/h");
-//            }
-//        }
-//        else {
-//            if (intSpeed == 0) {
-//                tv_speed.setText("0.00 mph");
-//            }
-//            if(strCurrentSpeed == null){
-//                tv_speed.setText("0.00 mph");
-//            }
-//            else{
-//                tv_speed.setText(strCurrentSpeed + " mph");
-//            }
-//        }
     }
 
     @Override
@@ -502,30 +473,6 @@ public class Group3 extends AppCompatActivity {
     }
     private boolean isPaused() {
         return sw_pause.isChecked();
-    }
-
-//    public double GetDistanceFromLatLonInKm(double lat1, double lon1, double lat2, double lon2)
-    public double GetDistanceFromLatLonInKm(Map<Double, Double> LatLongs)
-    {
-//        for (Map.Entry<Double, Double> e : LatLongs.entrySet()) {
-//            Map.Entry<Double, Double> prev_lat = LatLongs.higherEntry(e.getKey());
-//            Map.Entry<Double, Double> prev_long = LatLongs.higherEntry(e.getValue());
-//            Map.Entry<Double, Double> next_lat = LatLongs.lowerEntry(e.getKey());
-//            Map.Entry<Double, Double> next_long = LatLongs.lowerEntry(e.getValue());
-//
-//            final int R = 6371;
-//            // Radius of the earth in km
-//            double dLat = deg2rad(next_lat - prev_lat);
-//            // deg2rad below
-//            double dLon = deg2rad(next_long - prev_long);
-//            double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(deg2rad(prev_lat)) * Math.cos(deg2rad(next_lat)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
-//            double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-//            double d = R * c;
-//            // Distance in km
-//            return d;
-//        }
-        double d = 0;
-        return d;
     }
 
     private double deg2rad(double deg)

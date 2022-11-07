@@ -281,13 +281,15 @@
         android:src="@drawable/ic_baseline_arrow_drop_up_24"
         app:layout_constraintStart_toEndOf="@+id/tv_lat"
         app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/diff_lat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
         android:layout_marginTop="32dp"
-        android:visibility="invisible"
         android:text="0.00"
+        android:visibility="invisible"
         app:layout_constraintStart_toEndOf="@+id/up_arrow_lat"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -332,9 +334,10 @@
         android:id="@+id/diff_lon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
         android:layout_marginTop="16dp"
-        android:visibility="invisible"
         android:text="0.00"
+        android:visibility="invisible"
         app:layout_constraintStart_toEndOf="@+id/up_arrow_lon"
         app:layout_constraintTop_toBottomOf="@+id/tv_lat" />
 
@@ -371,12 +374,14 @@
         android:src="@drawable/ic_baseline_arrow_drop_up_24"
         app:layout_constraintStart_toEndOf="@+id/tv_speed"
         app:layout_constraintTop_toTopOf="@+id/tv_labelspeed" />
+
     <TextView
         android:id="@+id/diff_speed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="invisible"
+        android:layout_marginStart="40dp"
         android:text="0.00"
+        android:visibility="invisible"
         app:layout_constraintStart_toEndOf="@+id/up_arrow_speed"
         app:layout_constraintTop_toTopOf="@+id/tv_labelspeed" />
 
@@ -435,15 +440,17 @@
         android:src="@drawable/ic_baseline_arrow_drop_up_24"
         app:layout_constraintStart_toEndOf="@+id/tv_alt"
         app:layout_constraintTop_toBottomOf="@+id/tv_labeltime"/>
+
     <TextView
         android:id="@+id/diff_alt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
         android:layout_marginTop="16dp"
-        android:visibility="invisible"
         android:text="0.00"
+        android:visibility="invisible"
         app:layout_constraintStart_toEndOf="@+id/up_arrow_alt"
-        app:layout_constraintTop_toBottomOf="@+id/tv_labeltime"/>
+        app:layout_constraintTop_toBottomOf="@+id/tv_labeltime" />
 
     <TextView
         android:id="@+id/tv_labeldistance"

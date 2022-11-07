@@ -80,11 +80,13 @@ public class Group3 extends AppCompatActivity {
                     down_arrow_lat.setVisibility(View.VISIBLE);
                     up_arrow_lat.setVisibility(View.GONE);
                     diff_lat.setVisibility(View.VISIBLE);
+//                    diff_lat.setText(String.format("%.4f",tmp_diff));
                     diff_lat.setText(String.valueOf(tmp_diff));
                 } else if (tmp_diff > 0) {
                     down_arrow_lat.setVisibility(View.GONE);
                     up_arrow_lat.setVisibility(View.VISIBLE);
                     diff_lat.setVisibility(View.VISIBLE);
+//                    diff_lat.setText(String.format("%.4f",tmp_diff));
                     diff_lat.setText(String.valueOf(tmp_diff));
                 } else {
                     down_arrow_lat.setVisibility(View.GONE);
@@ -98,11 +100,13 @@ public class Group3 extends AppCompatActivity {
                     down_arrow_lon.setVisibility(View.VISIBLE);
                     up_arrow_lon.setVisibility(View.GONE);
                     diff_lon.setVisibility(View.VISIBLE);
+//                    diff_lon.setText(String.format("%.4f",tmp_diff));
                     diff_lon.setText(String.valueOf(tmp_diff));
                 } else if (tmp_diff > 0) {
                     down_arrow_lon.setVisibility(View.GONE);
                     up_arrow_lon.setVisibility(View.VISIBLE);
                     diff_lon.setVisibility(View.VISIBLE);
+//                    diff_lon.setText(String.format("%.4f",tmp_diff));
                     diff_lon.setText(String.valueOf(tmp_diff));
                 } else {
                     down_arrow_lon.setVisibility(View.GONE);
@@ -117,11 +121,13 @@ public class Group3 extends AppCompatActivity {
                     down_arrow_alt.setVisibility(View.VISIBLE);
                     up_arrow_alt.setVisibility(View.GONE);
                     diff_alt.setVisibility(View.VISIBLE);
+//                    diff_alt.setText(String.format("%.4f",tmp_diff));
                     diff_alt.setText(String.valueOf(tmp_diff));
                 } else if (tmp_diff > 0) {
                     down_arrow_alt.setVisibility(View.GONE);
                     up_arrow_alt.setVisibility(View.VISIBLE);
                     diff_alt.setVisibility(View.VISIBLE);
+//                    diff_alt.setText(String.format("%.4f",tmp_diff));
                     diff_alt.setText(String.valueOf(tmp_diff));
                 } else {
                     down_arrow_alt.setVisibility(View.GONE);
@@ -187,22 +193,26 @@ public class Group3 extends AppCompatActivity {
                         if(chkbx_dist_meters.isChecked()) {
 
                             tmp_distance = distance*1000;
-                            tv_distance.setText(String.valueOf(tmp_distance) + " m");
+                            tv_distance.setText(String.format("%.4f",tmp_distance)+ " m");
+//                            tv_distance.setText(String.valueOf(tmp_distance) + " m");
 
                         }
 
                         else if(chkbx_dist_kilometers.isChecked()) {
-                            tv_distance.setText(String.valueOf(distance) + " km");
+                            tv_distance.setText(String.format("%.4f",distance)+ " km");
+//                            tv_distance.setText(String.valueOf(distance) + " km");
                         }
 
                         else if(chkbx_dist_miles.isChecked()) {
                             tmp_distance = distance*0.621371;
-                            tv_distance.setText(String.valueOf(tmp_distance) + " miles");
+                            tv_distance.setText(String.format("%.4f",tmp_distance)+ " miles");
+//                            tv_distance.setText(String.valueOf(tmp_distance) + " miles");
                         }
 
                         else if(chkbx_dist_feet.isChecked()) {
                             tmp_distance = distance*3280.838879986877;
-                            tv_distance.setText(String.valueOf(tmp_distance) + " feet");
+                            tv_distance.setText(String.format("%.4f",tmp_distance)+ " feet");
+//                            tv_distance.setText(String.valueOf(tmp_distance) + " feet");
                         }
 
                         if(chkbx_meterPerSec.isChecked()) {

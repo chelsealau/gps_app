@@ -263,6 +263,33 @@
         android:text="0.00"
         app:layout_constraintStart_toEndOf="@+id/tv_labellat"
         app:layout_constraintTop_toTopOf="parent" />
+    <ImageView
+        android:id="@+id/down_arrow_lat"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_marginTop="32dp"
+        android:visibility="invisible"
+        android:src="@drawable/ic_baseline_arrow_drop_down_24"
+        app:layout_constraintStart_toEndOf="@+id/tv_lat"
+        app:layout_constraintTop_toTopOf="parent" />
+    <ImageView
+        android:id="@+id/up_arrow_lat"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_marginTop="32dp"
+        android:visibility="invisible"
+        android:src="@drawable/ic_baseline_arrow_drop_up_24"
+        app:layout_constraintStart_toEndOf="@+id/tv_lat"
+        app:layout_constraintTop_toTopOf="parent" />
+    <TextView
+        android:id="@+id/diff_lat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:visibility="invisible"
+        android:text="0.00"
+        app:layout_constraintStart_toEndOf="@+id/up_arrow_lat"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tv_labellon"
@@ -282,6 +309,35 @@
         app:layout_constraintStart_toEndOf="@+id/tv_labellon"
         app:layout_constraintTop_toBottomOf="@+id/tv_lat" />
 
+    <ImageView
+        android:id="@+id/down_arrow_lon"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_marginTop="16dp"
+        android:visibility="invisible"
+        android:src="@drawable/ic_baseline_arrow_drop_down_24"
+        app:layout_constraintStart_toEndOf="@+id/tv_lon"
+        app:layout_constraintTop_toBottomOf="@+id/tv_lat" />
+    <ImageView
+        android:id="@+id/up_arrow_lon"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_marginTop="16dp"
+        android:visibility="invisible"
+        android:src="@drawable/ic_baseline_arrow_drop_down_24"
+        app:layout_constraintStart_toEndOf="@+id/tv_lon"
+        app:layout_constraintTop_toBottomOf="@+id/tv_lat" />
+
+    <TextView
+        android:id="@+id/diff_lon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:visibility="invisible"
+        android:text="0.00"
+        app:layout_constraintStart_toEndOf="@+id/up_arrow_lon"
+        app:layout_constraintTop_toBottomOf="@+id/tv_lat" />
+
     <TextView
         android:id="@+id/tv_labelspeed"
         android:layout_width="100dp"
@@ -299,6 +355,30 @@
         app:layout_constraintStart_toEndOf="@+id/tv_labelspeed"
         app:layout_constraintTop_toTopOf="@+id/tv_labelspeed" />
 
+    <ImageView
+        android:id="@+id/down_arrow_speed"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:visibility="invisible"
+        android:src="@drawable/ic_baseline_arrow_drop_down_24"
+        app:layout_constraintStart_toEndOf="@+id/tv_speed"
+        app:layout_constraintTop_toTopOf="@+id/tv_labelspeed" />
+    <ImageView
+        android:id="@+id/up_arrow_speed"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:visibility="invisible"
+        android:src="@drawable/ic_baseline_arrow_drop_up_24"
+        app:layout_constraintStart_toEndOf="@+id/tv_speed"
+        app:layout_constraintTop_toTopOf="@+id/tv_labelspeed" />
+    <TextView
+        android:id="@+id/diff_speed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        android:text="0.00"
+        app:layout_constraintStart_toEndOf="@+id/up_arrow_speed"
+        app:layout_constraintTop_toTopOf="@+id/tv_labelspeed" />
 
     <TextView
         android:id="@+id/tv_labeltime"
@@ -308,7 +388,6 @@
         android:text="Time Elapsed:"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_labelspeed" />
-
 
     <TextView
         android:id="@+id/tv_time"
@@ -337,6 +416,34 @@
         android:text="0.00"
         app:layout_constraintStart_toEndOf="@+id/tv_labelalt"
         app:layout_constraintTop_toBottomOf="@+id/tv_labeltime" />
+
+    <ImageView
+        android:id="@+id/down_arrow_alt"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:visibility="invisible"
+        android:layout_marginTop="16dp"
+        android:src="@drawable/ic_baseline_arrow_drop_down_24"
+        app:layout_constraintStart_toEndOf="@+id/tv_alt"
+        app:layout_constraintTop_toBottomOf="@+id/tv_labeltime"/>
+    <ImageView
+        android:id="@+id/up_arrow_alt"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_marginTop="16dp"
+        android:visibility="invisible"
+        android:src="@drawable/ic_baseline_arrow_drop_up_24"
+        app:layout_constraintStart_toEndOf="@+id/tv_alt"
+        app:layout_constraintTop_toBottomOf="@+id/tv_labeltime"/>
+    <TextView
+        android:id="@+id/diff_alt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:visibility="invisible"
+        android:text="0.00"
+        app:layout_constraintStart_toEndOf="@+id/up_arrow_alt"
+        app:layout_constraintTop_toBottomOf="@+id/tv_labeltime"/>
 
     <TextView
         android:id="@+id/tv_labeldistance"

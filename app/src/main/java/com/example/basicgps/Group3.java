@@ -19,6 +19,7 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.RadioButton;
+import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
@@ -44,12 +45,16 @@ public class Group3 extends AppCompatActivity {
     private double raw_long, raw_lat, raw_alt, raw_speed, mile_speed;
     private int  meter_speed, metric_speed, mph_speed, intSpeed;
     private double meter_alt, kilometer_alt, mile_alt, feet_alt;
+    private double pre_lat=0, pre_lon=0, pre_alt=0, pre_speed=0;
+    private double distance=0, tmp_distance;
+
     AppCompatButton help_button;
-    TextView tv_lat, tv_lon, tv_speed, tv_alt;
+    TextView tv_lat, tv_lon, tv_speed, tv_alt, diff_lat, diff_lon, diff_speed, diff_alt, tv_distance;
     RadioButton chbx_seconds, chkbx_minutes, chkbx_hours,chkbx_days,
             chkbx_meters,chkbx_kilometers,chkbx_miles,chkbx_feet,chkbx_dist_meters,
             chkbx_dist_kilometers,chkbx_dist_miles,chkbx_dist_feet, chkbx_meterPerSec,
             chkbx_kmh, chkbx_mph, chkbx_minPermile;
+    ImageView up_arrow_lat, down_arrow_lat, up_arrow_lon, down_arrow_lon, up_arrow_alt, down_arrow_alt, up_arrow_speed, down_arrow_speed;
 
 
     int LOCATION_REFRESH_TIME = 1; // 15 seconds to update
@@ -58,6 +63,7 @@ public class Group3 extends AppCompatActivity {
     private final LocationListener mLocationListener = new LocationListener() {
         @Override
         public void onLocationChanged(final Location location) {
+            double tmp_diff;
             if(!isPaused()){
                 raw_long = location.getLongitude();
                 raw_lat = location.getLatitude();
@@ -66,6 +72,64 @@ public class Group3 extends AppCompatActivity {
                 strLong = String.valueOf(raw_long);
                 strLat = String.valueOf(raw_lat);
                 strAlt = String.valueOf(raw_alt);
+                // calculate distance in KM
+                distance += getDistanceFromLatLonInKm(pre_lat, pre_lon, raw_lat, raw_long);
+                // get difference of Latitude
+                tmp_diff = raw_lat - pre_lat;
+                if (tmp_diff< 0){
+                    down_arrow_lat.setVisibility(View.VISIBLE);
+                    up_arrow_lat.setVisibility(View.GONE);
+                    diff_lat.setVisibility(View.VISIBLE);
+                    diff_lat.setText(String.valueOf(tmp_diff));
+                } else if (tmp_diff > 0) {
+                    down_arrow_lat.setVisibility(View.GONE);
+                    up_arrow_lat.setVisibility(View.VISIBLE);
+                    diff_lat.setVisibility(View.VISIBLE);
+                    diff_lat.setText(String.valueOf(tmp_diff));
+                } else {
+                    down_arrow_lat.setVisibility(View.GONE);
+                    up_arrow_lat.setVisibility(View.GONE);
+                    diff_lat.setVisibility(View.GONE);
+                }
+                pre_lat = raw_lat;
+                // get difference of Longitude
+                tmp_diff = raw_long - pre_lon;
+                if (tmp_diff< 0){
+                    down_arrow_lon.setVisibility(View.VISIBLE);
+                    up_arrow_lon.setVisibility(View.GONE);
+                    diff_lon.setVisibility(View.VISIBLE);
+                    diff_lon.setText(String.valueOf(tmp_diff));
+                } else if (tmp_diff > 0) {
+                    down_arrow_lon.setVisibility(View.GONE);
+                    up_arrow_lon.setVisibility(View.VISIBLE);
+                    diff_lon.setVisibility(View.VISIBLE);
+                    diff_lon.setText(String.valueOf(tmp_diff));
+                } else {
+                    down_arrow_lon.setVisibility(View.GONE);
+                    up_arrow_lon.setVisibility(View.GONE);
+                    diff_lon.setVisibility(View.GONE);
+                }
+                pre_lon = raw_long;
+
+                // get difference of Speed
+                tmp_diff = raw_alt - pre_alt;
+                if (tmp_diff< 0){
+                    down_arrow_alt.setVisibility(View.VISIBLE);
+                    up_arrow_alt.setVisibility(View.GONE);
+                    diff_alt.setVisibility(View.VISIBLE);
+                    diff_alt.setText(String.valueOf(tmp_diff));
+                } else if (tmp_diff > 0) {
+                    down_arrow_alt.setVisibility(View.GONE);
+                    up_arrow_alt.setVisibility(View.VISIBLE);
+                    diff_alt.setVisibility(View.VISIBLE);
+                    diff_alt.setText(String.valueOf(tmp_diff));
+                } else {
+                    down_arrow_alt.setVisibility(View.GONE);
+                    up_arrow_alt.setVisibility(View.GONE);
+                    diff_alt.setVisibility(View.GONE);
+                }
+                pre_alt = raw_alt;
+
                 tv_lat.setText(strLat);
                 tv_lon.setText(strLong);
                 tv_alt.setText(strAlt);
@@ -121,18 +185,24 @@ public class Group3 extends AppCompatActivity {
                         }
 
                         if(chkbx_dist_meters.isChecked()) {
-                        }
 
-                        if(chkbx_dist_kilometers.isChecked()) {
-
-                        }
-
-                        if(chkbx_dist_miles.isChecked()) {
+                            tmp_distance = distance*1000;
+                            tv_distance.setText(String.valueOf(tmp_distance) + " m");
 
                         }
 
-                        if(chkbx_dist_feet.isChecked()) {
+                        else if(chkbx_dist_kilometers.isChecked()) {
+                            tv_distance.setText(String.valueOf(distance) + " km");
+                        }
 
+                        else if(chkbx_dist_miles.isChecked()) {
+                            tmp_distance = distance*0.621371;
+                            tv_distance.setText(String.valueOf(tmp_distance) + " miles");
+                        }
+
+                        else if(chkbx_dist_feet.isChecked()) {
+                            tmp_distance = distance*3280.838879986877;
+                            tv_distance.setText(String.valueOf(tmp_distance) + " feet");
                         }
 
                         if(chkbx_meterPerSec.isChecked()) {
@@ -165,7 +235,23 @@ public class Group3 extends AppCompatActivity {
                 currSpeed = location.getSpeed();
                 updateSpeed(intSpeed);
             }
+        }
+        double getDistanceFromLatLonInKm(double lat1,double lon1,double lat2,double lon2) {
+            double R = 6371; // Radius of the earth in km
+            double dLat = deg2rad(lat2-lat1);  // deg2rad below
+            double dLon = deg2rad(lon2-lon1);
+            double a =
+                    Math.sin(dLat/2) * Math.sin(dLat/2) +
+                            Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+                                    Math.sin(dLon/2) * Math.sin(dLon/2)
+                    ;
+            double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            double d = R * c; // Distance in km
+            return d;
+        }
 
+        double deg2rad(double deg) {
+            return deg * (Math.PI/180);
         }
     };
 
@@ -250,6 +336,8 @@ public class Group3 extends AppCompatActivity {
         tv_lon = findViewById(R.id.tv_lon);
         tv_speed = findViewById(R.id.tv_speed);
         tv_alt = findViewById(R.id.tv_alt);
+
+        tv_distance = findViewById(R.id.tv_distance);
         sw_fontsize = findViewById(R.id.sw_fontsize);
         sw_test = findViewById(R.id.sw_test);
         sw_pause = findViewById(R.id.sw_pause);
@@ -276,6 +364,22 @@ public class Group3 extends AppCompatActivity {
         chkbx_mph = findViewById(R.id.chkbx_mph);
         chkbx_minPermile = findViewById(R.id.chkbx_minPermile);
 
+        // Difference
+        up_arrow_lat = findViewById(R.id.up_arrow_lat);
+        down_arrow_lat = findViewById(R.id.down_arrow_lat);
+        diff_lat = findViewById(R.id.diff_lat);
+
+        up_arrow_lon = findViewById(R.id.up_arrow_lon);
+        down_arrow_lon = findViewById(R.id.down_arrow_lon);
+        diff_lon = findViewById(R.id.diff_lon);
+
+        up_arrow_alt = findViewById(R.id.up_arrow_alt);
+        down_arrow_alt = findViewById(R.id.down_arrow_alt);
+        diff_alt = findViewById(R.id.diff_alt);
+
+        up_arrow_speed = findViewById(R.id.up_arrow_speed);
+        down_arrow_speed = findViewById(R.id.down_arrow_speed);
+        diff_speed = findViewById(R.id.diff_speed);
 
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
@@ -390,8 +494,6 @@ public class Group3 extends AppCompatActivity {
                     }, 1000 * a);
                     lat = lat + 4.47038888888889;
                 }
-                strCurrentSpeed = "0";
-                tv_speed.setText(strCurrentSpeed + " mph");
             }
         });
     }

@@ -21,13 +21,14 @@ import android.widget.Toast;
 import android.widget.RadioButton;
 import android.widget.ImageView;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.app.ActivityCompat;
 
-import java.text.DecimalFormat;
-import java.util.Map;
 
 
 
@@ -35,21 +36,26 @@ public class Group3 extends AppCompatActivity {
     private static final int PERMISSIONS_FINE_LOCATION = 99;
     protected LocationManager locationManager;
 
-    SwitchCompat sw_metric;
     SwitchCompat sw_fontsize;
     SwitchCompat sw_pause;
     AppCompatButton sw_test;
     private float currSpeed;
     private String strCurrentSpeed;
-    private String strLong, strLat, strAlt;
+    private String strLong, strLat, strAlt, strSecTime, strMinTime, strHrTime, strDayTime;
     private double raw_long, raw_lat, raw_alt, raw_speed, mile_speed;
     private int  meter_speed, metric_speed, mph_speed, intSpeed;
     private double meter_alt, kilometer_alt, mile_alt, feet_alt;
     private double pre_lat=0, pre_lon=0, pre_alt=0, pre_speed=0;
     private double distance=0, tmp_distance;
+    private long startTime;
+//            timeElapsed, time_seconds, time_minutes, time_hours, time_days;
+    Timer timer;
+    TimerTask timerTask;
+    Double time = 0.0;
+    boolean timerStarted = false;
 
     AppCompatButton help_button;
-    TextView tv_lat, tv_lon, tv_speed, tv_alt, diff_lat, diff_lon, diff_speed, diff_alt, tv_distance;
+    TextView tv_lat, tv_lon, tv_speed, tv_alt, diff_lat, diff_lon, diff_speed, diff_alt, tv_distance, tv_time;
     RadioButton chbx_seconds, chkbx_minutes, chkbx_hours,chkbx_days,
             chkbx_meters,chkbx_kilometers,chkbx_miles,chkbx_feet,chkbx_dist_meters,
             chkbx_dist_kilometers,chkbx_dist_miles,chkbx_dist_feet, chkbx_meterPerSec,
@@ -75,6 +81,7 @@ public class Group3 extends AppCompatActivity {
                 // calculate distance in KM
                 distance += getDistanceFromLatLonInKm(pre_lat, pre_lon, raw_lat, raw_long);
                 // get difference of Latitude
+
                 tmp_diff = raw_lat - pre_lat;
                 if (tmp_diff< 0){
                     down_arrow_lat.setVisibility(View.VISIBLE);
@@ -145,23 +152,7 @@ public class Group3 extends AppCompatActivity {
                         tv_speed.setText("0.00");
                     }
                     else{
-                        if(chbx_seconds.isChecked()) {
-                            //elapsed_time = gettime()
-                            // seconds time = convert_time_toSec(elapsed_time)
-                        }
-                        if(chkbx_minutes.isChecked()) {
-
-                        }
-
-                        if(chkbx_hours.isChecked()) {
-
-                        }
-
-                        if(chkbx_days.isChecked()) {
-
-                        }
                         if(location.hasAltitude()) {
-
                             if (chkbx_meters.isChecked()) {
                                 meter_alt = (raw_alt);
                                 String strCurrentAlt = String.valueOf(meter_alt);
@@ -317,6 +308,7 @@ public class Group3 extends AppCompatActivity {
         tv_lon = findViewById(R.id.tv_lon);
         tv_speed = findViewById(R.id.tv_speed);
         tv_alt = findViewById(R.id.tv_alt);
+        tv_time = findViewById(R.id.tv_time);
 
         tv_distance = findViewById(R.id.tv_distance);
         sw_fontsize = findViewById(R.id.sw_fontsize);
@@ -362,6 +354,11 @@ public class Group3 extends AppCompatActivity {
         down_arrow_speed = findViewById(R.id.down_arrow_speed);
         diff_speed = findViewById(R.id.diff_speed);
 
+
+        startTime = System.currentTimeMillis();
+        timer = new Timer();
+        startTimer();
+
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -374,13 +371,6 @@ public class Group3 extends AppCompatActivity {
             }
 
         }
-
-//        sw_metric.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                Group3.this.updateSpeed();
-//            }
-//        });
 
         sw_fontsize.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -402,11 +392,6 @@ public class Group3 extends AppCompatActivity {
                 if (isPaused()) {
                     tv_lat.setText(latText);
                     tv_lon.setText(lonText);
-//                    if (useMetricUnits()) {
-//                        tv_speed.setText(speedText + " km/h");
-//                    } else {
-//                        tv_speed.setText(speedText + " mph");
-//                    }
                     if(chkbx_meterPerSec.isChecked()){
                         tv_speed.setText(speedText +" m/sec");
                     }
@@ -418,9 +403,23 @@ public class Group3 extends AppCompatActivity {
                     if(chkbx_minPermile.isChecked()) {
                         tv_speed.setText(speedText+" min/mile");
                     }
+                    if(chbx_seconds.isChecked()){
+                        tv_time.setText(strSecTime+" seconds");
+                    }
+                    if(chkbx_minutes.isChecked()){
+                        tv_time.setText(strMinTime+" minutes");
+                    }
+                    if(chkbx_hours.isChecked()){
+                        tv_time.setText(strHrTime+" hours");
+                    }
+                    if(chkbx_days.isChecked()){
+                        tv_time.setText(strDayTime+" days");
+                    }
                 }
                 else {
                     updateSpeed(intSpeed);
+                    long timeNow = System.currentTimeMillis();
+                    updateTime(timeNow);
                 }
             }
         });
@@ -488,6 +487,78 @@ public class Group3 extends AppCompatActivity {
     private double deg2rad(double deg)
     {
         return deg * (Math.PI / 180);
+    }
+
+    private void updateTime(long timeNow){
+        if(!isPaused()){
+            if(chbx_seconds.isChecked()) {
+                long timeElapsed = timeNow - startTime;
+                long time_seconds = timeElapsed/1000;
+                strSecTime = String.valueOf(time_seconds);
+                tv_time.setText(String.valueOf(time_seconds)+ " seconds");
+            }
+            if(chkbx_minutes.isChecked()) {
+                long timeElapsed = timeNow - startTime;
+                long time_seconds = timeElapsed/1000;
+                double time_minutes = (double) time_seconds/60;
+                strMinTime = String.format("%.4f", time_minutes);
+                tv_time.setText(String.format("%.4f", time_minutes)+ " minutes");
+            }
+            if(chkbx_hours.isChecked()) {
+                long timeElapsed = timeNow - startTime;
+                long time_seconds = timeElapsed/1000;
+                long time_minutes = time_seconds/60;
+                double time_hours = (double) time_minutes/60;
+                strHrTime = String.format("%.6f", time_hours);
+                tv_time.setText(String.format("%.6f", time_hours) + " hours");
+            }
+            if(chkbx_days.isChecked()) {
+                long timeElapsed = timeNow - startTime;
+                long time_seconds = timeElapsed/1000;
+                long time_minutes = time_seconds/60;
+                long time_hours = time_minutes/60;
+                double time_days = (double) time_hours/24;
+                strDayTime = String.format("%.8f", time_days);
+                tv_time.setText(String.format("%.8f", time_days) + " days");
+            }
+        }
+        else{
+            if(chbx_seconds.isChecked()){
+                tv_time.setText(strSecTime+" seconds");
+            }
+            if(chkbx_minutes.isChecked()){
+                tv_time.setText(strMinTime+" minutes");
+            }
+            if(chkbx_hours.isChecked()){
+                tv_time.setText(strHrTime+" hours");
+            }
+            if(chkbx_days.isChecked()){
+                tv_time.setText(strDayTime+" days");
+            }
+        }
+
+    }
+
+    private void startTimer()
+    {
+        timerTask = new TimerTask()
+        {
+            @Override
+            public void run()
+            {
+                runOnUiThread(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        long timeNow = System.currentTimeMillis();
+                        updateTime(timeNow);
+                    }
+                });
+            }
+
+        };
+        timer.scheduleAtFixedRate(timerTask, 0 ,1000);
     }
 
     public void onRadioButtonClicked(View view) {

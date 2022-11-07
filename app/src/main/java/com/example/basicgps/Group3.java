@@ -6,6 +6,7 @@
 package com.example.basicgps;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
@@ -34,7 +35,7 @@ public class Group3 extends AppCompatActivity {
 
     SwitchCompat sw_fontsize;
     SwitchCompat sw_pause;
-    AppCompatButton sw_test, reset_button;
+    AppCompatButton sw_test;
     private float currSpeed;
     private String strCurrentSpeed;
     private String strLong, strLat, strAlt;
@@ -42,11 +43,11 @@ public class Group3 extends AppCompatActivity {
     private int  meter_speed, metric_speed, mph_speed, intSpeed;
     private double meter_alt, kilometer_alt, mile_alt, feet_alt;
     private double pre_lat=0, pre_lon=0, pre_alt=0, pre_speed=0;
-    private double max_speed=0, max_distance=0;
     private double distance=0, tmp_distance=0;
 
-    AppCompatButton help_button;
+    AppCompatButton help_button, reset_button, highscore_button;
     TextView tv_lat, tv_lon, tv_speed, tv_alt, diff_lat, diff_lon, diff_speed, diff_alt, tv_distance, tv_time;
+    TextView max_dist, max_time, max_speed;
     RadioButton chbx_seconds, chkbx_minutes, chkbx_hours,chkbx_days,
             chkbx_meters,chkbx_kilometers,chkbx_miles,chkbx_feet,chkbx_dist_meters,
             chkbx_dist_kilometers,chkbx_dist_miles,chkbx_dist_feet, chkbx_meterPerSec,
@@ -321,6 +322,7 @@ public class Group3 extends AppCompatActivity {
         sw_pause = findViewById(R.id.sw_pause);
         reset_button = findViewById(R.id.reset_button);
         help_button = findViewById(R.id.help_button);
+        highscore_button = findViewById(R.id.highscore_button);
         // Time unit selection
         chbx_seconds = findViewById(R.id.chbx_seconds);
         chkbx_minutes = findViewById(R.id.chkbx_minutes);
@@ -358,6 +360,12 @@ public class Group3 extends AppCompatActivity {
         up_arrow_speed = findViewById(R.id.up_arrow_speed);
         down_arrow_speed = findViewById(R.id.down_arrow_speed);
         diff_speed = findViewById(R.id.diff_speed);
+
+        // max values
+//        View inflatedView = getLayoutInflater().inflate(R.layout.activity_get_high_score, null);
+//        max_dist = inflatedView.findViewById(R.id.max_dist_val);
+//        max_speed = inflatedView.findViewById(R.id.max_speed_val);
+//        max_time = inflatedView.findViewById(R.id.max_time_val);
 
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
@@ -433,16 +441,32 @@ public class Group3 extends AppCompatActivity {
         reset_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+//                double max_tmp = Double.parseDouble((String) max_dist.getText());
+//                double tmp = Double.parseDouble((String) tv_distance.getText());
+//                if (max_tmp < tmp) {
+//                    max_dist.setText(String.valueOf(tv_distance));
+//                }
+
                 tv_lat.setText("0.0"); tv_lon.setText("0.0"); tv_alt.setText("0.0");
                 tv_distance.setText("0.0"); tv_speed.setText("0.0"); tv_time.setText("0.0");
                 diff_alt.setText("0.0"); diff_alt.setVisibility(View.GONE);
                 diff_lat.setText("0.0"); diff_lat.setVisibility(View.GONE);
                 diff_lon.setText("0.0"); diff_lon.setVisibility(View.GONE);
                 diff_speed.setText("0.0"); diff_speed.setVisibility(View.GONE);
+                currSpeed = 0;
+                updateSpeed((int)currSpeed);
                 pre_alt = 0; pre_lat = 0; pre_lon = 0; pre_speed = 0;
                 down_arrow_lat.setVisibility(View.GONE); up_arrow_lat.setVisibility(View.GONE);
                 down_arrow_lon.setVisibility(View.GONE); up_arrow_lon.setVisibility(View.GONE);
                 down_arrow_alt.setVisibility(View.GONE); up_arrow_alt.setVisibility(View.GONE);
+            }
+        });
+
+        highscore_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Group3.this, getHighScore.class);
+                startActivity(intent);
             }
         });
 

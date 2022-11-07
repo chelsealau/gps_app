@@ -28,6 +28,7 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+        <uses-library android:name="com.google.android.maps" />
     </application>
 
 </manifest>

@@ -26,6 +26,10 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.app.ActivityCompat;
 
+import java.text.DecimalFormat;
+import java.util.Map;
+
+
 
 public class Group3 extends AppCompatActivity {
     private static final int PERMISSIONS_FINE_LOCATION = 99;
@@ -38,8 +42,8 @@ public class Group3 extends AppCompatActivity {
     private float currSpeed;
     private String strCurrentSpeed;
     private String strLong, strLat, strAlt;
-    private double raw_long, raw_lat, raw_alt, raw_speed;
-    private int metric_speed, mph_speed;
+    private double raw_long, raw_lat, raw_alt, raw_speed, mile_speed;
+    private int  meter_speed, metric_speed, mph_speed, intSpeed;
     private double meter_alt, kilometer_alt, mile_alt, feet_alt;
     private double pre_lat=0, pre_lon=0, pre_alt=0, pre_speed=0;
     private double distance=0, tmp_distance;
@@ -181,6 +185,7 @@ public class Group3 extends AppCompatActivity {
                         }
 
                         if(chkbx_dist_meters.isChecked()) {
+
                             tmp_distance = distance*1000;
                             tv_distance.setText(String.valueOf(tmp_distance) + " m");
 
@@ -201,23 +206,34 @@ public class Group3 extends AppCompatActivity {
                         }
 
                         if(chkbx_meterPerSec.isChecked()) {
-
+                            meter_speed = (int) (raw_speed);
+                            strCurrentSpeed = String.valueOf(meter_speed);
+                            tv_speed.setText(strCurrentSpeed+" m/sec");
+                            intSpeed = meter_speed;
                         }
                         if(chkbx_kmh.isChecked()) {
                             metric_speed = (int) ((raw_speed * 3600) / 1000);
                             strCurrentSpeed = String.valueOf(metric_speed);
                             tv_speed.setText(strCurrentSpeed+" km/h");
+                            intSpeed = metric_speed;
                         }
                         if(chkbx_mph.isChecked()) {
                             mph_speed=(int) (raw_speed*2.2369);
                             strCurrentSpeed = String.valueOf(mph_speed);
-                            tv_speed.setText(strCurrentSpeed+" mph");                        }
+                            tv_speed.setText(strCurrentSpeed+" mph");
+                            intSpeed = mph_speed;
+                        }
                         if(chkbx_minPermile.isChecked()) {
+                            mile_speed = (double) (raw_speed/26.822);
+//                            strCurrentSpeed = String.valueOf(mile_speed);j
+                            strCurrentSpeed = String.format("%.2f", mile_speed);
+                            tv_speed.setText(strCurrentSpeed+" mile/min");
+                            intSpeed = (int) mile_speed;
                         }
                     }
                 }
                 currSpeed = location.getSpeed();
-                updateSpeed();
+                updateSpeed(intSpeed);
             }
         }
         double getDistanceFromLatLonInKm(double lat1,double lon1,double lat2,double lon2) {
@@ -239,14 +255,14 @@ public class Group3 extends AppCompatActivity {
         }
     };
 
-    private void updateSpeed() {
-        int intSpeed = 0;
-        if(useMetricUnits()){
-            intSpeed = (int) ((currSpeed * 3600) / 1000);
-        }
-        else{
-            intSpeed=(int) (currSpeed*2.2369);
-        }
+    private void updateSpeed(int intSpeed) {
+//        int intSpeed = 0;
+//        if(useMetricUnits()){
+//            intSpeed = (int) ((currSpeed * 3600) / 1000);
+//        }
+//        else{
+//            intSpeed=(int) (currSpeed*2.2369);
+//        }
         intSpeed = Math.round(intSpeed);
         if(intSpeed == 0){
             tv_speed.setTextColor(Color.parseColor("#77FF33"));
@@ -287,28 +303,28 @@ public class Group3 extends AppCompatActivity {
         if(intSpeed > 60){
             tv_speed.setTextColor(Color.parseColor("#FF3333"));
         }
-        if(this.useMetricUnits()){
-            if(intSpeed == 0){
-                tv_speed.setText("0.00 km/h");
-            }
-            if(strCurrentSpeed == null){
-                tv_speed.setText("0.00 km/h");
-            }
-            else{
-                tv_speed.setText(strCurrentSpeed+" km/h");
-            }
-        }
-        else {
-            if (intSpeed == 0) {
-                tv_speed.setText("0.00 mph");
-            }
-            if(strCurrentSpeed == null){
-                tv_speed.setText("0.00 mph");
-            }
-            else{
-                tv_speed.setText(strCurrentSpeed + " mph");
-            }
-        }
+//        if(this.useMetricUnits()){
+//            if(intSpeed == 0){
+//                tv_speed.setText("0.00 km/h");
+//            }
+//            if(strCurrentSpeed == null){
+//                tv_speed.setText("0.00 km/h");
+//            }
+//            else{
+//                tv_speed.setText(strCurrentSpeed+" km/h");
+//            }
+//        }
+//        else {
+//            if (intSpeed == 0) {
+//                tv_speed.setText("0.00 mph");
+//            }
+//            if(strCurrentSpeed == null){
+//                tv_speed.setText("0.00 mph");
+//            }
+//            else{
+//                tv_speed.setText(strCurrentSpeed + " mph");
+//            }
+//        }
     }
 
     @Override
@@ -320,8 +336,8 @@ public class Group3 extends AppCompatActivity {
         tv_lon = findViewById(R.id.tv_lon);
         tv_speed = findViewById(R.id.tv_speed);
         tv_alt = findViewById(R.id.tv_alt);
+
         tv_distance = findViewById(R.id.tv_distance);
-        sw_metric = findViewById(R.id.sw_metric);
         sw_fontsize = findViewById(R.id.sw_fontsize);
         sw_test = findViewById(R.id.sw_test);
         sw_pause = findViewById(R.id.sw_pause);
@@ -405,13 +421,25 @@ public class Group3 extends AppCompatActivity {
                 if (isPaused()) {
                     tv_lat.setText(latText);
                     tv_lon.setText(lonText);
-                    if (useMetricUnits()) {
-                        tv_speed.setText(speedText + " km/h");
-                    } else {
-                        tv_speed.setText(speedText + " mph");
+//                    if (useMetricUnits()) {
+//                        tv_speed.setText(speedText + " km/h");
+//                    } else {
+//                        tv_speed.setText(speedText + " mph");
+//                    }
+                    if(chkbx_meterPerSec.isChecked()){
+                        tv_speed.setText(speedText +" m/sec");
                     }
-                } else {
-                    updateSpeed();
+                    if(chkbx_kmh.isChecked()) {
+                        tv_speed.setText(speedText +" km/h");
+                    }
+                    if(chkbx_mph.isChecked()) {
+                        tv_speed.setText(speedText+" mph");                        }
+                    if(chkbx_minPermile.isChecked()) {
+                        tv_speed.setText(speedText+" min/mile");
+                    }
+                }
+                else {
+                    updateSpeed(intSpeed);
                 }
             }
         });
@@ -443,25 +471,31 @@ public class Group3 extends AppCompatActivity {
                             tv_lat.setText(String.valueOf(location.getLatitude()));
                             tv_lon.setText(String.valueOf(location.getLongitude()));
                             currSpeed = 10;
-                            updateSpeed();
+                            updateSpeed(intSpeed);
                             double kmSpeed = (10 * 1.609);
+                            double mspeed = (10*2.237);
+                            double minPermile = (60/currSpeed);
+
                             int int_kmSpeed = (int) kmSpeed;
+                            int int_mSpeed = (int) mspeed;
+                            int int_minPermile = (int) minPermile;
                             String speedText = "10";
-                            if (useMetricUnits()) {
-                                tv_speed.setText(String.valueOf(int_kmSpeed) + " km/h");
-                            } else {
-                                tv_speed.setText(speedText + " mph");
+                            if(chkbx_meterPerSec.isChecked()){
+                                tv_speed.setText(String.valueOf(int_mSpeed) +" m/sec");
                             }
-//                            tv_speed.setText("10" + " mph");
-                        }
+                            if(chkbx_kmh.isChecked()) {
+                                tv_speed.setText(String.valueOf(int_kmSpeed) +" km/h");
+                            }
+                            if(chkbx_mph.isChecked()) {
+                                tv_speed.setText(speedText+" mph");                        }
+                            if(chkbx_minPermile.isChecked()) {
+                                tv_speed.setText(String.valueOf(int_minPermile)+" min/mile");                        }
+                            }
                     }, 1000 * a);
                     lat = lat + 4.47038888888889;
                 }
             }
         });
-    }
-    private boolean useMetricUnits() {
-        return sw_metric.isChecked();
     }
     private boolean bigFont() {
         return sw_fontsize.isChecked();
@@ -469,6 +503,36 @@ public class Group3 extends AppCompatActivity {
     private boolean isPaused() {
         return sw_pause.isChecked();
     }
+
+//    public double GetDistanceFromLatLonInKm(double lat1, double lon1, double lat2, double lon2)
+    public double GetDistanceFromLatLonInKm(Map<Double, Double> LatLongs)
+    {
+//        for (Map.Entry<Double, Double> e : LatLongs.entrySet()) {
+//            Map.Entry<Double, Double> prev_lat = LatLongs.higherEntry(e.getKey());
+//            Map.Entry<Double, Double> prev_long = LatLongs.higherEntry(e.getValue());
+//            Map.Entry<Double, Double> next_lat = LatLongs.lowerEntry(e.getKey());
+//            Map.Entry<Double, Double> next_long = LatLongs.lowerEntry(e.getValue());
+//
+//            final int R = 6371;
+//            // Radius of the earth in km
+//            double dLat = deg2rad(next_lat - prev_lat);
+//            // deg2rad below
+//            double dLon = deg2rad(next_long - prev_long);
+//            double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(deg2rad(prev_lat)) * Math.cos(deg2rad(next_lat)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+//            double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+//            double d = R * c;
+//            // Distance in km
+//            return d;
+//        }
+        double d = 0;
+        return d;
+    }
+
+    private double deg2rad(double deg)
+    {
+        return deg * (Math.PI / 180);
+    }
+
     public void onRadioButtonClicked(View view) {
         // Is the button now checked?
         boolean checked = ((RadioButton) view).isChecked();

@@ -6,6 +6,7 @@
 package com.example.basicgps;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
@@ -16,11 +17,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.RadioButton;
-import android.widget.ImageView;
-
+import java.util.concurrent.TimeUnit;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -28,7 +29,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.app.ActivityCompat;
-
 
 
 
@@ -48,14 +48,13 @@ public class Group3 extends AppCompatActivity {
     private double pre_lat=0, pre_lon=0, pre_alt=0, pre_speed=0;
     private double distance=0, tmp_distance;
     private long startTime;
-//            timeElapsed, time_seconds, time_minutes, time_hours, time_days;
     Timer timer;
     TimerTask timerTask;
-    Double time = 0.0;
-    boolean timerStarted = false;
 
-    AppCompatButton help_button;
     TextView tv_lat, tv_lon, tv_speed, tv_alt, diff_lat, diff_lon, diff_speed, diff_alt, tv_distance, tv_time;
+
+    AppCompatButton help_button, reset_button, highscore_button;
+    TextView max_dist, max_time, max_speed;
     RadioButton chbx_seconds, chkbx_minutes, chkbx_hours,chkbx_days,
             chkbx_meters,chkbx_kilometers,chkbx_miles,chkbx_feet,chkbx_dist_meters,
             chkbx_dist_kilometers,chkbx_dist_miles,chkbx_dist_feet, chkbx_meterPerSec,
@@ -308,14 +307,16 @@ public class Group3 extends AppCompatActivity {
         tv_lon = findViewById(R.id.tv_lon);
         tv_speed = findViewById(R.id.tv_speed);
         tv_alt = findViewById(R.id.tv_alt);
-        tv_time = findViewById(R.id.tv_time);
+
 
         tv_distance = findViewById(R.id.tv_distance);
+        tv_time = findViewById(R.id.tv_time);
         sw_fontsize = findViewById(R.id.sw_fontsize);
         sw_test = findViewById(R.id.sw_test);
         sw_pause = findViewById(R.id.sw_pause);
-
+        reset_button = findViewById(R.id.reset_button);
         help_button = findViewById(R.id.help_button);
+        highscore_button = findViewById(R.id.highscore_button);
         // Time unit selection
         chbx_seconds = findViewById(R.id.chbx_seconds);
         chkbx_minutes = findViewById(R.id.chkbx_minutes);
@@ -358,6 +359,11 @@ public class Group3 extends AppCompatActivity {
         startTime = System.currentTimeMillis();
         timer = new Timer();
         startTimer();
+        // max values
+//        View inflatedView = getLayoutInflater().inflate(R.layout.activity_get_high_score, null);
+//        max_dist = inflatedView.findViewById(R.id.max_dist_val);
+//        max_speed = inflatedView.findViewById(R.id.max_speed_val);
+//        max_time = inflatedView.findViewById(R.id.max_time_val);
 
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
@@ -429,6 +435,42 @@ public class Group3 extends AppCompatActivity {
             public void onClick(View v) {
                 Toast.makeText(Group3.this, "This app measures your speed using GPS in mph or kph", Toast.LENGTH_LONG).show();
                 Toast.makeText(Group3.this, "Use selectors to choose units and font size", Toast.LENGTH_LONG).show();
+            }
+        });
+
+        reset_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                double max_tmp = Double.parseDouble((String) max_dist.getText());
+//                double tmp = Double.parseDouble((String) tv_distance.getText());
+//                if (max_tmp < tmp) {
+//                    max_dist.setText(String.valueOf(tv_distance));
+//                }
+
+                tv_lat.setText("0.0"); tv_lon.setText("0.0"); tv_alt.setText("0.0");tv_time.setText("0:00");
+                tv_distance.setText("0.0"); tv_speed.setText("0.0"); tv_time.setText("0.0");
+                diff_alt.setText("0.0"); diff_alt.setVisibility(View.GONE);
+                diff_lat.setText("0.0"); diff_lat.setVisibility(View.GONE);
+                diff_lon.setText("0.0"); diff_lon.setVisibility(View.GONE);
+                diff_speed.setText("0.0"); diff_speed.setVisibility(View.GONE);
+                currSpeed = 0;
+                updateSpeed((int)currSpeed);
+                pre_alt = 0; pre_lat = 0; pre_lon = 0; pre_speed = 0;
+                down_arrow_lat.setVisibility(View.GONE); up_arrow_lat.setVisibility(View.GONE);
+                down_arrow_lon.setVisibility(View.GONE); up_arrow_lon.setVisibility(View.GONE);
+                down_arrow_alt.setVisibility(View.GONE); up_arrow_alt.setVisibility(View.GONE);
+                startTime = System.currentTimeMillis();
+                timer = new Timer();
+                startTimer();
+
+            }
+        });
+
+        highscore_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Group3.this, getHighScore.class);
+                startActivity(intent);
             }
         });
 
@@ -517,7 +559,7 @@ public class Group3 extends AppCompatActivity {
                 long time_seconds = timeElapsed/1000;
                 long time_minutes = time_seconds/60;
                 long time_hours = time_minutes/60;
-                double time_days = (double) time_hours/24;
+                double time_days = (double) time_hours;
                 strDayTime = String.format("%.8f", time_days);
                 tv_time.setText(String.format("%.8f", time_days) + " days");
             }

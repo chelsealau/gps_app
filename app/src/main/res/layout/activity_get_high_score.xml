@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="20dp"
+    tools:context=".getHighScore">
+
+    <TextView
+        android:id="@+id/max_speed_label"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="Max Speed:"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+    <TextView
+        android:id="@+id/max_speed_val"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="0.0"
+        app:layout_constraintStart_toEndOf="@+id/max_speed_label"
+        app:layout_constraintTop_toTopOf="parent" />
+    <TextView
+        android:id="@+id/max_dist_label"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:text="Max Distance:"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/max_speed_label"/>
+    <TextView
+        android:id="@+id/max_dist_val"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0.0"
+        app:layout_constraintStart_toEndOf="@+id/max_dist_label"
+        app:layout_constraintTop_toBottomOf="@+id/max_speed_val"/>
+    <TextView
+        android:id="@+id/max_time_label"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:text="Max Time:"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/max_dist_label"/>
+    <TextView
+        android:id="@+id/max_time_val"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0.0"
+        app:layout_constraintStart_toEndOf="@+id/max_time_label"
+        app:layout_constraintTop_toBottomOf="@+id/max_dist_val"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/back_button"
+        android:layout_width="25pt"
+        android:layout_height="15pt"
+        android:textSize="5pt"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:checked="false"
+        android:gravity="center"
+        android:text="back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/max_time_label"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -42,8 +42,10 @@ public class Group3 extends AppCompatActivity {
     private int metric_speed, mph_speed;
     private double meter_alt, kilometer_alt, mile_alt, feet_alt;
     private double pre_lat=0, pre_lon=0, pre_alt=0, pre_speed=0;
+    private double distance=0, tmp_distance;
+
     AppCompatButton help_button;
-    TextView tv_lat, tv_lon, tv_speed, tv_alt, diff_lat, diff_lon, diff_speed, diff_alt;
+    TextView tv_lat, tv_lon, tv_speed, tv_alt, diff_lat, diff_lon, diff_speed, diff_alt, tv_distance;
     RadioButton chbx_seconds, chkbx_minutes, chkbx_hours,chkbx_days,
             chkbx_meters,chkbx_kilometers,chkbx_miles,chkbx_feet,chkbx_dist_meters,
             chkbx_dist_kilometers,chkbx_dist_miles,chkbx_dist_feet, chkbx_meterPerSec,
@@ -66,6 +68,8 @@ public class Group3 extends AppCompatActivity {
                 strLong = String.valueOf(raw_long);
                 strLat = String.valueOf(raw_lat);
                 strAlt = String.valueOf(raw_alt);
+                // calculate distance in KM
+                distance += getDistanceFromLatLonInKm(pre_lat, pre_lon, raw_lat, raw_long);
                 // get difference of Latitude
                 tmp_diff = raw_lat - pre_lat;
                 if (tmp_diff< 0){
@@ -177,19 +181,23 @@ public class Group3 extends AppCompatActivity {
                         }
 
                         if(chkbx_dist_meters.isChecked()) {
+                            tmp_distance = distance*1000;
+                            tv_distance.setText(String.valueOf(tmp_distance) + " m");
 
                         }
 
-                        if(chkbx_dist_kilometers.isChecked()) {
-
+                        else if(chkbx_dist_kilometers.isChecked()) {
+                            tv_distance.setText(String.valueOf(distance) + " km");
                         }
 
-                        if(chkbx_dist_miles.isChecked()) {
-
+                        else if(chkbx_dist_miles.isChecked()) {
+                            tmp_distance = distance*0.621371;
+                            tv_distance.setText(String.valueOf(tmp_distance) + " miles");
                         }
 
-                        if(chkbx_dist_feet.isChecked()) {
-
+                        else if(chkbx_dist_feet.isChecked()) {
+                            tmp_distance = distance*3280.838879986877;
+                            tv_distance.setText(String.valueOf(tmp_distance) + " feet");
                         }
 
                         if(chkbx_meterPerSec.isChecked()) {
@@ -211,7 +219,23 @@ public class Group3 extends AppCompatActivity {
                 currSpeed = location.getSpeed();
                 updateSpeed();
             }
+        }
+        double getDistanceFromLatLonInKm(double lat1,double lon1,double lat2,double lon2) {
+            double R = 6371; // Radius of the earth in km
+            double dLat = deg2rad(lat2-lat1);  // deg2rad below
+            double dLon = deg2rad(lon2-lon1);
+            double a =
+                    Math.sin(dLat/2) * Math.sin(dLat/2) +
+                            Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+                                    Math.sin(dLon/2) * Math.sin(dLon/2)
+                    ;
+            double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            double d = R * c; // Distance in km
+            return d;
+        }
 
+        double deg2rad(double deg) {
+            return deg * (Math.PI/180);
         }
     };
 
@@ -296,6 +320,7 @@ public class Group3 extends AppCompatActivity {
         tv_lon = findViewById(R.id.tv_lon);
         tv_speed = findViewById(R.id.tv_speed);
         tv_alt = findViewById(R.id.tv_alt);
+        tv_distance = findViewById(R.id.tv_distance);
         sw_metric = findViewById(R.id.sw_metric);
         sw_fontsize = findViewById(R.id.sw_fontsize);
         sw_test = findViewById(R.id.sw_test);

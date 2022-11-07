@@ -16,18 +16,15 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.RadioButton;
-import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.app.ActivityCompat;
-
-import java.text.DecimalFormat;
-import java.util.Map;
 
 
 
@@ -35,10 +32,9 @@ public class Group3 extends AppCompatActivity {
     private static final int PERMISSIONS_FINE_LOCATION = 99;
     protected LocationManager locationManager;
 
-    SwitchCompat sw_metric;
     SwitchCompat sw_fontsize;
     SwitchCompat sw_pause;
-    AppCompatButton sw_test;
+    AppCompatButton sw_test, reset_button;
     private float currSpeed;
     private String strCurrentSpeed;
     private String strLong, strLat, strAlt;
@@ -46,10 +42,11 @@ public class Group3 extends AppCompatActivity {
     private int  meter_speed, metric_speed, mph_speed, intSpeed;
     private double meter_alt, kilometer_alt, mile_alt, feet_alt;
     private double pre_lat=0, pre_lon=0, pre_alt=0, pre_speed=0;
-    private double distance=0, tmp_distance;
+    private double max_speed=0, max_distance=0;
+    private double distance=0, tmp_distance=0;
 
     AppCompatButton help_button;
-    TextView tv_lat, tv_lon, tv_speed, tv_alt, diff_lat, diff_lon, diff_speed, diff_alt, tv_distance;
+    TextView tv_lat, tv_lon, tv_speed, tv_alt, diff_lat, diff_lon, diff_speed, diff_alt, tv_distance, tv_time;
     RadioButton chbx_seconds, chkbx_minutes, chkbx_hours,chkbx_days,
             chkbx_meters,chkbx_kilometers,chkbx_miles,chkbx_feet,chkbx_dist_meters,
             chkbx_dist_kilometers,chkbx_dist_miles,chkbx_dist_feet, chkbx_meterPerSec,
@@ -317,12 +314,12 @@ public class Group3 extends AppCompatActivity {
         tv_lon = findViewById(R.id.tv_lon);
         tv_speed = findViewById(R.id.tv_speed);
         tv_alt = findViewById(R.id.tv_alt);
-
         tv_distance = findViewById(R.id.tv_distance);
+        tv_time = findViewById(R.id.tv_time);
         sw_fontsize = findViewById(R.id.sw_fontsize);
         sw_test = findViewById(R.id.sw_test);
         sw_pause = findViewById(R.id.sw_pause);
-
+        reset_button = findViewById(R.id.reset_button);
         help_button = findViewById(R.id.help_button);
         // Time unit selection
         chbx_seconds = findViewById(R.id.chbx_seconds);
@@ -430,6 +427,22 @@ public class Group3 extends AppCompatActivity {
             public void onClick(View v) {
                 Toast.makeText(Group3.this, "This app measures your speed using GPS in mph or kph", Toast.LENGTH_LONG).show();
                 Toast.makeText(Group3.this, "Use selectors to choose units and font size", Toast.LENGTH_LONG).show();
+            }
+        });
+
+        reset_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tv_lat.setText("0.0"); tv_lon.setText("0.0"); tv_alt.setText("0.0");
+                tv_distance.setText("0.0"); tv_speed.setText("0.0"); tv_time.setText("0.0");
+                diff_alt.setText("0.0"); diff_alt.setVisibility(View.GONE);
+                diff_lat.setText("0.0"); diff_lat.setVisibility(View.GONE);
+                diff_lon.setText("0.0"); diff_lon.setVisibility(View.GONE);
+                diff_speed.setText("0.0"); diff_speed.setVisibility(View.GONE);
+                pre_alt = 0; pre_lat = 0; pre_lon = 0; pre_speed = 0;
+                down_arrow_lat.setVisibility(View.GONE); up_arrow_lat.setVisibility(View.GONE);
+                down_arrow_lon.setVisibility(View.GONE); up_arrow_lon.setVisibility(View.GONE);
+                down_arrow_alt.setVisibility(View.GONE); up_arrow_alt.setVisibility(View.GONE);
             }
         });
 

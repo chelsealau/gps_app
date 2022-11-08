@@ -47,7 +47,7 @@ public class Group3 extends AppCompatActivity {
     private int  meter_speed, metric_speed, mph_speed, intSpeed;
     private double meter_alt, kilometer_alt, mile_alt, feet_alt;
     private double pre_lat=0, pre_lon=0, pre_alt=0, pre_speed;
-    private double max_dist=0, max_time=0, max_speed=0;
+    private double max_dist, max_time, max_speed;
     private double distance=0, tmp_distance;
     private long startTime;
     Timer timer;
@@ -305,8 +305,35 @@ public class Group3 extends AppCompatActivity {
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putDouble("max_dist", max_dist);
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if (savedInstanceState != null) {
+            Toast.makeText(Group3.this, "savedInstanceState EXISTS!!!", Toast.LENGTH_LONG).show();
+            // Restore value of members from saved state
+            max_dist = savedInstanceState.getDouble("max_dist");
+            max_time = savedInstanceState.getDouble("max_time");
+            max_speed = savedInstanceState.getDouble("max_speed");
+        } else {
+            Toast.makeText(Group3.this, "savedInstanceState is Null", Toast.LENGTH_LONG).show();
+            // Probably initialize members with default values for a new instance
+            max_dist=0;
+            max_time=0;
+            max_speed=0;
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Log.v("max_dist", String.valueOf(max_dist));
+
         setContentView(R.layout.activity_main);
 
         tv_lat = findViewById(R.id.tv_lat);
@@ -447,10 +474,9 @@ public class Group3 extends AppCompatActivity {
                 max_page.putExtra("dist", max_dist+" km");
                 Log.v("max_dist", String.valueOf(max_dist));
                 if (mph_speed>max_speed){
-
                     max_speed = mph_speed;
                 }
-                max_page.putExtra("speed", String.valueOf(max_speed)+" mph");
+                max_page.putExtra("speed", max_speed+" mph");
                 max_page.putExtra("time", tv_time.getText());
                 tv_lat.setText("0.0"); tv_lon.setText("0.0"); tv_alt.setText("0.0");tv_time.setText("0:00");
                 distance = 0; tv_distance.setText("0.0"); tv_speed.setText("0.0"); tv_time.setText("0.0");

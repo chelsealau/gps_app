@@ -15,6 +15,8 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
@@ -41,17 +43,22 @@ public class Group3 extends AppCompatActivity {
     AppCompatButton sw_test;
     private float currSpeed;
     private String strCurrentSpeed;
-    private String strLong, strLat, strAlt, strSecTime, strMinTime, strHrTime, strDayTime;
+    private String strLong, strLat, strAlt, strSecTime, strMinTime, strHrTime, strDayTime,
+            strSecTimeDist, strMinTimeDist, strHrTimeDist, strDayTimeDist;
     private double raw_long, raw_lat, raw_alt, raw_speed, mile_speed;
     private int  meter_speed, metric_speed, mph_speed, intSpeed;
     private double meter_alt, kilometer_alt, mile_alt, feet_alt;
     private double pre_lat=0, pre_lon=0, pre_alt=0, pre_speed=0;
-    private double distance=0, tmp_distance;
-    private long startTime;
+    private double distance=0, tmp_distance, dist_diff=0, old_distance=0;
+    private long startTime, startTimeDist, distTimeNow,restartedTime , reStartTime, stopTime, timeElapsed, totalMovingTime;
+    boolean hasStopped = false;
     Timer timer;
     TimerTask timerTask;
 
-    TextView tv_lat, tv_lon, tv_speed, tv_alt, diff_lat, diff_lon, diff_speed, diff_alt, tv_distance, tv_time;
+    Timer distanceTimer;
+    TimerTask distanceTimerTask;
+
+    TextView tv_lat, tv_lon, tv_speed, tv_alt, diff_lat, diff_lon, diff_speed, diff_alt, tv_distance, tv_time, tv_time_distance;
 
     AppCompatButton help_button, reset_button, highscore_button;
     TextView max_dist, max_time, max_speed;
@@ -64,11 +71,14 @@ public class Group3 extends AppCompatActivity {
 
     int LOCATION_REFRESH_TIME = 1; // 15 seconds to update
     int LOCATION_REFRESH_DISTANCE = 1; // 500 meters to update
+    int GPS_INITIALIZATION = 0;
 
     private final LocationListener mLocationListener = new LocationListener() {
         @Override
         public void onLocationChanged(final Location location) {
             double tmp_diff;
+
+
             if(!isPaused()){
                 raw_long = location.getLongitude();
                 raw_lat = location.getLatitude();
@@ -78,7 +88,20 @@ public class Group3 extends AppCompatActivity {
                 strLat = String.format("%.4f", raw_lat);
                 strAlt = String.format("%.4f", raw_alt);
                 // calculate distance in KM
+                old_distance = distance;
                 distance += getDistanceFromLatLonInKm(pre_lat, pre_lon, raw_lat, raw_long);
+                double new_distance = distance;
+                dist_diff = new_distance - old_distance;
+                if (dist_diff!= 0){
+                    if(GPS_INITIALIZATION>0){
+                        if(GPS_INITIALIZATION == 1){
+                            distanceTimer = new Timer();
+                            startTimeDist = System.currentTimeMillis();
+                        }
+                        startDistanceTimer();
+                    }
+                }
+                reStartTime = System.currentTimeMillis();
                 // get difference of Latitude
 
                 tmp_diff = raw_lat - pre_lat;
@@ -121,7 +144,7 @@ public class Group3 extends AppCompatActivity {
                 }
                 pre_lon = raw_long;
 
-                // get difference of Speed
+                // get difference of altitude
                 tmp_diff = raw_alt - pre_alt;
                 if (tmp_diff< 0){
                     down_arrow_alt.setVisibility(View.VISIBLE);
@@ -235,6 +258,7 @@ public class Group3 extends AppCompatActivity {
                 currSpeed = location.getSpeed();
                 updateSpeed(intSpeed);
             }
+            GPS_INITIALIZATION+=1;
         }
         double getDistanceFromLatLonInKm(double lat1,double lon1,double lat2,double lon2) {
             double R = 6371; // Radius of the earth in km
@@ -310,6 +334,7 @@ public class Group3 extends AppCompatActivity {
 
 
         tv_distance = findViewById(R.id.tv_distance);
+        tv_time_distance = findViewById(R.id.tv_time_distance);
         tv_time = findViewById(R.id.tv_time);
         sw_fontsize = findViewById(R.id.sw_fontsize);
         sw_test = findViewById(R.id.sw_test);
@@ -578,7 +603,6 @@ public class Group3 extends AppCompatActivity {
                 tv_time.setText(strDayTime+" days");
             }
         }
-
     }
 
     private void startTimer()
@@ -598,9 +622,110 @@ public class Group3 extends AppCompatActivity {
                     }
                 });
             }
-
         };
         timer.scheduleAtFixedRate(timerTask, 0 ,1000);
+    }
+    private void startDistanceTimer()
+    {
+        distanceTimerTask = new TimerTask()
+        {
+            @Override
+            public void run()
+            {
+                runOnUiThread(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+//                        if(old_distance == distance){
+//                            Toast.makeText(Group3.this, "True", Toast.LENGTH_SHORT).show();
+//                            stopDistanceTimer();
+//                            stopTime = System.currentTimeMillis();
+//                            hasStopped = true;
+//                        }
+                        if (ismoving()){
+                            if(hasStopped){
+                                long time_diff = reStartTime-stopTime;
+                                restartedTime = startTimeDist + time_diff;
+                                updateDistanceTime(restartedTime, dist_diff);
+//                                totalMovingTime+= time;
+                            }
+                            else{
+                                distTimeNow = System.currentTimeMillis();
+                                updateDistanceTime(distTimeNow, dist_diff);
+//                                totalMovingTime+= time;
+                                old_distance = distance;
+                            }
+
+                        }
+                    }
+                });
+
+            }
+        };
+        distanceTimer.scheduleAtFixedRate(distanceTimerTask, 0 ,1000);
+    }
+
+    private void stopDistanceTimer(){
+        distanceTimerTask.cancel();
+    }
+
+    private boolean ismoving(){
+        if(old_distance == distance){
+            stopDistanceTimer();
+            stopTime = System.currentTimeMillis();
+            hasStopped = true;
+            return false;
+        }
+        else{
+            return true;
+        }
+    }
+    private void updateDistanceTime(long distTimeNow, double dist_diff){
+        if(dist_diff!=0){
+            long timeElapsed = distTimeNow - startTimeDist;
+            totalMovingTime = timeElapsed;
+            if(chbx_seconds.isChecked()) {
+                long time_seconds = totalMovingTime/1000;
+                strSecTimeDist = String.valueOf(time_seconds);
+                tv_time_distance.setText(String.valueOf(time_seconds)+ " seconds");
+            }
+            if(chkbx_minutes.isChecked()) {
+                long time_seconds = timeElapsed/1000;
+                double time_minutes = (double) time_seconds/60;
+                strMinTimeDist = String.format("%.4f", time_minutes);
+                tv_time_distance.setText(String.format("%.4f", time_minutes)+ " minutes");
+            }
+            if(chkbx_hours.isChecked()) {
+                long time_seconds = timeElapsed/1000;
+                long time_minutes = time_seconds/60;
+                double time_hours = (double) time_minutes/60;
+                strHrTimeDist = String.format("%.6f", time_hours);
+                tv_time_distance.setText(String.format("%.6f", time_hours) + " hours");
+            }
+            if(chkbx_days.isChecked()) {
+                long time_seconds = timeElapsed/1000;
+                long time_minutes = time_seconds/60;
+                long time_hours = time_minutes/60;
+                double time_days = (double) time_hours;
+                strDayTimeDist = String.format("%.8f", time_days);
+                tv_time_distance.setText(String.format("%.8f", time_days) + " days");
+            }
+        }
+        else{
+            if(chbx_seconds.isChecked()){
+                tv_time_distance.setText(strSecTimeDist+" seconds");
+            }
+            if(chkbx_minutes.isChecked()){
+                tv_time_distance.setText(strMinTimeDist+" minutes");
+            }
+            if(chkbx_hours.isChecked()){
+                tv_time_distance.setText(strHrTimeDist+" hours");
+            }
+            if(chkbx_days.isChecked()){
+                tv_time_distance.setText(strDayTimeDist+" days");
+            }
+        }
     }
 
     public void onRadioButtonClicked(View view) {

@@ -496,11 +496,17 @@ public class Group3 extends AppCompatActivity {
                 }
                 max_page.putExtra("dist", max_dist+" km");
                 Log.v("max_dist", String.valueOf(max_dist));
-                if (mph_speed>max_speed){
-                    max_speed = mph_speed;
+                if (raw_speed>max_speed){
+                    max_speed = raw_speed;
                 }
-                max_page.putExtra("speed", max_speed+" mph");
-                max_page.putExtra("time", tv_time.getText());
+                max_page.putExtra("speed", max_speed+" m/sec");
+
+                if (timeElapsed>max_time){
+                    max_time = timeElapsed;
+                }
+                max_page.putExtra("time", max_time/1000+" seconds");
+
+
                 tv_lat.setText("0.0"); tv_lon.setText("0.0"); tv_alt.setText("0.0");tv_time.setText("0:00");
                 distance = 0; tv_distance.setText("0.0"); tv_speed.setText("0.0"); tv_time_distance.setText("0:00");
                 diff_alt.setText("0.0"); diff_alt.setVisibility(View.GONE);

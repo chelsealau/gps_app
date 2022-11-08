@@ -15,6 +15,7 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
@@ -45,7 +46,8 @@ public class Group3 extends AppCompatActivity {
     private double raw_long, raw_lat, raw_alt, raw_speed, mile_speed;
     private int  meter_speed, metric_speed, mph_speed, intSpeed;
     private double meter_alt, kilometer_alt, mile_alt, feet_alt;
-    private double pre_lat, pre_lon, pre_alt, pre_speed;
+    private double pre_lat=0, pre_lon=0, pre_alt=0, pre_speed;
+    private double max_dist=0, max_time=0, max_speed=0;
     private double distance=0, tmp_distance;
     private long startTime;
     Timer timer;
@@ -54,13 +56,12 @@ public class Group3 extends AppCompatActivity {
     TextView tv_lat, tv_lon, tv_speed, tv_alt, diff_lat, diff_lon, diff_speed, diff_alt, tv_distance, tv_time;
 
     AppCompatButton help_button, reset_button, highscore_button;
-    TextView max_dist, max_time, max_speed;
+
     RadioButton chbx_seconds, chkbx_minutes, chkbx_hours,chkbx_days,
             chkbx_meters,chkbx_kilometers,chkbx_miles,chkbx_feet,chkbx_dist_meters,
             chkbx_dist_kilometers,chkbx_dist_miles,chkbx_dist_feet, chkbx_meterPerSec,
             chkbx_kmh, chkbx_mph, chkbx_minPermile;
     ImageView up_arrow_lat, down_arrow_lat, up_arrow_lon, down_arrow_lon, up_arrow_alt, down_arrow_alt, up_arrow_speed, down_arrow_speed;
-
 
     int LOCATION_REFRESH_TIME = 1; // 15 seconds to update
     int LOCATION_REFRESH_DISTANCE = 1; // 500 meters to update
@@ -77,13 +78,11 @@ public class Group3 extends AppCompatActivity {
                 strLong = String.format("%.4f",raw_long);
                 strLat = String.format("%.4f", raw_lat);
                 strAlt = String.format("%.4f", raw_alt);
-
                 if (pre_lat==0.0){
-                    pre_lat = location.getLatitude();
-                    Toast.makeText(Group3.this, "new start!!!", Toast.LENGTH_SHORT).show();
+                    pre_lat = raw_lat;
                 }
                 if (pre_lon==0.0){
-                    pre_lon = location.getLongitude();
+                    pre_lon = raw_long;
                 }
                 // calculate distance in KM
                 distance += getDistanceFromLatLonInKm(pre_lat, pre_lon, raw_lat, raw_long);
@@ -360,15 +359,11 @@ public class Group3 extends AppCompatActivity {
         up_arrow_speed = findViewById(R.id.up_arrow_speed);
         down_arrow_speed = findViewById(R.id.down_arrow_speed);
         diff_speed = findViewById(R.id.diff_speed);
+        Intent max_page = new Intent(Group3.this, getHighScore.class);
 
         startTime = System.currentTimeMillis();
         timer = new Timer();
         startTimer();
-        // max values
-//        View inflatedView = getLayoutInflater().inflate(R.layout.activity_get_high_score, null);
-//        max_dist = inflatedView.findViewById(R.id.max_dist_val);
-//        max_speed = inflatedView.findViewById(R.id.max_speed_val);
-//        max_time = inflatedView.findViewById(R.id.max_time_val);
 
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
@@ -446,12 +441,17 @@ public class Group3 extends AppCompatActivity {
         reset_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                double max_tmp = Double.parseDouble((String) max_dist.getText());
-//                double tmp = Double.parseDouble((String) tv_distance.getText());
-//                if (max_tmp < tmp) {
-//                    max_dist.setText(String.valueOf(tv_distance));
-//                }
+                if (distance > max_dist){
+                    max_dist = distance;
+                }
+                max_page.putExtra("dist", max_dist+" km");
+                Log.v("max_dist", String.valueOf(max_dist));
+                if (mph_speed>max_speed){
 
+                    max_speed = mph_speed;
+                }
+                max_page.putExtra("speed", String.valueOf(max_speed)+" mph");
+                max_page.putExtra("time", tv_time.getText());
                 tv_lat.setText("0.0"); tv_lon.setText("0.0"); tv_alt.setText("0.0");tv_time.setText("0:00");
                 distance = 0; tv_distance.setText("0.0"); tv_speed.setText("0.0"); tv_time.setText("0.0");
                 diff_alt.setText("0.0"); diff_alt.setVisibility(View.GONE);
@@ -474,8 +474,8 @@ public class Group3 extends AppCompatActivity {
         highscore_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Group3.this, getHighScore.class);
-                startActivity(intent);
+//                Intent intent = new Intent(Group3.this, getHighScore.class);
+                startActivity(max_page);
             }
         });
 
@@ -529,11 +529,6 @@ public class Group3 extends AppCompatActivity {
     }
     private boolean isPaused() {
         return sw_pause.isChecked();
-    }
-
-    private double deg2rad(double deg)
-    {
-        return deg * (Math.PI / 180);
     }
 
     private void updateTime(long timeNow){

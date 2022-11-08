@@ -23,14 +23,14 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
-import java.util.concurrent.TimeUnit;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.app.ActivityCompat;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 
@@ -48,10 +48,11 @@ public class Group3 extends AppCompatActivity {
     private double raw_long, raw_lat, raw_alt, raw_speed, mile_speed;
     private int  meter_speed, metric_speed, mph_speed, intSpeed;
     private double meter_alt, kilometer_alt, mile_alt, feet_alt;
-    private double pre_lat=0, pre_lon=0, pre_alt=0, pre_speed=0;
+    private double pre_lat, pre_lon, pre_alt, pre_speed;
     private double distance=0, tmp_distance, dist_diff=0, old_distance=0;
     private long startTime, startTimeDist, distTimeNow,restartedTime , reStartTime, stopTime, timeElapsed, totalMovingTime;
     boolean hasStopped = false;
+
     Timer timer;
     TimerTask timerTask;
 
@@ -87,6 +88,14 @@ public class Group3 extends AppCompatActivity {
                 strLong = String.format("%.4f",raw_long);
                 strLat = String.format("%.4f", raw_lat);
                 strAlt = String.format("%.4f", raw_alt);
+
+                if (pre_lat==0.0){
+                    pre_lat = location.getLatitude();
+                    Toast.makeText(Group3.this, "new start!!!", Toast.LENGTH_SHORT).show();
+                }
+                if (pre_lon==0.0){
+                    pre_lon = location.getLongitude();
+                }
                 // calculate distance in KM
                 old_distance = distance;
                 distance += getDistanceFromLatLonInKm(pre_lat, pre_lon, raw_lat, raw_long);
@@ -103,7 +112,6 @@ public class Group3 extends AppCompatActivity {
                 }
                 reStartTime = System.currentTimeMillis();
                 // get difference of Latitude
-
                 tmp_diff = raw_lat - pre_lat;
                 if (tmp_diff< 0){
                     down_arrow_lat.setVisibility(View.VISIBLE);
@@ -332,7 +340,6 @@ public class Group3 extends AppCompatActivity {
         tv_speed = findViewById(R.id.tv_speed);
         tv_alt = findViewById(R.id.tv_alt);
 
-
         tv_distance = findViewById(R.id.tv_distance);
         tv_time_distance = findViewById(R.id.tv_time_distance);
         tv_time = findViewById(R.id.tv_time);
@@ -379,7 +386,6 @@ public class Group3 extends AppCompatActivity {
         up_arrow_speed = findViewById(R.id.up_arrow_speed);
         down_arrow_speed = findViewById(R.id.down_arrow_speed);
         diff_speed = findViewById(R.id.diff_speed);
-
 
         startTime = System.currentTimeMillis();
         timer = new Timer();
@@ -473,7 +479,7 @@ public class Group3 extends AppCompatActivity {
 //                }
 
                 tv_lat.setText("0.0"); tv_lon.setText("0.0"); tv_alt.setText("0.0");tv_time.setText("0:00");
-                tv_distance.setText("0.0"); tv_speed.setText("0.0"); tv_time.setText("0.0");
+                distance = 0; tv_distance.setText("0.0"); tv_speed.setText("0.0"); tv_time.setText("0.0");
                 diff_alt.setText("0.0"); diff_alt.setVisibility(View.GONE);
                 diff_lat.setText("0.0"); diff_lat.setVisibility(View.GONE);
                 diff_lon.setText("0.0"); diff_lon.setVisibility(View.GONE);

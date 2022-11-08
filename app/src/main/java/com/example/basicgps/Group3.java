@@ -50,7 +50,7 @@ public class Group3 extends AppCompatActivity {
     private double meter_alt, kilometer_alt, mile_alt, feet_alt;
     private double pre_lat, pre_lon, pre_alt, pre_speed;
     private double distance=0, tmp_distance, dist_diff=0, old_distance=0;
-    private long startTime, startTimeDist, distTimeNow,restartedTime , reStartTime, stopTime, timeElapsed, totalMovingTime;
+    private long startTime, startTimeDist, distTimeNow, reStartTime, stopTime, timeElapsed, totalMovingTime,  time_diff;
     boolean hasStopped = false;
 
     Timer timer;
@@ -78,8 +78,6 @@ public class Group3 extends AppCompatActivity {
         @Override
         public void onLocationChanged(final Location location) {
             double tmp_diff;
-
-
             if(!isPaused()){
                 raw_long = location.getLongitude();
                 raw_lat = location.getLatitude();
@@ -110,7 +108,6 @@ public class Group3 extends AppCompatActivity {
                         startDistanceTimer();
                     }
                 }
-                reStartTime = System.currentTimeMillis();
                 // get difference of Latitude
                 tmp_diff = raw_lat - pre_lat;
                 if (tmp_diff< 0){
@@ -477,9 +474,9 @@ public class Group3 extends AppCompatActivity {
 //                if (max_tmp < tmp) {
 //                    max_dist.setText(String.valueOf(tv_distance));
 //                }
-
+                strSecTimeDist = "0:00"; strMinTime = "0:00";strHrTime="0:00"; strDayTime="0:00";
                 tv_lat.setText("0.0"); tv_lon.setText("0.0"); tv_alt.setText("0.0");tv_time.setText("0:00");
-                distance = 0; tv_distance.setText("0.0"); tv_speed.setText("0.0"); tv_time.setText("0.0");
+                distance = 0; tv_distance.setText("0.0"); tv_speed.setText("0.0"); tv_time_distance.setText("0:00");
                 diff_alt.setText("0.0"); diff_alt.setVisibility(View.GONE);
                 diff_lat.setText("0.0"); diff_lat.setVisibility(View.GONE);
                 diff_lon.setText("0.0"); diff_lon.setVisibility(View.GONE);
@@ -487,6 +484,8 @@ public class Group3 extends AppCompatActivity {
                 currSpeed = 0;
                 updateSpeed((int)currSpeed);
                 pre_alt = 0; pre_lat = 0; pre_lon = 0; pre_speed = 0;
+                totalMovingTime = 0;
+                timeElapsed = 0;
                 down_arrow_lat.setVisibility(View.GONE); up_arrow_lat.setVisibility(View.GONE);
                 down_arrow_lon.setVisibility(View.GONE); up_arrow_lon.setVisibility(View.GONE);
                 down_arrow_alt.setVisibility(View.GONE); up_arrow_alt.setVisibility(View.GONE);
@@ -494,6 +493,13 @@ public class Group3 extends AppCompatActivity {
                 timer = new Timer();
                 startTimer();
 
+                distTimeNow = 0;
+                dist_diff = 0;
+                updateDistanceTime(distTimeNow, dist_diff);
+//                startTimeDist = System.currentTimeMillis();
+//                distanceTimer = new Timer();
+//                startDistanceTimer();
+//                stopDistanceTimer();
             }
         });
 
@@ -590,9 +596,9 @@ public class Group3 extends AppCompatActivity {
                 long time_seconds = timeElapsed/1000;
                 long time_minutes = time_seconds/60;
                 long time_hours = time_minutes/60;
-                double time_days = (double) time_hours;
+                double time_days = (double) time_hours/24;
                 strDayTime = String.format("%.8f", time_days);
-                tv_time.setText(String.format("%.8f", time_days) + " days");
+                tv_time.setText(String.format("%.3f", time_days) + " days");
             }
         }
         else{
@@ -643,18 +649,14 @@ public class Group3 extends AppCompatActivity {
                     @Override
                     public void run()
                     {
-//                        if(old_distance == distance){
-//                            Toast.makeText(Group3.this, "True", Toast.LENGTH_SHORT).show();
-//                            stopDistanceTimer();
-//                            stopTime = System.currentTimeMillis();
-//                            hasStopped = true;
-//                        }
                         if (ismoving()){
                             if(hasStopped){
-                                long time_diff = reStartTime-stopTime;
-                                restartedTime = startTimeDist + time_diff;
-                                updateDistanceTime(restartedTime, dist_diff);
-//                                totalMovingTime+= time;
+                                time_diff = stopTime - reStartTime;
+                                timeElapsed = timeElapsed - time_diff;
+                                totalMovingTime = timeElapsed;
+                                distTimeNow = System.currentTimeMillis();
+                                updateDistanceTime(distTimeNow, dist_diff);
+
                             }
                             else{
                                 distTimeNow = System.currentTimeMillis();
@@ -673,49 +675,68 @@ public class Group3 extends AppCompatActivity {
     }
 
     private void stopDistanceTimer(){
+        stopTime = System.currentTimeMillis();
         distanceTimerTask.cancel();
     }
 
     private boolean ismoving(){
         if(old_distance == distance){
             stopDistanceTimer();
-            stopTime = System.currentTimeMillis();
             hasStopped = true;
             return false;
         }
-        else{
+        else if(old_distance != distance){
+            reStartTime = System.currentTimeMillis();
+            old_distance = distance;
             return true;
+        }
+        else{
+            stopDistanceTimer();
+            old_distance = distance;
+            return false;
         }
     }
     private void updateDistanceTime(long distTimeNow, double dist_diff){
         if(dist_diff!=0){
-            long timeElapsed = distTimeNow - startTimeDist;
-            totalMovingTime = timeElapsed;
             if(chbx_seconds.isChecked()) {
                 long time_seconds = totalMovingTime/1000;
                 strSecTimeDist = String.valueOf(time_seconds);
-                tv_time_distance.setText(String.valueOf(time_seconds)+ " seconds");
+                tv_time_distance.setText(strSecTimeDist + " seconds");
             }
             if(chkbx_minutes.isChecked()) {
-                long time_seconds = timeElapsed/1000;
+                long time_seconds = totalMovingTime/1000;
                 double time_minutes = (double) time_seconds/60;
                 strMinTimeDist = String.format("%.4f", time_minutes);
-                tv_time_distance.setText(String.format("%.4f", time_minutes)+ " minutes");
+                tv_time_distance.setText(strMinTimeDist + " minutes");
             }
             if(chkbx_hours.isChecked()) {
-                long time_seconds = timeElapsed/1000;
+                long time_seconds = totalMovingTime/1000;
                 long time_minutes = time_seconds/60;
                 double time_hours = (double) time_minutes/60;
                 strHrTimeDist = String.format("%.6f", time_hours);
-                tv_time_distance.setText(String.format("%.6f", time_hours) + " hours");
+                tv_time_distance.setText(strHrTimeDist + " hours");
             }
             if(chkbx_days.isChecked()) {
-                long time_seconds = timeElapsed/1000;
+                long time_seconds = totalMovingTime/1000;
                 long time_minutes = time_seconds/60;
                 long time_hours = time_minutes/60;
                 double time_days = (double) time_hours;
-                strDayTimeDist = String.format("%.8f", time_days);
-                tv_time_distance.setText(String.format("%.8f", time_days) + " days");
+                strDayTimeDist = String.format("%.3f", time_days);
+                tv_time_distance.setText(strDayTimeDist + " days");
+            }
+        }
+        if (dist_diff==0){
+            if(chbx_seconds.isChecked()){
+                tv_time_distance.setText("0:00 seconds");
+            }
+            if(chkbx_minutes.isChecked()){
+                tv_time_distance.setText("0:00 minutes");
+            }
+            if(chkbx_hours.isChecked()){
+                tv_time_distance.setText("0:00 hours");
+            }
+            if(chkbx_days.isChecked()){
+                tv_time_distance.setText("0:00 days");
             }
         }
         else{

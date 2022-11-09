@@ -9,23 +9,53 @@
 ## SOLUTION
  
  Our app has the following features:
+Problem Zero:
  - Latitude reading of current location
  - Longitude reading of current location
  - Current travelling speed
- - Unit toggling
- - Font toggling
+ - Unit toggling - change between Km/h and mph 
+ - Font toggling - change size of current speed indicator font
  - Indicative colors for speed value
  - Test mode
+ - Pause button that allows the user to pause all activity on the display
+
+New for Problem One:
+ - Reset button- resets all accumulated metrics to zero
+ - Height of phone (current altitude of the device)
+ - Distance traveled by the device since the last reset or app restart
+ - Time since app start (or last reset or app restart)
+ - Total moving time (total time device has been in motion since last reset or app restart)
+ - indicators (arrows) showing if a value is increasing or decreasing, in real time (displays magnitude of change to the right of the indicator)
+ - Unit toggling
+   - Time Units: Seconds, Minutes, Hours, Days
+   - Distance and Altitude Units: Meters, Kilometers, Miles, Feet
+   - Speed Units: Meters per second, Kilometers per hour, Miles per hour
+ - Uses an independent thread for location processing
+ - A high scores page that is visible after resetting the app and then tapping the "check high scores" button
+   - Displays maximum Speed achieved, the Max distance traveled, and the Maximum time for which the app was left running
+
+
 
  Upon first use, the app should ask for user permission to access location. If location is granted, the app will use the Location Manager class to obtain a Location object which contains information such as latitude, longitude, and speed at set intervals of change in time (ms) and distance (m). The TextViews for the read values are updated accordingly.
-
- There is a Metric switch that can toggle the speed units from mph to km/h, a switch to increase the font size of the speed reading, and a switch to pause the display. The speed value changes color depending on what range the number falls into. Finally, there is a button that when pressed can provide information on how to use the app. 
-
  There is also a switch that triggers a testing mode that is further described in the TESTING.md. 
 
- ## INDIVIDUAL ELEMENTS
+Once the app starts, the time Elapsed timer begins, showing a real time metric for how long the app has been running. This is reset to zero every time the app is restarted or the reset button is hit.
+The Latitude and longitude are initialized with values as soon as the GPS receives location data. Once the device begins to move, the Latitude and Longitude will change, and next to them, arrows will appear,
+indicating if those values are increasing (up arrow) or decreasing (down arrow). the magnitude of the change indicated by the arrow is displayed to the right of the arrow. The speed metric changes in real time,
+and changes color as speed changes. The Altitude metric -assuming the phone hardware supports it - will display current altitude of the phone. Note that the emulator does not provide altitude data, but says it 
+can provide data, so this will always display zero altitude in the emulator. The distance traveled metric calculates how far the phone has traveled since the phone started moving. The total moving time is 
+how much time the phone has been moving for. this pauses any time the phone stops moving, and picks back up once the phone starts moving again. Note that all of these metrics have units
+that can be selected by the list of unit options below the displayed metrics. 
+
+ ## INDIVIDUAL ELEMENTS (Problem Zero)
 - Add a pause button that allows the user to pause the display. (Arnaud)
 - Change the color of the speed display according to the speed being traveled. (Arnaud)
 - Allow the user to change the units in which the speed is being displayed. (Chelsea)
 - Allow the user to change the size of the font being used to display the speed. (Jae Yoon)
 - Add a help button that, when pressed, displays helpful information on how to use the app. (Cameron)
+
+## INDIVIDUAL ELEMENTS (Problem One)
+- Reset button - Cameron Cipriano
+- Qualitative Indicators - Chelsea Lau
+- High Scores Page - Jae Yoon Chung
+- Total Moving Time - Arnaud Harmange

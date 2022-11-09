@@ -91,9 +91,6 @@ public class Group3 extends AppCompatActivity {
      * @brief Background thread that calls bLocationListener directly
      */
     class LocationThread extends Thread {
-//        protected LocationManager locationManager;
-//        Context context;
-//        public Handler bHandler;
         Location location;
 
         LocationThread(Location location, String name) {
@@ -104,22 +101,7 @@ public class Group3 extends AppCompatActivity {
         @Override
         public void run() {
             Looper.prepare();
-
-//            bHandler = new Handler() {
-//                public void handleMessage()
-//            }
             bLocationListener.onLocationChanged(location);
-//            runOnUiThread(new Runnable() {
-//                @SuppressLint("MissingPermission")
-//                @Override
-//                public void run() {
-////                    tv_lat.setText("HELLO FROM BACKGROUND");
-////                    LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-////                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_REFRESH_TIME,
-////                            LOCATION_REFRESH_DISTANCE, mLocationListener);
-//                }
-//            });
-
         }
     }
 
@@ -132,16 +114,6 @@ public class Group3 extends AppCompatActivity {
 
             LocationThread thread = new LocationThread(location, "LocationThread");
             thread.start();
-//            ExecutorService executorService = Executors.newSingleThreadExecutor();
-//            executorService.execute(new Runnable() {
-//
-//                @Override
-//                public void run() {
-////                    LocationThread thread = new LocationThread(this);
-////                    thread.start();
-//
-//                }
-//            }
         }
     };
 
@@ -574,9 +546,6 @@ public class Group3 extends AppCompatActivity {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_REFRESH_TIME,
                     LOCATION_REFRESH_DISTANCE, mLocationListener);
-
-//            LocationThread thread = new LocationThread(this);
-//            thread.start();
         } else {
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

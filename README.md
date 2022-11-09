@@ -30,7 +30,7 @@ New for Problem One:
    - Time Units: Seconds, Minutes, Hours, Days
    - Distance and Altitude Units: Meters, Kilometers, Miles, Feet
    - Speed Units: Meters per second, Kilometers per hour, Miles per hour
- - Uses an independent thread for location processing
+ - Uses an independent thread to fetch location values before updating UI fields on UI(main) thread
  - A high scores page that is visible after resetting the app and then tapping the "check high scores" button
    - Displays maximum Speed achieved, the Max distance traveled, and the Maximum time for which the app was left running
 

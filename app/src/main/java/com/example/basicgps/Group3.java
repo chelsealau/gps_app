@@ -6,6 +6,8 @@
 package com.example.basicgps;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -15,6 +17,9 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+
+import android.os.Looper;
+
 import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -23,6 +28,7 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.SwitchCompat;
@@ -30,12 +36,14 @@ import androidx.core.app.ActivityCompat;
 
 import java.util.Timer;
 import java.util.TimerTask;
-
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 
 public class Group3 extends AppCompatActivity {
     private static final int PERMISSIONS_FINE_LOCATION = 99;
     protected LocationManager locationManager;
+    private static final String TAG = "Group3";
 
     SwitchCompat sw_fontsize;
     SwitchCompat sw_pause;
@@ -73,22 +81,108 @@ public class Group3 extends AppCompatActivity {
     int LOCATION_REFRESH_DISTANCE = 1; // 500 meters to update
     int GPS_INITIALIZATION = 0;
 
+//    public void startThread() {
+//        Log.d(TAG, "startThread: ");
+//        LocationThread thread = new LocationThread(this);
+//        thread.start();
+//    }
+
+    /**
+     * @brief Background thread that calls bLocationListener directly
+     */
+    class LocationThread extends Thread {
+//        protected LocationManager locationManager;
+//        Context context;
+//        public Handler bHandler;
+        Location location;
+
+        LocationThread(Location location, String name) {
+            this.location = location;
+            this.setName(name);
+        }
+
+        @Override
+        public void run() {
+            Looper.prepare();
+
+//            bHandler = new Handler() {
+//                public void handleMessage()
+//            }
+            bLocationListener.onLocationChanged(location);
+//            runOnUiThread(new Runnable() {
+//                @SuppressLint("MissingPermission")
+//                @Override
+//                public void run() {
+////                    tv_lat.setText("HELLO FROM BACKGROUND");
+////                    LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+////                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_REFRESH_TIME,
+////                            LOCATION_REFRESH_DISTANCE, mLocationListener);
+//                }
+//            });
+
+        }
+    }
+
+    /**
+     * @brief Main(UI) thread LocationListener that starts background thread
+     */
     private final LocationListener mLocationListener = new LocationListener() {
         @Override
+        public void onLocationChanged(@NonNull Location location) {
+
+            LocationThread thread = new LocationThread(location, "LocationThread");
+            thread.start();
+//            ExecutorService executorService = Executors.newSingleThreadExecutor();
+//            executorService.execute(new Runnable() {
+//
+//                @Override
+//                public void run() {
+////                    LocationThread thread = new LocationThread(this);
+////                    thread.start();
+//
+//                }
+//            }
+        }
+    };
+
+    /**
+     * @brief Fetches measurements based on location passed to background thread, passes values back to UI thread to update UI
+     */
+    private final LocationListener bLocationListener = new LocationListener() {
+
+        double getDistanceFromLatLonInKm(double lat1, double lon1, double lat2, double lon2) {
+            double R = 6371; // Radius of the earth in km
+            double dLat = deg2rad(lat2 - lat1);  // deg2rad below
+            double dLon = deg2rad(lon2 - lon1);
+            double a =
+                    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                            Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+                                    Math.sin(dLon / 2) * Math.sin(dLon / 2);
+            double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            double d = R * c; // Distance in km
+            return d;
+        }
+
+        double deg2rad(double deg) {
+            return deg * (Math.PI / 180);
+        }
+
+        @Override
         public void onLocationChanged(final Location location) {
-            double tmp_diff;
-            if(!isPaused()){
+//            double tmp_diff;
+            if (!isPaused()) {
+                Log.d(TAG, "onLocationChanged: " + Thread.currentThread());
                 raw_long = location.getLongitude();
                 raw_lat = location.getLatitude();
                 raw_speed = location.getSpeed();
                 raw_alt = location.getAltitude();
-                strLong = String.format("%.4f",raw_long);
+                strLong = String.format("%.4f", raw_long);
                 strLat = String.format("%.4f", raw_lat);
                 strAlt = String.format("%.4f", raw_alt);
-                if (pre_lat==0.0){
+                if (pre_lat == 0.0) {
                     pre_lat = raw_lat;
                 }
-                if (pre_lon==0.0){
+                if (pre_lon == 0.0) {
                     pre_lon = raw_long;
                 }
                 // calculate distance in KM
@@ -96,9 +190,9 @@ public class Group3 extends AppCompatActivity {
                 distance += getDistanceFromLatLonInKm(pre_lat, pre_lon, raw_lat, raw_long);
                 double new_distance = distance;
                 dist_diff = new_distance - old_distance;
-                if (dist_diff!= 0){
-                    if(GPS_INITIALIZATION>0){
-                        if(GPS_INITIALIZATION == 1){
+                if (dist_diff != 0) {
+                    if (GPS_INITIALIZATION > 0) {
+                        if (GPS_INITIALIZATION == 1) {
                             distanceTimer = new Timer();
                             startTimeDist = System.currentTimeMillis();
                         }
@@ -106,178 +200,240 @@ public class Group3 extends AppCompatActivity {
                     }
                 }
                 // get difference of Latitude
-                tmp_diff = raw_lat - pre_lat;
-                if (tmp_diff< 0){
-                    down_arrow_lat.setVisibility(View.VISIBLE);
-                    up_arrow_lat.setVisibility(View.GONE);
-                    diff_lat.setVisibility(View.VISIBLE);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        double tmp_diff;
+                        tmp_diff = raw_lat - pre_lat;
+                        if (tmp_diff < 0) {
+                            down_arrow_lat.setVisibility(View.VISIBLE);
+                            up_arrow_lat.setVisibility(View.GONE);
+                            diff_lat.setVisibility(View.VISIBLE);
 //                    diff_lat.setText(String.format("%.4f",tmp_diff));
-                    diff_lat.setText(String.valueOf(tmp_diff));
-                } else if (tmp_diff > 0) {
-                    down_arrow_lat.setVisibility(View.GONE);
-                    up_arrow_lat.setVisibility(View.VISIBLE);
-                    diff_lat.setVisibility(View.VISIBLE);
+                            diff_lat.setText(String.valueOf(tmp_diff));
+                        } else if (tmp_diff > 0) {
+                            down_arrow_lat.setVisibility(View.GONE);
+                            up_arrow_lat.setVisibility(View.VISIBLE);
+                            diff_lat.setVisibility(View.VISIBLE);
 //                    diff_lat.setText(String.format("%.4f",tmp_diff));
-                    diff_lat.setText(String.valueOf(tmp_diff));
-                } else {
-                    down_arrow_lat.setVisibility(View.GONE);
-                    up_arrow_lat.setVisibility(View.GONE);
-                    diff_lat.setVisibility(View.GONE);
-                }
-                pre_lat = raw_lat;
-                // get difference of Longitude
-                tmp_diff = raw_long - pre_lon;
-                if (tmp_diff< 0){
-                    down_arrow_lon.setVisibility(View.VISIBLE);
-                    up_arrow_lon.setVisibility(View.GONE);
-                    diff_lon.setVisibility(View.VISIBLE);
-//                    diff_lon.setText(String.format("%.4f",tmp_diff));
-                    diff_lon.setText(String.valueOf(tmp_diff));
-                } else if (tmp_diff > 0) {
-                    down_arrow_lon.setVisibility(View.GONE);
-                    up_arrow_lon.setVisibility(View.VISIBLE);
-                    diff_lon.setVisibility(View.VISIBLE);
-//                    diff_lon.setText(String.format("%.4f",tmp_diff));
-                    diff_lon.setText(String.valueOf(tmp_diff));
-                } else {
-                    down_arrow_lon.setVisibility(View.GONE);
-                    up_arrow_lon.setVisibility(View.GONE);
-                    diff_lon.setVisibility(View.GONE);
-                }
-                pre_lon = raw_long;
-
-                // get difference of altitude
-                tmp_diff = raw_alt - pre_alt;
-                if (tmp_diff< 0){
-                    down_arrow_alt.setVisibility(View.VISIBLE);
-                    up_arrow_alt.setVisibility(View.GONE);
-                    diff_alt.setVisibility(View.VISIBLE);
-//                    diff_alt.setText(String.format("%.4f",tmp_diff));
-                    diff_alt.setText(String.valueOf(tmp_diff));
-                } else if (tmp_diff > 0) {
-                    down_arrow_alt.setVisibility(View.GONE);
-                    up_arrow_alt.setVisibility(View.VISIBLE);
-                    diff_alt.setVisibility(View.VISIBLE);
-//                    diff_alt.setText(String.format("%.4f",tmp_diff));
-                    diff_alt.setText(String.valueOf(tmp_diff));
-                } else {
-                    down_arrow_alt.setVisibility(View.GONE);
-                    up_arrow_alt.setVisibility(View.GONE);
-                    diff_alt.setVisibility(View.GONE);
-                }
-                pre_alt = raw_alt;
-
-                tv_lat.setText(strLat);
-                tv_lon.setText(strLong);
-                tv_alt.setText(strAlt);
-
-                if(location != null){
-                    if(Math.round(currSpeed) == 0){
-                        tv_speed.setText("0.00");
-                    }
-                    else{
-                        if(location.hasAltitude()) {
-                            if (chkbx_meters.isChecked()) {
-                                meter_alt = (raw_alt);
-                                String strCurrentAlt = String.valueOf(meter_alt);
-                                tv_alt.setText(strCurrentAlt + " meters");
-                            }
-
-                            if (chkbx_kilometers.isChecked()) {
-                                kilometer_alt = (raw_alt / 1000);
-                                String strCurrentAlt = String.valueOf(kilometer_alt);
-                                tv_alt.setText(strCurrentAlt + " kilometers");
-                            }
-
-                            if (chkbx_miles.isChecked()) {
-                                mile_alt = (raw_alt / 1609);
-                                String strCurrentAlt = String.valueOf(mile_alt);
-                                tv_alt.setText(strCurrentAlt + " miles");
-                            }
-
-                            if (chkbx_feet.isChecked()) {
-                                feet_alt = (raw_alt * 3.281);
-                                String strCurrentAlt = String.valueOf(feet_alt);
-                                tv_alt.setText(strCurrentAlt + " feet");
-                            }
+                            diff_lat.setText(String.valueOf(tmp_diff));
+                        } else {
+                            down_arrow_lat.setVisibility(View.GONE);
+                            up_arrow_lat.setVisibility(View.GONE);
+                            diff_lat.setVisibility(View.GONE);
                         }
-                        else{
-                            tv_alt.setText("Not Available");
+                        pre_lat = raw_lat;
+                        // get difference of Longitude
+                        tmp_diff = raw_long - pre_lon;
+                        if (tmp_diff < 0) {
+                            down_arrow_lon.setVisibility(View.VISIBLE);
+                            up_arrow_lon.setVisibility(View.GONE);
+                            diff_lon.setVisibility(View.VISIBLE);
+//                    diff_lon.setText(String.format("%.4f",tmp_diff));
+                            diff_lon.setText(String.valueOf(tmp_diff));
+                        } else if (tmp_diff > 0) {
+                            down_arrow_lon.setVisibility(View.GONE);
+                            up_arrow_lon.setVisibility(View.VISIBLE);
+                            diff_lon.setVisibility(View.VISIBLE);
+//                    diff_lon.setText(String.format("%.4f",tmp_diff));
+                            diff_lon.setText(String.valueOf(tmp_diff));
+                        } else {
+                            down_arrow_lon.setVisibility(View.GONE);
+                            up_arrow_lon.setVisibility(View.GONE);
+                            diff_lon.setVisibility(View.GONE);
                         }
+                        pre_lon = raw_long;
 
-                        if(chkbx_dist_meters.isChecked()) {
+                        // get difference of altitude
+                        tmp_diff = raw_alt - pre_alt;
+                        if (tmp_diff < 0) {
+                            down_arrow_alt.setVisibility(View.VISIBLE);
+                            up_arrow_alt.setVisibility(View.GONE);
+                            diff_alt.setVisibility(View.VISIBLE);
+//                    diff_alt.setText(String.format("%.4f",tmp_diff));
+                            diff_alt.setText(String.valueOf(tmp_diff));
+                        } else if (tmp_diff > 0) {
+                            down_arrow_alt.setVisibility(View.GONE);
+                            up_arrow_alt.setVisibility(View.VISIBLE);
+                            diff_alt.setVisibility(View.VISIBLE);
+//                    diff_alt.setText(String.format("%.4f",tmp_diff));
+                            diff_alt.setText(String.valueOf(tmp_diff));
+                        } else {
+                            down_arrow_alt.setVisibility(View.GONE);
+                            up_arrow_alt.setVisibility(View.GONE);
+                            diff_alt.setVisibility(View.GONE);
+                        }
+                        pre_alt = raw_alt;
 
-                            tmp_distance = distance*1000;
-                            tv_distance.setText(String.format("%.4f",tmp_distance)+ " m");
+                        tv_lat.setText(strLat);
+                        tv_lon.setText(strLong);
+                        tv_alt.setText(strAlt);
+
+                        if (location != null) {
+                            if (Math.round(currSpeed) == 0) {
+                                tv_speed.setText("0.00");
+                            } else {
+                                if (location.hasAltitude()) {
+                                    if (chkbx_meters.isChecked()) {
+                                        meter_alt = (raw_alt);
+                                        String strCurrentAlt = String.valueOf(meter_alt);
+                                        tv_alt.setText(strCurrentAlt + " meters");
+                                    }
+
+                                    if (chkbx_kilometers.isChecked()) {
+                                        kilometer_alt = (raw_alt / 1000);
+                                        String strCurrentAlt = String.valueOf(kilometer_alt);
+                                        tv_alt.setText(strCurrentAlt + " kilometers");
+                                    }
+
+                                    if (chkbx_miles.isChecked()) {
+                                        mile_alt = (raw_alt / 1609);
+                                        String strCurrentAlt = String.valueOf(mile_alt);
+                                        tv_alt.setText(strCurrentAlt + " miles");
+                                    }
+
+                                    if (chkbx_feet.isChecked()) {
+                                        feet_alt = (raw_alt * 3.281);
+                                        String strCurrentAlt = String.valueOf(feet_alt);
+                                        tv_alt.setText(strCurrentAlt + " feet");
+                                    }
+
+                                    pre_lat = raw_lat;
+                                    // get difference of Longitude
+                                    tmp_diff = raw_long - pre_lon;
+                                    if (tmp_diff < 0) {
+                                        down_arrow_lon.setVisibility(View.VISIBLE);
+                                        up_arrow_lon.setVisibility(View.GONE);
+                                        diff_lon.setVisibility(View.VISIBLE);
+//                    diff_lon.setText(String.format("%.4f",tmp_diff));
+                                        diff_lon.setText(String.valueOf(tmp_diff));
+                                    } else if (tmp_diff > 0) {
+                                        down_arrow_lon.setVisibility(View.GONE);
+                                        up_arrow_lon.setVisibility(View.VISIBLE);
+                                        diff_lon.setVisibility(View.VISIBLE);
+//                    diff_lon.setText(String.format("%.4f",tmp_diff));
+                                        diff_lon.setText(String.valueOf(tmp_diff));
+                                    } else {
+                                        down_arrow_lon.setVisibility(View.GONE);
+                                        up_arrow_lon.setVisibility(View.GONE);
+                                        diff_lon.setVisibility(View.GONE);
+                                    }
+                                    pre_lon = raw_long;
+
+                                    // get difference of Speed
+                                    tmp_diff = raw_alt - pre_alt;
+                                    if (tmp_diff < 0) {
+                                        down_arrow_alt.setVisibility(View.VISIBLE);
+                                        up_arrow_alt.setVisibility(View.GONE);
+                                        diff_alt.setVisibility(View.VISIBLE);
+//                    diff_alt.setText(String.format("%.4f",tmp_diff));
+                                        diff_alt.setText(String.valueOf(tmp_diff));
+                                    } else if (tmp_diff > 0) {
+                                        down_arrow_alt.setVisibility(View.GONE);
+                                        up_arrow_alt.setVisibility(View.VISIBLE);
+                                        diff_alt.setVisibility(View.VISIBLE);
+//                    diff_alt.setText(String.format("%.4f",tmp_diff));
+                                        diff_alt.setText(String.valueOf(tmp_diff));
+                                    } else {
+                                        down_arrow_alt.setVisibility(View.GONE);
+                                        up_arrow_alt.setVisibility(View.GONE);
+                                        diff_alt.setVisibility(View.GONE);
+                                    }
+                                    pre_alt = raw_alt;
+
+                                    tv_lat.setText(strLat);
+                                    tv_lon.setText(strLong);
+                                    tv_alt.setText(strAlt);
+
+                                    if (location != null) {
+                                        if (Math.round(currSpeed) == 0) {
+                                            tv_speed.setText("0.00");
+                                        } else {
+                                            if (location.hasAltitude()) {
+                                                if (chkbx_meters.isChecked()) {
+                                                    meter_alt = (raw_alt);
+                                                    String strCurrentAlt = String.valueOf(meter_alt);
+                                                    tv_alt.setText(strCurrentAlt + " meters");
+                                                }
+
+                                                if (chkbx_kilometers.isChecked()) {
+                                                    kilometer_alt = (raw_alt / 1000);
+                                                    String strCurrentAlt = String.valueOf(kilometer_alt);
+                                                    tv_alt.setText(strCurrentAlt + " kilometers");
+                                                }
+
+                                                if (chkbx_miles.isChecked()) {
+                                                    mile_alt = (raw_alt / 1609);
+                                                    String strCurrentAlt = String.valueOf(mile_alt);
+                                                    tv_alt.setText(strCurrentAlt + " miles");
+                                                }
+
+                                                if (chkbx_feet.isChecked()) {
+                                                    feet_alt = (raw_alt * 3.281);
+                                                    String strCurrentAlt = String.valueOf(feet_alt);
+                                                    tv_alt.setText(strCurrentAlt + " feet");
+                                                }
+                                            } else {
+                                                tv_alt.setText("Not Available");
+                                            }
+
+                                            if (chkbx_dist_meters.isChecked()) {
+
+                                                tmp_distance = distance * 1000;
+                                                tv_distance.setText(String.format("%.4f", tmp_distance) + " m");
 //                            tv_distance.setText(String.valueOf(tmp_distance) + " m");
 
-                        }
-
-                        else if(chkbx_dist_kilometers.isChecked()) {
-                            tv_distance.setText(String.format("%.4f",distance)+ " km");
+                                            } else if (chkbx_dist_kilometers.isChecked()) {
+                                                tv_distance.setText(String.format("%.4f", distance) + " km");
 //                            tv_distance.setText(String.valueOf(distance) + " km");
-                        }
-
-                        else if(chkbx_dist_miles.isChecked()) {
-                            tmp_distance = distance*0.621371;
-                            tv_distance.setText(String.format("%.4f",tmp_distance)+ " miles");
+                                            } else if (chkbx_dist_miles.isChecked()) {
+                                                tmp_distance = distance * 0.621371;
+                                                tv_distance.setText(String.format("%.4f", tmp_distance) + " miles");
 //                            tv_distance.setText(String.valueOf(tmp_distance) + " miles");
-                        }
-
-                        else if(chkbx_dist_feet.isChecked()) {
-                            tmp_distance = distance*3280.838879986877;
-                            tv_distance.setText(String.format("%.4f",tmp_distance)+ " feet");
+                                            } else if (chkbx_dist_feet.isChecked()) {
+                                                tmp_distance = distance * 3280.838879986877;
+                                                tv_distance.setText(String.format("%.4f", tmp_distance) + " feet");
 //                            tv_distance.setText(String.valueOf(tmp_distance) + " feet");
-                        }
+                                            }
 
-                        if(chkbx_meterPerSec.isChecked()) {
-                            meter_speed = (int) (raw_speed);
-                            strCurrentSpeed = String.valueOf(meter_speed);
-                            tv_speed.setText(strCurrentSpeed+" m/sec");
-                            intSpeed = meter_speed;
-                        }
-                        if(chkbx_kmh.isChecked()) {
-                            metric_speed = (int) ((raw_speed * 3600) / 1000);
-                            strCurrentSpeed = String.valueOf(metric_speed);
-                            tv_speed.setText(strCurrentSpeed+" km/h");
-                            intSpeed = metric_speed;
-                        }
-                        if(chkbx_mph.isChecked()) {
-                            mph_speed=(int) (raw_speed*2.2369);
-                            strCurrentSpeed = String.valueOf(mph_speed);
-                            tv_speed.setText(strCurrentSpeed+" mph");
-                            intSpeed = mph_speed;
-                        }
-                        if(chkbx_minPermile.isChecked()) {
-                            mile_speed = (double) (raw_speed/26.822);
+                                            if (chkbx_meterPerSec.isChecked()) {
+                                                meter_speed = (int) (raw_speed);
+                                                strCurrentSpeed = String.valueOf(meter_speed);
+                                                tv_speed.setText(strCurrentSpeed + " m/sec");
+                                                intSpeed = meter_speed;
+                                            }
+                                            if (chkbx_kmh.isChecked()) {
+                                                metric_speed = (int) ((raw_speed * 3600) / 1000);
+                                                strCurrentSpeed = String.valueOf(metric_speed);
+                                                tv_speed.setText(strCurrentSpeed + " km/h");
+                                                intSpeed = metric_speed;
+                                            }
+                                            if (chkbx_mph.isChecked()) {
+                                                mph_speed = (int) (raw_speed * 2.2369);
+                                                strCurrentSpeed = String.valueOf(mph_speed);
+                                                tv_speed.setText(strCurrentSpeed + " mph");
+                                                intSpeed = mph_speed;
+                                            }
+                                            if (chkbx_minPermile.isChecked()) {
+                                                mile_speed = (double) (raw_speed / 26.822);
 //                            strCurrentSpeed = String.valueOf(mile_speed);j
-                            strCurrentSpeed = String.format("%.2f", mile_speed);
-                            tv_speed.setText(strCurrentSpeed+" mile/min");
-                            intSpeed = (int) mile_speed;
+                                                strCurrentSpeed = String.format("%.2f", mile_speed);
+                                                tv_speed.setText(strCurrentSpeed + " mile/min");
+                                                intSpeed = (int) mile_speed;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                            currSpeed = location.getSpeed();
+                            updateSpeed(intSpeed);
                         }
                     }
-                }
-                currSpeed = location.getSpeed();
-                updateSpeed(intSpeed);
+                });
+                GPS_INITIALIZATION += 1;
             }
-            GPS_INITIALIZATION+=1;
-        }
-        double getDistanceFromLatLonInKm(double lat1,double lon1,double lat2,double lon2) {
-            double R = 6371; // Radius of the earth in km
-            double dLat = deg2rad(lat2-lat1);  // deg2rad below
-            double dLon = deg2rad(lon2-lon1);
-            double a =
-                    Math.sin(dLat/2) * Math.sin(dLat/2) +
-                            Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
-                                    Math.sin(dLon/2) * Math.sin(dLon/2)
-                    ;
-            double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-            double d = R * c; // Distance in km
-            return d;
-        }
 
-        double deg2rad(double deg) {
-            return deg * (Math.PI/180);
         }
     };
 
@@ -414,10 +570,13 @@ public class Group3 extends AppCompatActivity {
         startTimer();
 
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-
+//
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_REFRESH_TIME,
                     LOCATION_REFRESH_DISTANCE, mLocationListener);
+
+//            LocationThread thread = new LocationThread(this);
+//            thread.start();
         } else {
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

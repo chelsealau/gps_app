@@ -446,52 +446,19 @@ public class Group3 extends AppCompatActivity {
                             updateSpeed(intSpeed);
                         }
 
-
-                        if (chbx_seconds.isChecked()) {
-                            timeUnits = Units.Time.SECONDS;
-                        } else if (chkbx_minutes.isChecked()) {
-                            timeUnits = Units.Time.MINUTES;
-                        } else if (chkbx_hours.isChecked()) {
-                            timeUnits = Units.Time.HOURS;
-                        } else if (chkbx_days.isChecked()) {
-                            timeUnits = Units.Time.DAYS;
-                        }
-
-                        Units.Distance finalAltitudeUnits = altitudeUnits;
-                        Units.Speed finalSpeedUnits = speedUnits;
-                        double finalSpeedToSave = speedToSave;
-                        double finalAltitudeToSave = altitudeToSave;
-                        double finalDistanceToSave = distanceToSave;
-                        Units.Distance finalDistanceUnits = distanceUnits;
-                        Units.Time finalTimeUnits = timeUnits;
                         GPSDatabase.databaseWriteExecutor.execute(() -> {
-                            long timeToSave = 0;
-                            switch (finalTimeUnits) {
-                                case SECONDS:
-                                    timeToSave = Long.valueOf(strSecTime);
-                                    break;
-                                case MINUTES:
-                                    timeToSave = Long.valueOf(strMinTime);
-                                    break;
-                                case HOURS:
-                                    timeToSave = Long.valueOf(strHrTime);
-                                    break;
-                                case DAYS:
-                                    timeToSave = Long.valueOf(strDayTime);
-                                    break;
-                            }
                             GPSDatabase.getInstance(getApplicationContext()).metricDAO()
                                     .insert(new Metric(
                                             raw_lat,
                                             raw_long,
-                                            finalAltitudeToSave,
-                                            (finalAltitudeUnits != null) ? finalAltitudeUnits : Units.Distance.METERS,
-                                            finalSpeedToSave,
-                                            (finalSpeedUnits != null) ? finalSpeedUnits : Units.Speed.METERS_PER_SECOND,
-                                            finalDistanceToSave,
-                                            (finalDistanceUnits != null) ? finalDistanceUnits : Units.Distance.KILOMETERS,
-                                            timeToSave,
-                                            (finalTimeUnits != null) ? finalTimeUnits : Units.Time.SECONDS
+                                            raw_alt,
+                                            Units.Distance.METERS,
+                                            raw_speed,
+                                            Units.Speed.METERS_PER_SECOND,
+                                            distance,
+                                            Units.Distance.KILOMETERS,
+                                            Long.valueOf(strSecTime),
+                                            Units.Time.SECONDS
                                             ));
                         });
                     }

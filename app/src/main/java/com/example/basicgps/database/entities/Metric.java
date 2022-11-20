@@ -17,7 +17,7 @@ public class Metric {
     @ColumnInfo(name = "altitude_units")
     public Units.Distance altitudeUnits;
 
-    public float speed;
+    public double speed;
     @ColumnInfo(name = "speed_units")
     public Units.Speed speedUnits;
 
@@ -32,7 +32,7 @@ public class Metric {
     @ColumnInfo(name = "moving_time_units")
     public Units.Time movingTimeUnits;
 
-    public Metric(double latitude, double longitude, double altitude, Units.Distance altitudeUnits, float speed, Units.Speed speedUnits, double distanceTraveled, Units.Distance distTraveledUnits, long movingTime, Units.Time movingTimeUnits) {
+    public Metric(double latitude, double longitude, double altitude, Units.Distance altitudeUnits, double speed, Units.Speed speedUnits, double distanceTraveled, Units.Distance distTraveledUnits, long movingTime, Units.Time movingTimeUnits) {
         this.latitude = latitude;
         this.longitude = longitude;
         this.altitude = altitude;

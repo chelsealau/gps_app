@@ -26,6 +26,9 @@ public interface MetricDAO {
     @Query("SELECT * FROM metrics")
     List<Metric> getAllMetrics();
 
+    @Query("SELECT COUNT(*) FROM metrics")
+    int documentCount();
+
     @Query("DELETE FROM metrics")
     void clearTable();
 }

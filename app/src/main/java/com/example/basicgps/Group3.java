@@ -7,7 +7,6 @@ package com.example.basicgps;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -33,6 +32,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.app.ActivityCompat;
+
+import com.example.basicgps.database.GPSDatabase;
+import com.example.basicgps.database.Units;
+import com.example.basicgps.database.entities.Metric;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -175,6 +178,15 @@ public class Group3 extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+
+                        Units.Time timeUnits = null;
+                        Units.Distance altitudeUnits = null;
+                        double altitudeToSave = 0;
+                        Units.Distance distanceUnits = null;
+                        double distanceToSave = 0;
+                        Units.Speed speedUnits = null;
+                        double speedToSave = 0;
+
                         double tmp_diff;
                         tmp_diff = raw_lat - pre_lat;
                         if (tmp_diff < 0) {
@@ -250,24 +262,32 @@ public class Group3 extends AppCompatActivity {
                                         meter_alt = (raw_alt);
                                         String strCurrentAlt = String.valueOf(meter_alt);
                                         tv_alt.setText(strCurrentAlt + " meters");
+                                        altitudeUnits = Units.Distance.METERS;
+                                        altitudeToSave = meter_alt;
                                     }
 
                                     if (chkbx_kilometers.isChecked()) {
                                         kilometer_alt = (raw_alt / 1000);
                                         String strCurrentAlt = String.valueOf(kilometer_alt);
                                         tv_alt.setText(strCurrentAlt + " kilometers");
+                                        altitudeUnits = Units.Distance.KILOMETERS;
+                                        altitudeToSave = kilometer_alt;
                                     }
 
                                     if (chkbx_miles.isChecked()) {
                                         mile_alt = (raw_alt / 1609);
                                         String strCurrentAlt = String.valueOf(mile_alt);
                                         tv_alt.setText(strCurrentAlt + " miles");
+                                        altitudeUnits = Units.Distance.MILES;
+                                        altitudeToSave = mile_alt;
                                     }
 
                                     if (chkbx_feet.isChecked()) {
                                         feet_alt = (raw_alt * 3.281);
                                         String strCurrentAlt = String.valueOf(feet_alt);
                                         tv_alt.setText(strCurrentAlt + " feet");
+                                        altitudeUnits = Units.Distance.FEET;
+                                        altitudeToSave = feet_alt;
                                     }
 
                                     pre_lat = raw_lat;
@@ -326,24 +346,32 @@ public class Group3 extends AppCompatActivity {
                                                     meter_alt = (raw_alt);
                                                     String strCurrentAlt = String.valueOf(meter_alt);
                                                     tv_alt.setText(strCurrentAlt + " meters");
+                                                    altitudeUnits = Units.Distance.METERS;
+                                                    altitudeToSave = meter_alt;
                                                 }
 
                                                 if (chkbx_kilometers.isChecked()) {
                                                     kilometer_alt = (raw_alt / 1000);
                                                     String strCurrentAlt = String.valueOf(kilometer_alt);
                                                     tv_alt.setText(strCurrentAlt + " kilometers");
+                                                    altitudeUnits = Units.Distance.KILOMETERS;
+                                                    altitudeToSave = kilometer_alt;
                                                 }
 
                                                 if (chkbx_miles.isChecked()) {
                                                     mile_alt = (raw_alt / 1609);
                                                     String strCurrentAlt = String.valueOf(mile_alt);
                                                     tv_alt.setText(strCurrentAlt + " miles");
+                                                    altitudeUnits = Units.Distance.MILES;
+                                                    altitudeToSave = mile_alt;
                                                 }
 
                                                 if (chkbx_feet.isChecked()) {
                                                     feet_alt = (raw_alt * 3.281);
                                                     String strCurrentAlt = String.valueOf(feet_alt);
                                                     tv_alt.setText(strCurrentAlt + " feet");
+                                                    altitudeUnits = Units.Distance.FEET;
+                                                    altitudeToSave = feet_alt;
                                                 }
                                             } else {
                                                 tv_alt.setText("Not Available");
@@ -353,18 +381,26 @@ public class Group3 extends AppCompatActivity {
 
                                                 tmp_distance = distance * 1000;
                                                 tv_distance.setText(String.format("%.4f", tmp_distance) + " m");
+                                                distanceUnits = Units.Distance.METERS;
+                                                distanceToSave = tmp_distance;
 //                            tv_distance.setText(String.valueOf(tmp_distance) + " m");
 
                                             } else if (chkbx_dist_kilometers.isChecked()) {
                                                 tv_distance.setText(String.format("%.4f", distance) + " km");
+                                                distanceUnits = Units.Distance.KILOMETERS;
+                                                distanceToSave = distance;
 //                            tv_distance.setText(String.valueOf(distance) + " km");
                                             } else if (chkbx_dist_miles.isChecked()) {
                                                 tmp_distance = distance * 0.621371;
                                                 tv_distance.setText(String.format("%.4f", tmp_distance) + " miles");
+                                                distanceUnits = Units.Distance.MILES;
+                                                distanceToSave = tmp_distance;
 //                            tv_distance.setText(String.valueOf(tmp_distance) + " miles");
                                             } else if (chkbx_dist_feet.isChecked()) {
                                                 tmp_distance = distance * 3280.838879986877;
                                                 tv_distance.setText(String.format("%.4f", tmp_distance) + " feet");
+                                                distanceUnits = Units.Distance.FEET;
+                                                distanceToSave = tmp_distance;
 //                            tv_distance.setText(String.valueOf(tmp_distance) + " feet");
                                             }
 
@@ -373,18 +409,24 @@ public class Group3 extends AppCompatActivity {
                                                 strCurrentSpeed = String.valueOf(meter_speed);
                                                 tv_speed.setText(strCurrentSpeed + " m/sec");
                                                 intSpeed = meter_speed;
+                                                speedUnits = Units.Speed.METERS_PER_SECOND;
+                                                speedToSave = meter_speed;
                                             }
                                             if (chkbx_kmh.isChecked()) {
                                                 metric_speed = (int) ((raw_speed * 3600) / 1000);
                                                 strCurrentSpeed = String.valueOf(metric_speed);
                                                 tv_speed.setText(strCurrentSpeed + " km/h");
                                                 intSpeed = metric_speed;
+                                                speedUnits = Units.Speed.KILOMETERS_PER_HOUR;
+                                                speedToSave = metric_speed;
                                             }
                                             if (chkbx_mph.isChecked()) {
                                                 mph_speed = (int) (raw_speed * 2.2369);
                                                 strCurrentSpeed = String.valueOf(mph_speed);
                                                 tv_speed.setText(strCurrentSpeed + " mph");
                                                 intSpeed = mph_speed;
+                                                speedUnits = Units.Speed.MILES_PER_HOUR;
+                                                speedToSave = mph_speed;
                                             }
                                             if (chkbx_minPermile.isChecked()) {
                                                 mile_speed = (double) (raw_speed / 26.822);
@@ -392,6 +434,8 @@ public class Group3 extends AppCompatActivity {
                                                 strCurrentSpeed = String.format("%.2f", mile_speed);
                                                 tv_speed.setText(strCurrentSpeed + " mile/min");
                                                 intSpeed = (int) mile_speed;
+                                                speedUnits = Units.Speed.MILES_PER_MINUTE;
+                                                speedToSave = mile_speed;
                                             }
                                         }
                                     }
@@ -401,10 +445,61 @@ public class Group3 extends AppCompatActivity {
                             currSpeed = location.getSpeed();
                             updateSpeed(intSpeed);
                         }
+
+
+                        if (chbx_seconds.isChecked()) {
+                            timeUnits = Units.Time.SECONDS;
+                        } else if (chkbx_minutes.isChecked()) {
+                            timeUnits = Units.Time.MINUTES;
+                        } else if (chkbx_hours.isChecked()) {
+                            timeUnits = Units.Time.HOURS;
+                        } else if (chkbx_days.isChecked()) {
+                            timeUnits = Units.Time.DAYS;
+                        }
+
+                        Units.Distance finalAltitudeUnits = altitudeUnits;
+                        Units.Speed finalSpeedUnits = speedUnits;
+                        double finalSpeedToSave = speedToSave;
+                        double finalAltitudeToSave = altitudeToSave;
+                        double finalDistanceToSave = distanceToSave;
+                        Units.Distance finalDistanceUnits = distanceUnits;
+                        Units.Time finalTimeUnits = timeUnits;
+                        GPSDatabase.databaseWriteExecutor.execute(() -> {
+                            long timeToSave = 0;
+                            switch (finalTimeUnits) {
+                                case SECONDS:
+                                    timeToSave = Long.valueOf(strSecTime);
+                                    break;
+                                case MINUTES:
+                                    timeToSave = Long.valueOf(strMinTime);
+                                    break;
+                                case HOURS:
+                                    timeToSave = Long.valueOf(strHrTime);
+                                    break;
+                                case DAYS:
+                                    timeToSave = Long.valueOf(strDayTime);
+                                    break;
+                            }
+                            GPSDatabase.getInstance(getApplicationContext()).metricDAO()
+                                    .insert(new Metric(
+                                            raw_lat,
+                                            raw_long,
+                                            finalAltitudeToSave,
+                                            (finalAltitudeUnits != null) ? finalAltitudeUnits : Units.Distance.METERS,
+                                            finalSpeedToSave,
+                                            (finalSpeedUnits != null) ? finalSpeedUnits : Units.Speed.METERS_PER_SECOND,
+                                            finalDistanceToSave,
+                                            (finalDistanceUnits != null) ? finalDistanceUnits : Units.Distance.KILOMETERS,
+                                            timeToSave,
+                                            (finalTimeUnits != null) ? finalTimeUnits : Units.Time.SECONDS
+                                            ));
+                        });
                     }
                 });
                 GPS_INITIALIZATION += 1;
             }
+
+
 
         }
     };
@@ -635,7 +730,7 @@ public class Group3 extends AppCompatActivity {
                 max_page.putExtra("time", max_time/1000+" seconds");
 
 
-                tv_lat.setText("0.0"); tv_lon.setText("0.0"); tv_alt.setText("0.0");tv_time.setText("0:00");
+                tv_alt.setText("0.0");tv_time.setText("0:00");
                 distance = 0; tv_distance.setText("0.0"); tv_speed.setText("0.0"); tv_time_distance.setText("0:00");
                 diff_alt.setText("0.0"); diff_alt.setVisibility(View.GONE);
                 diff_lat.setText("0.0"); diff_lat.setVisibility(View.GONE);
@@ -660,6 +755,9 @@ public class Group3 extends AppCompatActivity {
 //                distanceTimer = new Timer();
 //                startDistanceTimer();
 //                stopDistanceTimer();
+                GPSDatabase.databaseWriteExecutor.execute(() -> {
+                    GPSDatabase.getInstance(getApplicationContext()).metricDAO().clearTable();
+                });
             }
         });
 

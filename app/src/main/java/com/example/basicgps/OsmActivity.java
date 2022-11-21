@@ -11,12 +11,18 @@ import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
 
+import org.osmdroid.views.overlay.ItemizedIconOverlay;
+import org.osmdroid.views.overlay.ItemizedOverlayWithFocus;
+import org.osmdroid.views.overlay.Marker;
+import org.osmdroid.views.overlay.Overlay;
+import org.osmdroid.views.overlay.OverlayItem;
 import org.osmdroid.views.overlay.Polyline;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import android.content.Context;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -32,11 +38,13 @@ public class OsmActivity extends AppCompatActivity {
     private MapController myMapController;
 //    protected LocationManager locationManager;
     private static final String TAG = "OsmActivity";
-    private double m_latitude = 42.3505d;
-    private double m_longitude = -71.1054d;
-    private GeoPoint start = new GeoPoint(m_latitude, m_longitude);
-    private ArrayList<MyLocationNewOverlay> mOverlayItemArray = new ArrayList<MyLocationNewOverlay>();
-    MyLocationNewOverlay mLocationOverlay;
+//    private double m_latitude = 37.390488;
+//    private double m_longitude = -122.06385;
+//    private GeoPoint start = new GeoPoint(m_latitude, m_longitude);
+//    private ArrayList<MyLocationNewOverlay> mOverlayItemArray = new ArrayList<MyLocationNewOverlay>();
+//    MyLocationNewOverlay mLocationOverlay;
+
+    private ArrayList<GeoPoint> m_geopoints;
 
 
     /** Called when the activity is first created. */
@@ -50,45 +58,110 @@ public class OsmActivity extends AppCompatActivity {
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            m_latitude = extras.getDouble("Latitude");
-            m_longitude = extras.getDouble("Longitude");
+//            m_latitude = extras.getDouble("Latitude");
+//            m_longitude = extras.getDouble("Longitude");
+            this.m_geopoints = extras.getParcelableArrayList("Geopoints");
         }
 
 
-        myOpenMapView = (MapView)findViewById(R.id.map);
+        myOpenMapView = (MapView) findViewById(R.id.map);
         myOpenMapView.setTileSource(TileSourceFactory.MAPNIK);
         myOpenMapView.setBuiltInZoomControls(true);
         myMapController = (MapController) myOpenMapView.getController();
         myMapController.setZoom(12);
+        GeoPoint start = m_geopoints.get(0);
         myOpenMapView.setExpectedCenter(start);
 
-        Executors.newSingleThreadExecutor().execute(new Runnable() {
-            @Override
-            public void run() {
-                List<GeoPoint> geoPoints = new ArrayList<>();
 
-                // get all values from database
-                List<Metric> metrics = GPSDatabase.getInstance(getApplicationContext()).metricDAO().getAllMetrics();
-                List<Double> long_list = metrics.stream().map(Metric::getLongitude).collect(Collectors.toList());
-                List<Double> lat_list = metrics.stream().map(Metric::getLatitude).collect(Collectors.toList());
+        Polyline line = new Polyline();   //see note below!
+        line.setPoints(m_geopoints);
+        Color color = new Color();
+//        line.getOutlinePaint().setColor((int)color.green());
+        myOpenMapView.getOverlays().add(line);
 
-                // add geopoints to array using fetched long and lat values
-                for (int i=0; i < long_list.size(); i++) {
-                    geoPoints.add(new GeoPoint(long_list.get(i), lat_list.get(i)));
-                }
+//        for (int i=0; i < 5; i++) {
+//            Marker startMarker = new Marker(myOpenMapView);
+//            startMarker.setPosition(m_geopoints.get(i));
+//            startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+//            myOpenMapView.getOverlays().add(startMarker);
+//        }
+        myOpenMapView.invalidate();
 
-                // create polyline using values
-                Polyline line = new Polyline();   //see note below!
-                line.setPoints(geoPoints);
+//        GeoPoint point = new GeoPoint(m_latitude, m_longitude);
+//        Marker startMarker = new Marker(myOpenMapView);
+//        startMarker.setPosition(point);
+//        startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+//        myOpenMapView.getOverlays().add(startMarker);
+//        myOpenMapView.invalidate();
+//        GeoPoint newPoint = new GeoPoint(42.350876, -71.106918);
+//        Marker startMarker2 = new Marker(myOpenMapView);
+//        startMarker2.setPosition(newPoint);
+//        myOpenMapView.getOverlays().add(startMarker2);
+//        Log.d(TAG, "overlays: " + myOpenMapView.getOverlays().toString());
 
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        myOpenMapView.getOverlayManager().add(line);
-                    }
-                });
-            }
-        });
+
+//        @Override
+//        protected void onResume() {
+//            // TODO Auto-generated method stub
+//            super.onResume();
+//            myOpenMapView.onResume();
+//        }
+
+//        Executors.newSingleThreadExecutor().execute(new Runnable() {
+//            @Override
+//            public void run() {
+//                List<GeoPoint> geoPoints = new ArrayList<>();
+//
+//                //// get all values from database
+//                List<Metric> metrics = GPSDatabase.getInstance(getApplicationContext()).metricDAO().getAllMetrics();
+//                List<Double> long_list = metrics.stream().map(Metric::getLongitude).collect(Collectors.toList());
+//                List<Double> lat_list = metrics.stream().map(Metric::getLatitude).collect(Collectors.toList());
+//
+//                //// add geopoints to array using fetched long and lat values
+//
+////                geoPoints.add(start);
+////                geoPoints.add(new GeoPoint(39.6920d, -119.2851d));
+//                for (int i=0; i < 15; i++) {
+//                    geoPoints.add(new GeoPoint(long_list.get(i), lat_list.get(i)));
+//                }
+//
+//                GeoPoint startPoint = new GeoPoint(39.6920d, -119.2851d);
+//                Marker startMarker = new Marker(myOpenMapView);
+//                startMarker.setPosition(startPoint);
+//                startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+////                myOpenMapView.getOverlays().add(startMarker);
+//
+////                String pointsString = geoPoints.toString();
+////                Log.d(TAG, "GEOPOINTS LIST: " + pointsString);
+////                // create polyline using values
+////                Polyline line = new Polyline();   //see note below!
+////                line.setPoints(geoPoints);
+////                String linePoints = line.getPoints().toString();
+////                Log.d(TAG, "GEOPOINTS LIST FROM LINE: " + linePoints);
+////                line.getOutlinePaint().setStrokeWidth(25f);
+////                Color color = new Color();
+////                line.getOutlinePaint().setColor((int)color.blue());
+////                Boolean vis = line.isVisible();
+////                Log.d(TAG, "VISIBILITY CHECK: " + vis);
+//
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+////                        myOpenMapView.getOverlays().add(line);
+////                        myOpenMapView.getOverlays().add(startMarker);
+//                        for (int i=0; i < geoPoints.size(); i++) {
+////                            geoPoints.add(new GeoPoint(long_list.get(i), lat_list.get(i)));
+//                            Marker startMarker = new Marker(myOpenMapView);
+//                            startMarker.setPosition(geoPoints.get(i));
+//                            startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+//                            myOpenMapView.getOverlays().add(new Marker(myOpenMapView));
+//                            myOpenMapView.invalidate();
+//                        }
+//
+//                    }
+//                });
+//            }
+//        });
     }
 
 
@@ -145,11 +218,6 @@ public class OsmActivity extends AppCompatActivity {
 //        myOpenMapView.getOverlays().add(myScaleBarOverlay);
 //    }
 
-    @Override
-    protected void onResume() {
-        // TODO Auto-generated method stub
-        super.onResume();
-        myOpenMapView.onResume();
-    }
 
+//    }
 }

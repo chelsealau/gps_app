@@ -11,7 +11,7 @@
     <RadioGroup
         android:id="@+id/rg_timeUnits"
         android:layout_width="88dp"
-        android:layout_height="240dp"
+        android:layout_height="200dp"
         android:layout_centerInParent="true"
         android:layout_gravity="center"
         android:gravity="center"
@@ -64,7 +64,7 @@
     <RadioGroup
         android:id="@+id/rg_altitutdeUnits"
         android:layout_width="101dp"
-        android:layout_height="240dp"
+        android:layout_height="200dp"
         android:layout_centerInParent="true"
         android:layout_gravity="center"
         android:gravity="center"
@@ -117,7 +117,7 @@
     <RadioGroup
         android:id="@+id/rg_distanceeUnits"
         android:layout_width="98dp"
-        android:layout_height="241dp"
+        android:layout_height="200dp"
         android:layout_centerInParent="true"
         android:layout_gravity="center"
         android:gravity="center"
@@ -170,9 +170,9 @@
     <RadioGroup
         android:id="@+id/rg_speedUnits"
         android:layout_width="94dp"
-        android:layout_height="240dp"
+        android:layout_height="200dp"
         android:layout_gravity="center"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="40dp"
         android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -224,7 +224,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="10dp"
         android:checked="false"
         android:gravity="center"
         android:paddingTop="20dp"
@@ -358,6 +358,24 @@
         app:layout_constraintStart_toEndOf="@+id/tv_labelspeed"
         app:layout_constraintTop_toTopOf="@+id/tv_labelspeed" />
 
+    <TextView
+        android:id="@+id/tv_labelacc"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Acceleration:"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_labelspeed" />
+
+    <TextView
+        android:id="@+id/tv_acc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="0.00"
+        app:layout_constraintStart_toEndOf="@+id/tv_labelacc"
+        app:layout_constraintTop_toBottomOf="@+id/tv_speed" />
+
     <ImageView
         android:id="@+id/down_arrow_speed"
         android:layout_height="wrap_content"
@@ -392,7 +410,7 @@
         android:layout_marginTop="16dp"
         android:text="Time Elapsed:"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_labelspeed" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_labelacc" />
 
     <TextView
         android:id="@+id/tv_time"
@@ -401,7 +419,7 @@
         android:layout_marginTop="16dp"
         android:text="0.00"
         app:layout_constraintStart_toEndOf="@+id/tv_labeltime"
-        app:layout_constraintTop_toBottomOf="@+id/tv_labelspeed" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_labelacc" />
 
 
     <TextView
@@ -582,7 +600,7 @@
         android:id="@+id/tv_unit_speed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="15dp"
         android:layout_marginEnd="16dp"
         android:text="Speed"
         app:layout_constraintEnd_toEndOf="parent"

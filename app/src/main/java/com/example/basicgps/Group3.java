@@ -486,14 +486,16 @@ public class Group3 extends AppCompatActivity {
                             @Override
                             public void run() {
                                 List<Metric> metrics = GPSDatabase.getInstance(getApplicationContext()).metricDAO().getAllMetrics();
-                                List<Long> time_list = metrics.stream().map(Metric::getMovingTime).collect(Collectors.toList());
-                                List<Double> dist_list = metrics.stream().map(Metric::getDistanceTraveled).collect(Collectors.toList());
+                                List<Long> time_list = null;
+                                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                                    time_list = metrics.stream().map(Metric::getMovingTime).collect(Collectors.toList());
+                                    List<Double> dist_list = metrics.stream().map(Metric::getDistanceTraveled).collect(Collectors.toList());
+                                    first_t = time_list.get(0);
+                                    last_t = time_list.get(time_list.size() - 1);
 
-                                first_t = time_list.get(0);
-                                last_t = time_list.get(time_list.size() - 1);
-
-                                first_dist = dist_list.get(0);
-                                last_dist = dist_list.get(dist_list.size() - 1);
+                                    first_dist = dist_list.get(0);
+                                    last_dist = dist_list.get(dist_list.size() - 1);
+                                }
                             }
                         });
                         double dist = abs(last_dist-first_dist);
@@ -524,9 +526,12 @@ public class Group3 extends AppCompatActivity {
             @Override
             public void run() {
                 List<Metric> metrics = GPSDatabase.getInstance(getApplicationContext()).metricDAO().getAllMetrics();
-                List<Double> speed_list = metrics.stream().map(Metric::getSpeed).collect(Collectors.toList());
-                num_vals = speed_list.size();
-                avg_speed = speed_list.stream().reduce((double) 0, (a, b)->a+b)/num_vals;
+                List<Double> speed_list = null;
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                    speed_list = metrics.stream().map(Metric::getSpeed).collect(Collectors.toList());
+                    num_vals = speed_list.size();
+                    avg_speed = speed_list.stream().reduce((double) 0, (a, b) -> a + b) / num_vals;
+                }
             }
         });
         intSpeed = Math.round(intSpeed);

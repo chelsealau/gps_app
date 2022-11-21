@@ -32,6 +32,7 @@ public class Metric {
     @ColumnInfo(name = "moving_time_units")
     public Units.Time movingTimeUnits;
 
+
     public Metric(double latitude, double longitude, double altitude, Units.Distance altitudeUnits, double speed, Units.Speed speedUnits, double distanceTraveled, Units.Distance distTraveledUnits, long movingTime, Units.Time movingTimeUnits) {
         this.latitude = latitude;
         this.longitude = longitude;
@@ -43,5 +44,24 @@ public class Metric {
         this.distTraveledUnits = distTraveledUnits;
         this.movingTime = movingTime;
         this.movingTimeUnits = movingTimeUnits;
+    }
+
+    public double getAltitude(){
+        return altitude;
+    }
+    public double getLatitude(){
+        return latitude;
+    }
+    public double getLongitude(){
+        return longitude;
+    }
+    public double getSpeed(){
+        return speed;
+    }
+    public long getMovingTime(){
+        return movingTime;
+    }
+    public double getDistanceTraveled(){
+        return distanceTraveled;
     }
 }

@@ -5,8 +5,9 @@
  */
 package com.example.basicgps;
 
+import static java.lang.Math.abs;
+
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -16,14 +17,15 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-
 import android.os.Looper;
-
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.RadioButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,8 +44,8 @@ import com.example.basicgps.database.entityDAOs.ScoreDAO;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 
 public class Group3 extends AppCompatActivity {
@@ -54,6 +56,7 @@ public class Group3 extends AppCompatActivity {
     SwitchCompat sw_fontsize;
     SwitchCompat sw_pause;
     AppCompatButton sw_test;
+    Spinner acc_unit;
     private float currSpeed;
     private String strCurrentSpeed;
     private String strLong, strLat, strAlt, strSecTime, strMinTime, strHrTime, strDayTime,
@@ -69,6 +72,11 @@ public class Group3 extends AppCompatActivity {
     private double min_dist, min_speed = Double.MAX_VALUE;
     private long max_time = Long.MIN_VALUE;
     private long min_time = Long.MAX_VALUE;
+    int num_vals, unit_idx=0;
+    double avg_speed;
+    double first_dist,last_dist,tmp_acc;
+
+    long first_t, last_t;
 
     Timer timer;
     TimerTask timerTask;
@@ -76,9 +84,10 @@ public class Group3 extends AppCompatActivity {
     Timer distanceTimer;
     TimerTask distanceTimerTask;
 
-    TextView tv_lat, tv_lon, tv_speed, tv_alt, diff_lat, diff_lon, diff_speed, diff_alt, tv_distance, tv_time, tv_time_distance;
+    TextView tv_lat, tv_lon, tv_speed, tv_alt, diff_lat, diff_lon, diff_speed, diff_alt, tv_distance, tv_time, tv_time_distance, acc_val;
 
-    AppCompatButton help_button, reset_button, highscore_button, map_button;
+
+    AppCompatButton help_button, reset_button, highscore_button, average_button, email_button, map_button;
 
     RadioButton chbx_seconds, chkbx_minutes, chkbx_hours,chkbx_days,
             chkbx_meters,chkbx_kilometers,chkbx_miles,chkbx_feet,chkbx_dist_meters,
@@ -186,7 +195,6 @@ public class Group3 extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-
                         Units.Time timeUnits = null;
                         Units.Distance altitudeUnits = null;
                         double altitudeToSave = 0;
@@ -469,6 +477,33 @@ public class Group3 extends AppCompatActivity {
                                             Units.Time.SECONDS
                                             ));
                         });
+                        Executors.newSingleThreadExecutor().execute(new Runnable() {
+                            @Override
+                            public void run() {
+                                List<Metric> metrics = GPSDatabase.getInstance(getApplicationContext()).metricDAO().getAllMetrics();
+                                List<Long> time_list = metrics.stream().map(Metric::getMovingTime).collect(Collectors.toList());
+                                List<Double> dist_list = metrics.stream().map(Metric::getDistanceTraveled).collect(Collectors.toList());
+
+                                first_t = time_list.get(0);
+                                last_t = time_list.get(time_list.size() - 1);
+
+                                first_dist = dist_list.get(0);
+                                last_dist = dist_list.get(dist_list.size() - 1);
+                            }
+                        });
+                        double dist = abs(last_dist-first_dist);
+                        double t_sq = Math.pow(last_t-first_t, 2);
+                        tmp_acc = dist/t_sq;
+                        switch (unit_idx){
+                            case 0:
+                                acc_val.setText(String.format("%.4f",tmp_acc));
+                                break;
+                            case 1:
+                                double smoots = tmp_acc*1.70180/(0.000001*0.000001);
+                                acc_val.setText(String.format("%.4f",smoots));
+                                break;
+                        }
+//
                     }
                 });
                 GPS_INITIALIZATION += 1;
@@ -480,46 +515,26 @@ public class Group3 extends AppCompatActivity {
     };
 
     private void updateSpeed(int intSpeed) {
+        Executors.newSingleThreadExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                List<Metric> metrics = GPSDatabase.getInstance(getApplicationContext()).metricDAO().getAllMetrics();
+                List<Double> speed_list = metrics.stream().map(Metric::getSpeed).collect(Collectors.toList());
+                num_vals = speed_list.size();
+                avg_speed = speed_list.stream().reduce((double) 0, (a, b)->a+b)/num_vals;
+            }
+        });
         intSpeed = Math.round(intSpeed);
-        if(intSpeed == 0){
-            tv_speed.setTextColor(Color.parseColor("#77FF33"));
+        double speed_diff = avg_speed - intSpeed;
+
+        if (abs(speed_diff) <= 5){
+            tv_speed.setTextColor(Color.parseColor("#000000"));
+        } else if (speed_diff < 0){
+            tv_speed.setTextColor(Color.parseColor("#FF0000"));
+        } else {
+            tv_speed.setTextColor(Color.parseColor("#00FF00"));
         }
-        if(intSpeed > 0 && intSpeed<=10){
-            tv_speed.setTextColor(Color.parseColor("#DFFF00"));
-        }
-        if(intSpeed > 10 && intSpeed<=15){
-            tv_speed.setTextColor(Color.parseColor("#FFBF00"));
-        }
-        if(intSpeed > 15 && intSpeed<=20){
-            tv_speed.setTextColor(Color.parseColor("#FF7F50"));
-        }
-        if(intSpeed > 20 && intSpeed<=25){
-            tv_speed.setTextColor(Color.parseColor("#DE3163"));
-        }
-        if(intSpeed > 25 && intSpeed<=30){
-            tv_speed.setTextColor(Color.parseColor("#9FE2BF"));
-        }
-        if(intSpeed > 30 && intSpeed<=35){
-            tv_speed.setTextColor(Color.parseColor("#339CFF"));
-        }
-        if(intSpeed > 35 && intSpeed<=40){
-            tv_speed.setTextColor(Color.parseColor("#9B33FF"));
-        }
-        if(intSpeed > 40 && intSpeed<=45){
-            tv_speed.setTextColor(Color.parseColor("#FF33EE"));
-        }
-        if(intSpeed > 45 && intSpeed<=50){
-            tv_speed.setTextColor(Color.parseColor("#FF6D33"));
-        }
-        if(intSpeed > 50 && intSpeed<=55){
-            tv_speed.setTextColor(Color.parseColor("#5DFF33"));
-        }
-        if(intSpeed > 55 && intSpeed<=60){
-            tv_speed.setTextColor(Color.parseColor("#EAFF33"));
-        }
-        if(intSpeed > 60){
-            tv_speed.setTextColor(Color.parseColor("#FF3333"));
-        }
+
     }
 
     @Override
@@ -562,8 +577,6 @@ public class Group3 extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Log.v("max_dist", String.valueOf(max_dist));
-
         setContentView(R.layout.activity_main);
 
         tv_lat = findViewById(R.id.tv_lat);
@@ -580,6 +593,10 @@ public class Group3 extends AppCompatActivity {
         reset_button = findViewById(R.id.reset_button);
         help_button = findViewById(R.id.help_button);
         highscore_button = findViewById(R.id.highscore_button);
+        email_button = findViewById(R.id.email_button);
+
+        average_button = findViewById(R.id.average_button);
+
         map_button = findViewById(R.id.map_button);
         // Time unit selection
         chbx_seconds = findViewById(R.id.chbx_seconds);
@@ -619,7 +636,12 @@ public class Group3 extends AppCompatActivity {
         down_arrow_speed = findViewById(R.id.down_arrow_speed);
         diff_speed = findViewById(R.id.diff_speed);
         Intent max_page = new Intent(Group3.this, getHighScore.class);
+        Intent email_page = new Intent(Group3.this, sendEmail.class);
         Intent map_page = new Intent(Group3.this, OsmActivity.class);
+
+        // dropdown for acceleration
+        acc_unit = (Spinner) findViewById(R.id.acc_spinner);
+        acc_val = (TextView) findViewById(R.id.tv_acc);
 
         startTime = System.currentTimeMillis();
         timer = new Timer();
@@ -687,6 +709,32 @@ public class Group3 extends AppCompatActivity {
                     long timeNow = System.currentTimeMillis();
                     updateTime(timeNow);
                 }
+            }
+        });
+
+        // spinners
+
+        String[] items = new String[]{"meters / second^2", "smoots/microcentury^2"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
+        acc_unit.setAdapter(adapter);
+
+        acc_unit.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view,
+                                       int position, long id) {
+                switch (position) {
+                    case 0:
+                        unit_idx = 0;
+                        break;
+                    case 1:
+                        unit_idx = 1;
+                        break;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                unit_idx =0;
             }
         });
 
@@ -802,6 +850,23 @@ public class Group3 extends AppCompatActivity {
             public void onClick(View v) {
 //                Intent intent = new Intent(Group3.this, getHighScore.class);
                 startActivity(max_page);
+            }
+        });
+
+
+        email_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(email_page);
+            }
+        });
+
+
+        average_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+              Intent getAverage = new Intent(Group3.this, getAverage.class);
+              startActivity(getAverage);
             }
         });
 
@@ -1089,6 +1154,8 @@ public class Group3 extends AppCompatActivity {
         }
     }
 
+
+
     public void onRadioButtonClicked(View view) {
         // Is the button now checked?
         boolean checked = ((RadioButton) view).isChecked();
@@ -1162,11 +1229,3 @@ public class Group3 extends AppCompatActivity {
         }
     }
 }
-
-
-
-
-
-
-
-

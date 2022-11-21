@@ -34,6 +34,8 @@ New for Problem One:
  - A high scores page that is visible after resetting the app and then tapping the "check high scores" button
    - Displays maximum Speed achieved, the Max distance traveled, and the Maximum time for which the app was left running
 
+New for Problem Two:
+-Accessible map implemented using OpenStreetMap that shows the user's travels (NOTE: Path is generated from all location points collected BEFORE pressing the MAP button)
 
 
  Upon first use, the app should ask for user permission to access location. If location is granted, the app will use the Location Manager class to obtain a Location object which contains information such as latitude, longitude, and speed at set intervals of change in time (ms) and distance (m). The TextViews for the read values are updated accordingly.
@@ -59,3 +61,9 @@ that can be selected by the list of unit options below the displayed metrics.
 - Qualitative Indicators - Chelsea Lau
 - High Scores Page - Jae Yoon Chung
 - Total Moving Time - Arnaud Harmange
+
+## INDIVIDUAL ELEMENTS (Problem Two)
+- Speed colors according to historical average - Cameron Cipriano
+- Instantaneous acceleration - Chelsea Lau
+- Historical averages page - Jae Yoon Chung
+- Export feature - Arnaud Harmange

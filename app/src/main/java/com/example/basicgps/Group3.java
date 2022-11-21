@@ -85,7 +85,8 @@ public class Group3 extends AppCompatActivity {
 
     TextView tv_lat, tv_lon, tv_speed, tv_alt, diff_lat, diff_lon, diff_speed, diff_alt, tv_distance, tv_time, tv_time_distance, acc_val;
 
-    AppCompatButton help_button, reset_button, highscore_button, average_button, email_button;
+
+    AppCompatButton help_button, reset_button, highscore_button, average_button, email_button, map_button;
 
     RadioButton chbx_seconds, chkbx_minutes, chkbx_hours,chkbx_days,
             chkbx_meters,chkbx_kilometers,chkbx_miles,chkbx_feet,chkbx_dist_meters,
@@ -582,6 +583,8 @@ public class Group3 extends AppCompatActivity {
         email_button = findViewById(R.id.email_button);
 
         average_button = findViewById(R.id.average_button);
+
+        map_button = findViewById(R.id.map_button);
         // Time unit selection
         chbx_seconds = findViewById(R.id.chbx_seconds);
         chkbx_minutes = findViewById(R.id.chkbx_minutes);
@@ -621,6 +624,7 @@ public class Group3 extends AppCompatActivity {
         diff_speed = findViewById(R.id.diff_speed);
         Intent max_page = new Intent(Group3.this, getHighScore.class);
         Intent email_page = new Intent(Group3.this, sendEmail.class);
+        Intent map_page = new Intent(Group3.this, OsmActivity.class);
 
         // dropdown for acceleration
         acc_unit = (Spinner) findViewById(R.id.acc_spinner);
@@ -789,6 +793,7 @@ public class Group3 extends AppCompatActivity {
             }
         });
 
+
         email_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -800,8 +805,17 @@ public class Group3 extends AppCompatActivity {
         average_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent getAverage = new Intent(Group3.this, getAverage.class);
-                startActivity(getAverage);
+              Intent getAverage = new Intent(Group3.this, getAverage.class);
+              startActivity(getAverage);
+            }
+        });
+
+        map_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                map_page.putExtra("Latitude", raw_lat);
+                map_page.putExtra("Longitude", raw_long);
+                startActivity(map_page);
             }
         });
 
@@ -1150,11 +1164,3 @@ public class Group3 extends AppCompatActivity {
         }
     }
 }
-
-
-
-
-
-
-
-

@@ -566,9 +566,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:text="ACCESS MAP"
-        app:layout_constraintStart_toStartOf="@+id/highscore_button"
-        app:layout_constraintTop_toBottomOf="@+id/highscore_button" />
+        android:text="MAP"
+        app:layout_constraintStart_toEndOf="@+id/reset_button"
+        app:layout_constraintTop_toBottomOf="@+id/rg_speedUnits" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/sw_test"
@@ -578,7 +578,7 @@
         android:layout_centerHorizontal="true"
         android:checked="false"
         android:gravity="center"
-        android:text="start Test"
+        android:text="Test"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/rg_timeUnits" />
 

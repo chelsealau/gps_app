@@ -1,0 +1,49 @@
+image: openjdk:11-jdk
+
+variables:
+  ANDROID_COMPILE_SDK: "30"
+  ANDROID_BUILD_TOOLS: "30.0.3"
+  ANDROID_SDK_TOOLS: "7583922"
+
+
+before_script:
+  - echo "Run this before every script."
+  - export ANDROID_HOME="${PWD}/android-home"
+  - install -d $ANDROID_HOME
+  - wget --output-document=$ANDROID_HOME/cmdline-tools.zip https://dl.google.com/android/repository/commandlinetools-linux-${ANDROID_SDK_TOOLS}_latest.zip
+  # move to the archive at ANDROID_HOME
+  - pushd $ANDROID_HOME
+  - unzip -d cmdline-tools cmdline-tools.zip
+  - pushd cmdline-tools
+  - mv cmdline-tools tools || true
+  - popd
+  - popd
+  - export PATH=$PATH:${ANDROID_HOME}/cmdline-tools/tools/bin/
+  - export PATH="$ANDROID_HOME/emulator:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools:$PATH" 
+  - yes | sdkmanager --licenses || true
+  - sdkmanager "platforms;android-${ANDROID_COMPILE_SDK}"
+  - sdkmanager "platform-tools"
+  - sdkmanager "build-tools;${ANDROID_BUILD_TOOLS}"
+  - sdkmanager "emulator"
+  - chmod +x ./gradlew
+
+
+
+stages:
+  - build
+  - test
+
+builder:
+  stage: build
+  script:
+    - echo "building..."
+  tags: [android30]
+
+CompileJava:
+  stage: test
+  script:
+    - chmod +x testing.sh
+    - ./testing.sh
+    - echo "done running test shell script"
+  tags: [java]
+

@@ -2,38 +2,29 @@ package com.example.basicgps;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
-//import org.osmdroid.DefaultResourceProxyImpl;
-//import org.osmdroid.ResourceProxy;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
-import org.osmdroid.views.overlay.ItemizedIconOverlay;
-import org.osmdroid.views.overlay.OverlayItem;
+
 import org.osmdroid.views.overlay.Polyline;
-import org.osmdroid.views.overlay.ScaleBarOverlay;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Point;
-import android.location.Location;
-//import android.location.LocationListener;
-//import android.location.LocationManager;
-import android.nfc.Tag;
+
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.MotionEvent;
-import android.widget.Toast;
-//import android.content.Intent;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.basicgps.database.GPSDatabase;
+import com.example.basicgps.database.entities.Metric;
 
 public class OsmActivity extends AppCompatActivity {
 
@@ -71,16 +62,45 @@ public class OsmActivity extends AppCompatActivity {
         myMapController.setZoom(12);
         myOpenMapView.setExpectedCenter(start);
 
+        Executors.newSingleThreadExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                List<GeoPoint> geoPoints = new ArrayList<>();
 
-        mLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(ctx),myOpenMapView);
-        mLocationOverlay.enableMyLocation();
-        mOverlayItemArray.add(mLocationOverlay);
-        String arrayString = mOverlayItemArray.toString();
-        Log.d(TAG, "onCreate: " + arrayString);
+                // get all values from database
+                List<Metric> metrics = GPSDatabase.getInstance(getApplicationContext()).metricDAO().getAllMetrics();
+                List<Double> long_list = metrics.stream().map(Metric::getLongitude).collect(Collectors.toList());
+                List<Double> lat_list = metrics.stream().map(Metric::getLatitude).collect(Collectors.toList());
 
-        for (MyLocationNewOverlay location : mOverlayItemArray) {
-            myOpenMapView.getOverlays().add(location);
-        }
+                // add geopoints to array using fetched long and lat values
+                for (int i=0; i < long_list.size(); i++) {
+                    geoPoints.add(new GeoPoint(long_list.get(i), lat_list.get(i)));
+                }
+
+                // create polyline using values
+                Polyline line = new Polyline();   //see note below!
+                line.setPoints(geoPoints);
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        myOpenMapView.getOverlayManager().add(line);
+                    }
+                });
+            }
+        });
+    }
+
+
+//        mLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(ctx),myOpenMapView);
+//        mLocationOverlay.enableMyLocation();
+//        mOverlayItemArray.add(mLocationOverlay);
+//        String arrayString = mOverlayItemArray.toString();
+//        Log.d(TAG, "onCreate: " + arrayString);
+//
+//        for (MyLocationNewOverlay location : mOverlayItemArray) {
+//            myOpenMapView.getOverlays().add(location);
+//        }
 
         //--- Create Overlay
 //        overlayItemArray = new ArrayList<OverlayItem>();
@@ -123,7 +143,7 @@ public class OsmActivity extends AppCompatActivity {
         //Add Scale Bar
 //        ScaleBarOverlay myScaleBarOverlay = new ScaleBarOverlay(this.myOpenMapView);
 //        myOpenMapView.getOverlays().add(myScaleBarOverlay);
-    }
+//    }
 
     @Override
     protected void onResume() {

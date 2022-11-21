@@ -21,8 +21,11 @@ public interface ScoreDAO {
     @Delete
     void deleteScore(Score scoreToDelete);
 
-    @Query("SELECT * FROM scores")
-    List<Score> getAll();
+    @Query("SELECT * FROM scores LIMIT 1")
+    Score getSavedScore();
+
+    @Query("SELECT COUNT(*) FROM scores")
+    int documentCount();
 
     @Query("DELETE FROM scores")
     void clearTable();

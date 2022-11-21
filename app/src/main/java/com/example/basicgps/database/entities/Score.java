@@ -10,9 +10,9 @@ public class Score {
     public int id;
 
     @ColumnInfo(name = "max_speed")
-    public float maxSpeed;
+    public double maxSpeed;
     @ColumnInfo(name = "min_speed")
-    public float minSpeed;
+    public double minSpeed;
 
     @ColumnInfo(name = "max_distance")
     public double maxDistance;
@@ -24,7 +24,7 @@ public class Score {
     @ColumnInfo(name = "min_time")
     public long minTime;
 
-    public Score(float maxSpeed, float minSpeed, double maxDistance, double minDistance, long maxTime, long minTime) {
+    public Score(double maxSpeed, double minSpeed, double maxDistance, double minDistance, long maxTime, long minTime) {
         this.maxSpeed = maxSpeed;
         this.minSpeed = minSpeed;
         this.maxDistance = maxDistance;

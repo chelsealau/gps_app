@@ -36,7 +36,7 @@
 
 **New for Problem Two:**
 
--Accessible map implemented using OpenStreetMap that shows the user's travels (NOTE: Path is generated from all location points collected BEFORE pressing the _MAP_ button)
+- Accessible map implemented using OpenStreetMap that shows the user's travels (NOTE: Path is generated from all location points collected BEFORE pressing the _MAP_ button)
 
 
  Upon first use, the app should ask for user permission to access location. If location is granted, the app will use the Location Manager class to obtain a Location object which contains information such as latitude, longitude, and speed at set intervals of change in time (ms) and distance (m). The TextViews for the read values are updated accordingly.

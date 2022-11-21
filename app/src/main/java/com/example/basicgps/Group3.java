@@ -41,6 +41,9 @@ import com.example.basicgps.database.entities.Metric;
 import com.example.basicgps.database.entities.Score;
 import com.example.basicgps.database.entityDAOs.ScoreDAO;
 
+import org.osmdroid.util.GeoPoint;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -70,6 +73,7 @@ public class Group3 extends AppCompatActivity {
     private double pre_lat=0, pre_lon=0, pre_alt=0, pre_speed;
     private double max_dist, min_dist, max_speed, min_speed;
     private long max_time, min_time;
+    private ArrayList<GeoPoint> geopoints = new ArrayList<GeoPoint>();
 
     int num_vals, unit_idx=0;
     double avg_speed;
@@ -165,6 +169,8 @@ public class Group3 extends AppCompatActivity {
                 Log.d(TAG, "onLocationChanged: " + Thread.currentThread());
                 raw_long = location.getLongitude();
                 raw_lat = location.getLatitude();
+                geopoints.add(new GeoPoint(raw_lat, raw_long));
+
                 raw_speed = location.getSpeed();
                 raw_alt = location.getAltitude();
                 strLong = String.format("%.4f", raw_long);
@@ -813,8 +819,10 @@ public class Group3 extends AppCompatActivity {
         map_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                map_page.putExtra("Latitude", raw_lat);
-                map_page.putExtra("Longitude", raw_long);
+//                map_page.putExtra("Latitude", raw_lat);
+//                map_page.putExtra("Longitude", raw_long);
+//                Toast.makeText(Group3.this, "The displayed route will be generated from all locations collected before pressing the ACCESS MAP button", Toast.LENGTH_LONG).show();
+                map_page.putExtra("Geopoints", geopoints);
                 startActivity(map_page);
             }
         });

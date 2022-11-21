@@ -13,7 +13,7 @@ import androidx.appcompat.widget.AppCompatButton;
 
 public class sendEmail extends AppCompatActivity {
     private String subject = "All Database Data";
-    private String body = "Find Database info in attatchment";
+    private String body = "Find Database info in attachment";
 
     AppCompatButton back_button, send_button;
     EditText email;
@@ -30,11 +30,19 @@ public class sendEmail extends AppCompatActivity {
             public void onClick(View v) {
                 if (!email.getText().toString().isEmpty()) {
                     Intent intent = new Intent(Intent.ACTION_SEND);
+                    intent.setType("text/html");
                     intent.putExtra(Intent.EXTRA_EMAIL, new String[]{email.getText().toString()});
                     intent.putExtra(Intent.EXTRA_SUBJECT, subject);
                     intent.putExtra(Intent.EXTRA_TEXT, body);
-//                    intent.setType("message/rfc822");
-                    intent.setData(Uri.parse("mailto:"));
+                    startActivity(Intent.createChooser(intent, "Send Email"));
+
+//                    Intent intent = new Intent(Intent.ACTION_SEND);
+//                    intent.addCategory(Intent.CATEGORY_DEFAULT);
+//                    intent.putExtra(Intent.EXTRA_EMAIL, new String[]{email.getText().toString()});
+//                    intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+//                    intent.putExtra(Intent.EXTRA_TEXT, body);
+////                    intent.setType("message/rfc822");
+//                    intent.setData(Uri.parse("mailto:"));
                     if (intent.resolveActivity(getPackageManager()) != null) {
                         startActivity(intent);
                     } else {

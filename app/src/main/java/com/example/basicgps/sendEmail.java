@@ -35,14 +35,6 @@ public class sendEmail extends AppCompatActivity {
                     intent.putExtra(Intent.EXTRA_SUBJECT, subject);
                     intent.putExtra(Intent.EXTRA_TEXT, body);
                     startActivity(Intent.createChooser(intent, "Send Email"));
-
-//                    Intent intent = new Intent(Intent.ACTION_SEND);
-//                    intent.addCategory(Intent.CATEGORY_DEFAULT);
-//                    intent.putExtra(Intent.EXTRA_EMAIL, new String[]{email.getText().toString()});
-//                    intent.putExtra(Intent.EXTRA_SUBJECT, subject);
-//                    intent.putExtra(Intent.EXTRA_TEXT, body);
-////                    intent.setType("message/rfc822");
-//                    intent.setData(Uri.parse("mailto:"));
                     if (intent.resolveActivity(getPackageManager()) != null) {
                         startActivity(intent);
                     } else {

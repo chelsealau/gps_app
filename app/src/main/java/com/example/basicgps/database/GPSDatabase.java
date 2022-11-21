@@ -14,6 +14,7 @@ import java.util.concurrent.Executors;
 
 @Database(entities = {Metric.class, Score.class}, version = 1)
 public abstract class GPSDatabase extends RoomDatabase {
+
     public abstract MetricDAO metricDAO();
     public abstract ScoreDAO scoreDAO();
 

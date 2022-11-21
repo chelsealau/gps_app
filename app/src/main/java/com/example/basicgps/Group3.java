@@ -68,9 +68,11 @@ public class Group3 extends AppCompatActivity {
     private double pre_lat=0, pre_lon=0, pre_alt=0, pre_speed;
     private double max_dist, max_time, max_speed;
 
-
-    int num_vals;
+    int num_vals, unit_idx=0;
     double avg_speed;
+    double first_dist,last_dist,tmp_acc;
+
+    long first_t, last_t;
 
     Timer timer;
     TimerTask timerTask;
@@ -78,8 +80,7 @@ public class Group3 extends AppCompatActivity {
     Timer distanceTimer;
     TimerTask distanceTimerTask;
 
-    TextView tv_lat, tv_lon, tv_speed, tv_alt, diff_lat, diff_lon, diff_speed, diff_alt, tv_distance, tv_time, tv_time_distance;
-
+    TextView tv_lat, tv_lon, tv_speed, tv_alt, diff_lat, diff_lon, diff_speed, diff_alt, tv_distance, tv_time, tv_time_distance, acc_val;
 
     AppCompatButton help_button, reset_button, highscore_button, average_button, email_button;
 
@@ -187,7 +188,6 @@ public class Group3 extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-
                         Units.Time timeUnits = null;
                         Units.Distance altitudeUnits = null;
                         double altitudeToSave = 0;
@@ -470,6 +470,33 @@ public class Group3 extends AppCompatActivity {
                                             Units.Time.SECONDS
                                             ));
                         });
+                        Executors.newSingleThreadExecutor().execute(new Runnable() {
+                            @Override
+                            public void run() {
+                                List<Metric> metrics = GPSDatabase.getInstance(getApplicationContext()).metricDAO().getAllMetrics();
+                                List<Long> time_list = metrics.stream().map(Metric::getMovingTime).collect(Collectors.toList());
+                                List<Double> dist_list = metrics.stream().map(Metric::getDistanceTraveled).collect(Collectors.toList());
+
+                                first_t = time_list.get(0);
+                                last_t = time_list.get(time_list.size() - 1);
+
+                                first_dist = dist_list.get(0);
+                                last_dist = dist_list.get(dist_list.size() - 1);
+                            }
+                        });
+                        double dist = abs(last_dist-first_dist);
+                        double t_sq = Math.pow(last_t-first_t, 2);
+                        tmp_acc = dist/t_sq;
+                        switch (unit_idx){
+                            case 0:
+                                acc_val.setText(String.format("%.4f",tmp_acc));
+                                break;
+                            case 1:
+                                double smoots = tmp_acc*1.70180/(0.000001*0.000001);
+                                acc_val.setText(String.format("%.4f",smoots));
+                                break;
+                        }
+//
                     }
                 });
                 GPS_INITIALIZATION += 1;
@@ -590,9 +617,9 @@ public class Group3 extends AppCompatActivity {
         Intent max_page = new Intent(Group3.this, getHighScore.class);
         Intent email_page = new Intent(Group3.this, sendEmail.class);
 
-
         // dropdown for acceleration
         acc_unit = (Spinner) findViewById(R.id.acc_spinner);
+        acc_val = (TextView) findViewById(R.id.tv_acc);
 
         startTime = System.currentTimeMillis();
         timer = new Timer();
@@ -675,14 +702,17 @@ public class Group3 extends AppCompatActivity {
                                        int position, long id) {
                 switch (position) {
                     case 0:
+                        unit_idx = 0;
                         break;
                     case 1:
+                        unit_idx = 1;
                         break;
                 }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
+                unit_idx =0;
             }
         });
 

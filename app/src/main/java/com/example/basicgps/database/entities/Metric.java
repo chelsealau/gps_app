@@ -58,4 +58,10 @@ public class Metric {
     public double getSpeed(){
         return speed;
     }
+    public long getMovingTime(){
+        return movingTime;
+    }
+    public double getDistanceTraveled(){
+        return distanceTraveled;
+    }
 }

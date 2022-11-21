@@ -38,6 +38,8 @@ import androidx.core.app.ActivityCompat;
 import com.example.basicgps.database.GPSDatabase;
 import com.example.basicgps.database.Units;
 import com.example.basicgps.database.entities.Metric;
+import com.example.basicgps.database.entities.Score;
+import com.example.basicgps.database.entityDAOs.ScoreDAO;
 
 import java.util.List;
 import java.util.Timer;
@@ -66,7 +68,8 @@ public class Group3 extends AppCompatActivity {
     private long startTime, startTimeDist, distTimeNow, reStartTime, stopTime, timeElapsed, totalMovingTime,  time_diff;
     boolean hasStopped = false;
     private double pre_lat=0, pre_lon=0, pre_alt=0, pre_speed;
-    private double max_dist, max_time, max_speed;
+    private double max_dist, min_dist, max_speed, min_speed;
+    private long max_time, min_time;
 
     int num_vals, unit_idx=0;
     double avg_speed;
@@ -93,6 +96,8 @@ public class Group3 extends AppCompatActivity {
     int LOCATION_REFRESH_TIME = 1; // 15 seconds to update
     int LOCATION_REFRESH_DISTANCE = 1; // 500 meters to update
     int GPS_INITIALIZATION = 0;
+
+    Score appScores = null;
 
 //    public void startThread() {
 //        Log.d(TAG, "startThread: ");
@@ -543,7 +548,7 @@ public class Group3 extends AppCompatActivity {
             Toast.makeText(Group3.this, "savedInstanceState EXISTS!!!", Toast.LENGTH_LONG).show();
             // Restore value of members from saved state
             max_dist = savedInstanceState.getDouble("max_dist");
-            max_time = savedInstanceState.getDouble("max_time");
+            max_time = savedInstanceState.getLong("max_time");
             max_speed = savedInstanceState.getDouble("max_speed");
         } else {
             Toast.makeText(Group3.this, "savedInstanceState is Null", Toast.LENGTH_LONG).show();
@@ -844,6 +849,37 @@ public class Group3 extends AppCompatActivity {
                 }
             }
         });
+        GPSDatabase.databaseWriteExecutor.execute(() -> {
+            ScoreDAO appScoreDAO = GPSDatabase.getInstance(getApplicationContext()).scoreDAO();
+            int numScores = appScoreDAO.documentCount();
+            if (numScores > 0) {
+                appScores = appScoreDAO.getSavedScore();
+                min_dist = appScores.minDistance;
+                max_dist = appScores.maxDistance;
+                min_speed = appScores.minSpeed;
+                max_speed = appScores.maxSpeed;
+                min_time = appScores.minTime;
+                max_time = appScores.maxTime;
+            }
+            else {
+                min_dist = 0.0;
+                max_dist = 0.0;
+                min_speed = 0.0;
+                max_speed = 0.0;
+                min_time = 0;
+                max_time = 0;
+                appScoreDAO.insertScore(new Score(
+                            max_speed,
+                            min_speed,
+                            max_dist,
+                            min_dist,
+                            max_time,
+                            min_time
+                        )
+                );
+            }
+        });
+
     }
     private boolean bigFont() {
         return sw_fontsize.isChecked();

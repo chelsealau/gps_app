@@ -75,7 +75,8 @@ public class Group3 extends AppCompatActivity {
 
     TextView tv_lat, tv_lon, tv_speed, tv_alt, diff_lat, diff_lon, diff_speed, diff_alt, tv_distance, tv_time, tv_time_distance;
 
-    AppCompatButton help_button, reset_button, highscore_button, average_button;
+
+    AppCompatButton help_button, reset_button, highscore_button, average_button, email_button;
 
     RadioButton chbx_seconds, chkbx_minutes, chkbx_hours,chkbx_days,
             chkbx_meters,chkbx_kilometers,chkbx_miles,chkbx_feet,chkbx_dist_meters,
@@ -541,6 +542,8 @@ public class Group3 extends AppCompatActivity {
         reset_button = findViewById(R.id.reset_button);
         help_button = findViewById(R.id.help_button);
         highscore_button = findViewById(R.id.highscore_button);
+        email_button = findViewById(R.id.email_button);
+
         average_button = findViewById(R.id.average_button);
         // Time unit selection
         chbx_seconds = findViewById(R.id.chbx_seconds);
@@ -580,6 +583,8 @@ public class Group3 extends AppCompatActivity {
         down_arrow_speed = findViewById(R.id.down_arrow_speed);
         diff_speed = findViewById(R.id.diff_speed);
         Intent max_page = new Intent(Group3.this, getHighScore.class);
+        Intent email_page = new Intent(Group3.this, sendEmail.class);
+
 
         startTime = System.currentTimeMillis();
         timer = new Timer();
@@ -717,6 +722,14 @@ public class Group3 extends AppCompatActivity {
                 startActivity(max_page);
             }
         });
+
+        email_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(email_page);
+            }
+        });
+
 
         average_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -964,6 +977,8 @@ public class Group3 extends AppCompatActivity {
             }
         }
     }
+
+
 
     public void onRadioButtonClicked(View view) {
         // Is the button now checked?

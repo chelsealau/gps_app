@@ -35,6 +35,7 @@
    - Displays maximum Speed achieved, the Max distance traveled, and the Maximum time for which the app was left running
 
 **New for Problem Two:**
+
 -Accessible map implemented using OpenStreetMap that shows the user's travels (NOTE: Path is generated from all location points collected BEFORE pressing the _MAP_ button)
 
 

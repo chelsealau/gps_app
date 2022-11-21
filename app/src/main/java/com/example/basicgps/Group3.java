@@ -39,6 +39,7 @@ import com.example.basicgps.database.GPSDatabase;
 import com.example.basicgps.database.Units;
 import com.example.basicgps.database.entities.Metric;
 import com.example.basicgps.database.entities.Score;
+import com.example.basicgps.database.entityDAOs.MetricDAO;
 import com.example.basicgps.database.entityDAOs.ScoreDAO;
 
 import org.osmdroid.util.GeoPoint;
@@ -68,13 +69,14 @@ public class Group3 extends AppCompatActivity {
     private int  meter_speed, metric_speed, mph_speed, intSpeed;
     private double meter_alt, kilometer_alt, mile_alt, feet_alt;
     private double distance=0, tmp_distance, dist_diff=0, old_distance=0;
-    private long startTime, startTimeDist, distTimeNow, reStartTime, stopTime, timeElapsed, totalMovingTime,  time_diff;
+    private long startTime, startTimeDist, distTimeNow, reStartTime, stopTime, timeElapsed, totalMovingTime,  time_diff = 0;
     boolean hasStopped = false;
     private double pre_lat=0, pre_lon=0, pre_alt=0, pre_speed;
-    private double max_dist, min_dist, max_speed, min_speed;
-    private long max_time, min_time;
+    private double max_dist, max_speed = -1.0;
+    private double min_dist, min_speed = Double.MAX_VALUE;
+    private long max_time = Long.MIN_VALUE;
+    private long min_time = Long.MAX_VALUE;
     private ArrayList<GeoPoint> geopoints = new ArrayList<GeoPoint>();
-
     int num_vals, unit_idx=0;
     double avg_speed;
     double first_dist,last_dist,tmp_acc;
@@ -490,11 +492,14 @@ public class Group3 extends AppCompatActivity {
                                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
                                     time_list = metrics.stream().map(Metric::getMovingTime).collect(Collectors.toList());
                                     List<Double> dist_list = metrics.stream().map(Metric::getDistanceTraveled).collect(Collectors.toList());
-                                    first_t = time_list.get(0);
-                                    last_t = time_list.get(time_list.size() - 1);
 
-                                    first_dist = dist_list.get(0);
-                                    last_dist = dist_list.get(dist_list.size() - 1);
+                                    if (time_list.size() > 0 && dist_list.size() > 0) {
+                                        first_t = time_list.get(0);
+                                        last_t = time_list.get(time_list.size() - 1);
+
+                                        first_dist = dist_list.get(0);
+                                        last_dist = dist_list.get(dist_list.size() - 1);
+                                    }
                                 }
                             }
                         });
@@ -551,6 +556,11 @@ public class Group3 extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
         savedInstanceState.putDouble("max_dist", max_dist);
+        savedInstanceState.putDouble("min_dist", min_dist);
+        savedInstanceState.putDouble("max_speed", max_speed);
+        savedInstanceState.putDouble("min_speed", min_speed);
+        savedInstanceState.putLong("max_time", max_time);
+        savedInstanceState.putLong("min_tie", min_time);
     }
 
     @Override
@@ -560,14 +570,21 @@ public class Group3 extends AppCompatActivity {
             Toast.makeText(Group3.this, "savedInstanceState EXISTS!!!", Toast.LENGTH_LONG).show();
             // Restore value of members from saved state
             max_dist = savedInstanceState.getDouble("max_dist");
+            min_dist = savedInstanceState.getDouble("min_dist");
             max_time = savedInstanceState.getLong("max_time");
+            min_time = savedInstanceState.getLong("min_time");
             max_speed = savedInstanceState.getDouble("max_speed");
+            min_speed = savedInstanceState.getDouble("min_speed");
+
         } else {
             Toast.makeText(Group3.this, "savedInstanceState is Null", Toast.LENGTH_LONG).show();
             // Probably initialize members with default values for a new instance
-            max_dist=0;
-            max_time=0;
-            max_speed=0;
+            max_dist = -1.0;
+            min_dist = Double.MAX_VALUE;
+            max_time= Long.MIN_VALUE;
+            min_time = Long.MAX_VALUE;
+            max_speed = -1.0;
+            min_speed = Double.MAX_VALUE;
         }
     }
 
@@ -752,17 +769,64 @@ public class Group3 extends AppCompatActivity {
                 if (distance > max_dist){
                     max_dist = distance;
                 }
-                max_page.putExtra("dist", max_dist+" km");
+                max_page.putExtra("maxDist", max_dist+" km");
                 Log.v("max_dist", String.valueOf(max_dist));
+
+                if (distance < min_dist) {
+                    min_dist = distance;
+                }
+                max_page.putExtra("minDist", min_dist+ " km");
+
+                Log.d("RAW_SPEED_GT", "Raw speed greater?: " + String.valueOf(raw_speed > max_speed));
                 if (raw_speed>max_speed){
+                    Log.d("RAW_SPEED", "Raw speed is greater than max?");
                     max_speed = raw_speed;
                 }
-                max_page.putExtra("speed", max_speed+" m/sec");
+                Log.d("MAX SPEED", max_speed + " m/sec");
+                max_page.putExtra("maxSpeed", max_speed+" m/sec");
 
-                if (timeElapsed>max_time){
+                if (raw_speed < min_speed) {
+                    min_speed = raw_speed;
+                }
+                max_page.putExtra("minSpeed", min_speed + " m/sec");
+
+                Log.d("TIME_ELAPSED", timeElapsed + " seconds");
+                if ((timeElapsed / 1000) > max_time){
                     max_time = timeElapsed;
                 }
-                max_page.putExtra("time", max_time/1000+" seconds");
+                max_page.putExtra("maxTime", max_time/1000+" seconds");
+
+                if ((timeElapsed / 1000) < min_time) {
+                    min_time = timeElapsed;
+                }
+                max_page.putExtra("minTime", min_time/1000 + " seconds");
+
+                if (appScores != null) {
+                    appScores.maxDistance = max_dist;
+                    appScores.minDistance = min_dist;
+                    appScores.maxSpeed = max_speed;
+                    appScores.minSpeed = min_speed;
+                    appScores.maxTime = max_time;
+                    appScores.minTime = min_time;
+                } else {
+                    appScores = new Score(
+                            max_speed,
+                            min_speed,
+                            max_dist,
+                            min_dist,
+                            max_time,
+                            min_time
+                    );
+                }
+
+                GPSDatabase.databaseWriteExecutor.execute(() -> {
+                    final ScoreDAO appScoreDAO = GPSDatabase.getInstance(getApplicationContext()).scoreDAO();
+                    if (appScoreDAO.documentCount() > 0) {
+                        appScoreDAO.updateScore(appScores);
+                    } else {
+                        appScoreDAO.insertScore(appScores);
+                    }
+                });
 
 
                 tv_alt.setText("0.0");tv_time.setText("0:00");
@@ -878,8 +942,10 @@ public class Group3 extends AppCompatActivity {
         });
         GPSDatabase.databaseWriteExecutor.execute(() -> {
             ScoreDAO appScoreDAO = GPSDatabase.getInstance(getApplicationContext()).scoreDAO();
+
             int numScores = appScoreDAO.documentCount();
             if (numScores > 0) {
+                Log.d(TAG, "GETTING FROM THE DATABASE");
                 appScores = appScoreDAO.getSavedScore();
                 min_dist = appScores.minDistance;
                 max_dist = appScores.maxDistance;
@@ -889,12 +955,13 @@ public class Group3 extends AppCompatActivity {
                 max_time = appScores.maxTime;
             }
             else {
-                min_dist = 0.0;
-                max_dist = 0.0;
-                min_speed = 0.0;
-                max_speed = 0.0;
-                min_time = 0;
-                max_time = 0;
+                Log.d(TAG, "SETTING SCORES FOR THE FIRST TIME");
+                min_dist = Double.MAX_VALUE;
+                max_dist = -1.0;
+                min_speed = Double.MAX_VALUE;
+                max_speed = -1.0;
+                min_time = Long.MAX_VALUE;
+                max_time = Long.MIN_VALUE;
                 appScoreDAO.insertScore(new Score(
                             max_speed,
                             min_speed,
@@ -905,6 +972,9 @@ public class Group3 extends AppCompatActivity {
                         )
                 );
             }
+            Log.d(TAG, "maxD: " + max_dist + ", minD: " + min_dist +
+                    ", maxS: " + max_speed + ", minS: " + min_speed +
+                    ", maxT: " + max_time + ", minT: " + min_time);
         });
 
     }
@@ -918,20 +988,20 @@ public class Group3 extends AppCompatActivity {
     private void updateTime(long timeNow){
         if(!isPaused()){
             if(chbx_seconds.isChecked()) {
-                long timeElapsed = timeNow - startTime;
+                timeElapsed = timeNow - startTime;
                 long time_seconds = timeElapsed/1000;
                 strSecTime = String.valueOf(time_seconds);
                 tv_time.setText(String.valueOf(time_seconds)+ " seconds");
             }
             if(chkbx_minutes.isChecked()) {
-                long timeElapsed = timeNow - startTime;
+                timeElapsed = timeNow - startTime;
                 long time_seconds = timeElapsed/1000;
                 double time_minutes = (double) time_seconds/60;
                 strMinTime = String.format("%.4f", time_minutes);
                 tv_time.setText(String.format("%.4f", time_minutes)+ " minutes");
             }
             if(chkbx_hours.isChecked()) {
-                long timeElapsed = timeNow - startTime;
+                timeElapsed = timeNow - startTime;
                 long time_seconds = timeElapsed/1000;
                 long time_minutes = time_seconds/60;
                 double time_hours = (double) time_minutes/60;
@@ -939,7 +1009,7 @@ public class Group3 extends AppCompatActivity {
                 tv_time.setText(String.format("%.6f", time_hours) + " hours");
             }
             if(chkbx_days.isChecked()) {
-                long timeElapsed = timeNow - startTime;
+                timeElapsed = timeNow - startTime;
                 long time_seconds = timeElapsed/1000;
                 long time_minutes = time_seconds/60;
                 long time_hours = time_minutes/60;

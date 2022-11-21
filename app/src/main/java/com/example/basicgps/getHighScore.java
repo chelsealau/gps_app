@@ -8,9 +8,12 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
+import com.example.basicgps.database.entities.Score;
+
 public class getHighScore extends AppCompatActivity {
     AppCompatButton back_button;
-    TextView max_speed, max_distance, max_time;
+    TextView max_speed, min_speed, max_distance, min_distance, max_time, min_time;
+    Score highScores = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,9 +21,12 @@ public class getHighScore extends AppCompatActivity {
         setContentView(R.layout.activity_get_high_score);
 
         back_button = findViewById(R.id.back_button);
-        max_distance = (TextView) findViewById(R.id.max_dist_val);
-        max_time = (TextView) findViewById(R.id.max_time_val);
-        max_speed = (TextView) findViewById(R.id.max_speed_val);
+        max_distance = findViewById(R.id.max_dist_val);
+        min_distance = findViewById(R.id.min_dist_val);
+        max_time = findViewById(R.id.max_time_val);
+        min_time = findViewById(R.id.min_time_val);
+        max_speed = findViewById(R.id.max_speed_val);
+        min_speed = findViewById(R.id.min_speed_val);
 
         back_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -30,21 +36,18 @@ public class getHighScore extends AppCompatActivity {
             }
         });
         Intent main = getIntent();
-        String distance = main.getStringExtra("dist");
-        String speed = main.getStringExtra("speed");
-        String time = main.getStringExtra("time");
+        String maxDist = main.getStringExtra("maxDist");
+        String minDist = main.getStringExtra("minDist");
+        String maxSpeed = main.getStringExtra("maxSpeed");
+        String minSpeed = main.getStringExtra("minSpeed");
+        String maxTime = main.getStringExtra("maxTime");
+        String minTime = main.getStringExtra("minTime");
 
-        max_time.setText(time);
-        max_speed.setText(speed);
-        max_distance.setText(distance);
-
-//        String speed = main.getStringExtra("speed");
-//        String time = main.getStringExtra("time");
-//        Toast.makeText(getHighScore.this, distance, Toast.LENGTH_LONG).show();
-//        if (Double.parseDouble(distance) > Double.parseDouble((String) max_distance.getText())){
-//            max_distance.setText(distance);
-//        }
-
-//        Toast.makeText(getHighScore.this, "distance", Toast.LENGTH_LONG).show();
+        max_time.setText(maxTime);
+        min_time.setText(minTime);
+        max_speed.setText(maxSpeed);
+        min_speed.setText(minSpeed);
+        max_distance.setText(maxDist);
+        min_distance.setText(minDist);
     }
 }

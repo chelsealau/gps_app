@@ -6,7 +6,6 @@
 package com.example.basicgps;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -16,9 +15,7 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-
 import android.os.Looper;
-
 import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -39,8 +36,6 @@ import com.example.basicgps.database.entities.Metric;
 
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 
 public class Group3 extends AppCompatActivity {
@@ -72,7 +67,7 @@ public class Group3 extends AppCompatActivity {
 
     TextView tv_lat, tv_lon, tv_speed, tv_alt, diff_lat, diff_lon, diff_speed, diff_alt, tv_distance, tv_time, tv_time_distance;
 
-    AppCompatButton help_button, reset_button, highscore_button;
+    AppCompatButton help_button, reset_button, highscore_button, average_button;
 
     RadioButton chbx_seconds, chkbx_minutes, chkbx_hours,chkbx_days,
             chkbx_meters,chkbx_kilometers,chkbx_miles,chkbx_feet,chkbx_dist_meters,
@@ -575,8 +570,6 @@ public class Group3 extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Log.v("max_dist", String.valueOf(max_dist));
-
         setContentView(R.layout.activity_main);
 
         tv_lat = findViewById(R.id.tv_lat);
@@ -593,6 +586,7 @@ public class Group3 extends AppCompatActivity {
         reset_button = findViewById(R.id.reset_button);
         help_button = findViewById(R.id.help_button);
         highscore_button = findViewById(R.id.highscore_button);
+        average_button = findViewById(R.id.average_button);
         // Time unit selection
         chbx_seconds = findViewById(R.id.chbx_seconds);
         chkbx_minutes = findViewById(R.id.chkbx_minutes);
@@ -766,6 +760,14 @@ public class Group3 extends AppCompatActivity {
             public void onClick(View v) {
 //                Intent intent = new Intent(Group3.this, getHighScore.class);
                 startActivity(max_page);
+            }
+        });
+
+        average_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent getAverage = new Intent(Group3.this, getAverage.class);
+                startActivity(getAverage);
             }
         });
 

@@ -498,7 +498,6 @@
         android:text="Help"
         app:layout_constraintStart_toEndOf="@+id/sw_test"
         app:layout_constraintTop_toBottomOf="@+id/rg_altitutdeUnits" />
-
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/reset_button"
         android:layout_width="wrap_content"
@@ -515,6 +514,15 @@
         android:text="Check High Scores"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/sw_test" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/average_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Average"
+        app:layout_constraintStart_toEndOf="@+id/highscore_button"
+        app:layout_constraintTop_toBottomOf="@+id/reset_button"/>
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/sw_test"

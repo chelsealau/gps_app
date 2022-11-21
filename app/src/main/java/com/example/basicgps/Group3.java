@@ -5,8 +5,9 @@
  */
 package com.example.basicgps;
 
+import static java.lang.Math.abs;
+
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -16,9 +17,7 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-
 import android.os.Looper;
-
 import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -37,10 +36,11 @@ import com.example.basicgps.database.GPSDatabase;
 import com.example.basicgps.database.Units;
 import com.example.basicgps.database.entities.Metric;
 
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 
 public class Group3 extends AppCompatActivity {
@@ -64,6 +64,9 @@ public class Group3 extends AppCompatActivity {
     private double pre_lat=0, pre_lon=0, pre_alt=0, pre_speed;
     private double max_dist, max_time, max_speed;
 
+    int num_vals;
+    double avg_speed;
+
     Timer timer;
     TimerTask timerTask;
 
@@ -72,7 +75,8 @@ public class Group3 extends AppCompatActivity {
 
     TextView tv_lat, tv_lon, tv_speed, tv_alt, diff_lat, diff_lon, diff_speed, diff_alt, tv_distance, tv_time, tv_time_distance;
 
-    AppCompatButton help_button, reset_button, highscore_button, email_button;
+
+    AppCompatButton help_button, reset_button, highscore_button, average_button, email_button;
 
     RadioButton chbx_seconds, chkbx_minutes, chkbx_hours,chkbx_days,
             chkbx_meters,chkbx_kilometers,chkbx_miles,chkbx_feet,chkbx_dist_meters,
@@ -472,46 +476,26 @@ public class Group3 extends AppCompatActivity {
     };
 
     private void updateSpeed(int intSpeed) {
+        Executors.newSingleThreadExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                List<Metric> metrics = GPSDatabase.getInstance(getApplicationContext()).metricDAO().getAllMetrics();
+                List<Double> speed_list = metrics.stream().map(Metric::getSpeed).collect(Collectors.toList());
+                num_vals = speed_list.size();
+                avg_speed = speed_list.stream().reduce((double) 0, (a, b)->a+b)/num_vals;
+            }
+        });
         intSpeed = Math.round(intSpeed);
-        if(intSpeed == 0){
-            tv_speed.setTextColor(Color.parseColor("#77FF33"));
+        double speed_diff = avg_speed - intSpeed;
+
+        if (abs(speed_diff) <= 5){
+            tv_speed.setTextColor(Color.parseColor("#000000"));
+        } else if (speed_diff < 0){
+            tv_speed.setTextColor(Color.parseColor("#FF0000"));
+        } else {
+            tv_speed.setTextColor(Color.parseColor("#00FF00"));
         }
-        if(intSpeed > 0 && intSpeed<=10){
-            tv_speed.setTextColor(Color.parseColor("#DFFF00"));
-        }
-        if(intSpeed > 10 && intSpeed<=15){
-            tv_speed.setTextColor(Color.parseColor("#FFBF00"));
-        }
-        if(intSpeed > 15 && intSpeed<=20){
-            tv_speed.setTextColor(Color.parseColor("#FF7F50"));
-        }
-        if(intSpeed > 20 && intSpeed<=25){
-            tv_speed.setTextColor(Color.parseColor("#DE3163"));
-        }
-        if(intSpeed > 25 && intSpeed<=30){
-            tv_speed.setTextColor(Color.parseColor("#9FE2BF"));
-        }
-        if(intSpeed > 30 && intSpeed<=35){
-            tv_speed.setTextColor(Color.parseColor("#339CFF"));
-        }
-        if(intSpeed > 35 && intSpeed<=40){
-            tv_speed.setTextColor(Color.parseColor("#9B33FF"));
-        }
-        if(intSpeed > 40 && intSpeed<=45){
-            tv_speed.setTextColor(Color.parseColor("#FF33EE"));
-        }
-        if(intSpeed > 45 && intSpeed<=50){
-            tv_speed.setTextColor(Color.parseColor("#FF6D33"));
-        }
-        if(intSpeed > 50 && intSpeed<=55){
-            tv_speed.setTextColor(Color.parseColor("#5DFF33"));
-        }
-        if(intSpeed > 55 && intSpeed<=60){
-            tv_speed.setTextColor(Color.parseColor("#EAFF33"));
-        }
-        if(intSpeed > 60){
-            tv_speed.setTextColor(Color.parseColor("#FF3333"));
-        }
+
     }
 
     @Override
@@ -542,8 +526,6 @@ public class Group3 extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Log.v("max_dist", String.valueOf(max_dist));
-
         setContentView(R.layout.activity_main);
 
         tv_lat = findViewById(R.id.tv_lat);
@@ -562,6 +544,7 @@ public class Group3 extends AppCompatActivity {
         highscore_button = findViewById(R.id.highscore_button);
         email_button = findViewById(R.id.email_button);
 
+        average_button = findViewById(R.id.average_button);
         // Time unit selection
         chbx_seconds = findViewById(R.id.chbx_seconds);
         chkbx_minutes = findViewById(R.id.chkbx_minutes);
@@ -744,6 +727,15 @@ public class Group3 extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(email_page);
+            }
+        });
+
+
+        average_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent getAverage = new Intent(Group3.this, getAverage.class);
+                startActivity(getAverage);
             }
         });
 

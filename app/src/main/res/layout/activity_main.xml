@@ -376,6 +376,16 @@
         app:layout_constraintStart_toEndOf="@+id/tv_labelacc"
         app:layout_constraintTop_toBottomOf="@+id/tv_speed" />
 
+    <Spinner
+        android:id="@+id/acc_spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="19dp"
+        android:layout_marginTop="11dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintStart_toEndOf="@+id/tv_acc"
+        app:layout_constraintTop_toBottomOf="@+id/up_arrow_speed"
+        />
+
     <ImageView
         android:id="@+id/down_arrow_speed"
         android:layout_height="wrap_content"

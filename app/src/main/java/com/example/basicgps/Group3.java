@@ -20,9 +20,12 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.RadioButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,6 +54,7 @@ public class Group3 extends AppCompatActivity {
     SwitchCompat sw_fontsize;
     SwitchCompat sw_pause;
     AppCompatButton sw_test;
+    Spinner acc_unit;
     private float currSpeed;
     private String strCurrentSpeed;
     private String strLong, strLat, strAlt, strSecTime, strMinTime, strHrTime, strDayTime,
@@ -63,6 +67,7 @@ public class Group3 extends AppCompatActivity {
     boolean hasStopped = false;
     private double pre_lat=0, pre_lon=0, pre_alt=0, pre_speed;
     private double max_dist, max_time, max_speed;
+
 
     int num_vals;
     double avg_speed;
@@ -586,6 +591,9 @@ public class Group3 extends AppCompatActivity {
         Intent email_page = new Intent(Group3.this, sendEmail.class);
 
 
+        // dropdown for acceleration
+        acc_unit = (Spinner) findViewById(R.id.acc_spinner);
+
         startTime = System.currentTimeMillis();
         timer = new Timer();
         startTimer();
@@ -652,6 +660,29 @@ public class Group3 extends AppCompatActivity {
                     long timeNow = System.currentTimeMillis();
                     updateTime(timeNow);
                 }
+            }
+        });
+
+        // spinners
+
+        String[] items = new String[]{"meters / second^2", "smoots/microcentury^2"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
+        acc_unit.setAdapter(adapter);
+
+        acc_unit.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view,
+                                       int position, long id) {
+                switch (position) {
+                    case 0:
+                        break;
+                    case 1:
+                        break;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
             }
         });
 

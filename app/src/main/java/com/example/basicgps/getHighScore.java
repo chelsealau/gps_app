@@ -2,18 +2,18 @@ package com.example.basicgps;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
-import org.w3c.dom.Text;
+import com.example.basicgps.database.entities.Score;
 
 public class getHighScore extends AppCompatActivity {
     AppCompatButton back_button;
     TextView max_speed, min_speed, max_distance, min_distance, max_time, min_time;
+    Score highScores = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +42,6 @@ public class getHighScore extends AppCompatActivity {
         String minSpeed = main.getStringExtra("minSpeed");
         String maxTime = main.getStringExtra("maxTime");
         String minTime = main.getStringExtra("minTime");
-
-        Log.d("HIGH SCORE VALS", "maxS: " + maxSpeed);
 
         max_time.setText(maxTime);
         min_time.setText(minTime);

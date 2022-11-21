@@ -532,13 +532,13 @@
         android:layout_height="wrap_content"
         android:text="Reset"
         app:layout_constraintStart_toEndOf="@+id/help_button"
-        app:layout_constraintTop_toBottomOf="@+id/rg_distanceeUnits" />
+        app:layout_constraintTop_toTopOf="@+id/help_button" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/highscore_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="5dp"
         android:text="High Scores"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/sw_test" />
@@ -547,7 +547,7 @@
         android:id="@+id/email_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="5dp"
         android:text="Email all Data"
         app:layout_constraintStart_toEndOf="@id/average_button"
         app:layout_constraintTop_toBottomOf="@+id/reset_button" />
@@ -556,7 +556,7 @@
         android:id="@+id/average_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:text="Average"
         app:layout_constraintStart_toEndOf="@+id/highscore_button"
         app:layout_constraintTop_toBottomOf="@+id/reset_button"/>
@@ -565,10 +565,10 @@
         android:id="@+id/map_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="5dp"
         android:text="ACCESS MAP"
-        app:layout_constraintStart_toEndOf="@+id/highscore_button"
-        app:layout_constraintTop_toBottomOf="@+id/sw_test" />
+        app:layout_constraintStart_toStartOf="@+id/highscore_button"
+        app:layout_constraintTop_toBottomOf="@+id/highscore_button" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/sw_test"
@@ -619,13 +619,12 @@
         android:id="@+id/tv_unit_speed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
         android:layout_marginEnd="16dp"
         android:text="Speed"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.552"
         app:layout_constraintStart_toEndOf="@+id/tv_unit_distance"
-        app:layout_constraintTop_toBottomOf="@+id/sw_pause" />
+        app:layout_constraintTop_toTopOf="@+id/tv_unit_distance" />
 
     <TextView
         android:id="@+id/tv_units_header"

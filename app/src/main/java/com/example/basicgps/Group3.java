@@ -821,6 +821,7 @@ public class Group3 extends AppCompatActivity {
             public void onClick(View v) {
 //                map_page.putExtra("Latitude", raw_lat);
 //                map_page.putExtra("Longitude", raw_long);
+//                Toast.makeText(Group3.this, "The displayed route will be generated from all locations collected before pressing the ACCESS MAP button", Toast.LENGTH_LONG).show();
                 map_page.putExtra("Geopoints", geopoints);
                 startActivity(map_page);
             }
